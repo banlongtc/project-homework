@@ -1,0 +1,83 @@
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+/SavedFiles
+/Upload
+
+# ASP.NET Scaffolding
+.scaffolding
+
+# Visual Studio
+.vscode/
+.vs/
+# Exclude all build and publish directories
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.pidb
+*.log
+*.tss
+
+# Backup & report files
+*.bak
+*.bkp
+*.swp
+*.tmp
+*.temp
+*.stackdump
+
+# ASP.NET Core
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
+# Entity Framework
+**/Migrations/
+
+# Log files
+*.log
+logs/
+
+# Azure Pipelines
+logs/
+azure-pipelines.yml
+
+# DotNet patcher
+*.patch
+
+# Distributed build cache
+.cache/
+
+# Rider
+.idea/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+
+# Mac
+*.DS_Store
+*.AppleDouble
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini

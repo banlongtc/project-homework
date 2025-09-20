@@ -1,0 +1,288 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<MPLUS_GW_WebCore.Models.TblSubMaterial>
+@{
+    ViewData["Title"] = "Nguyên Vật Liệu Phụ";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var subMaterialsList = ViewData["SubMaterialsList"] as List<TblSubMaterial>;
+    var defaultValueProd = subMaterialsList != null ? subMaterialsList.Select(s => s.QtyProdPerDay).FirstOrDefault() : 0;
+}
+<div class="text-center page-title">
+    <h1 class="display-6 mb-0">@ViewData["Title"]</h1>
+</div>
+
+@* Hiển thị breadcrumb *@
+@await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+<hr />
+
+<div class="section-content">
+    <div class="addition-material">
+        <div class="head-table d-flex justify-content-between align-items-center">
+            <div class="qty-content">
+                <span>Số lượng sản xuất/ngày: </span>
+                <span>
+                    <input type="number" id="QtyProd" value="@defaultValueProd" class="input-field qty-per-day" />
+                </span>
+            </div>
+            <div class="action-head d-flex justify-content-between">
+                <div class="enter-content me-3">
+                    <button class="btn btn-success btn-enter-qty">Nhập số lượng</button>
+                </div>
+                <div class="export-content">
+                    <a asp-controller="Materials" asp-action="WriteDeliverySubMaterials" class="btn btn-secondary disabled btn-export-material">Xuất kho</a>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered border-dark text-center">
+                <thead>
+                    <tr class="align-middle th-table-data">
+                        <th>Mã NVL</th>
+                        <th>Tên NVL</th>
+                        <th class="w-100px">Số lượng tồn trước trừ</th>
+                        <th class="w-100px">Số lượng in được/cuộn</th>
+                        <th class="w-100px">Tồn an toàn</th>
+                        <th class="w-100px">Số lượng sx/ngày</th>
+                        <th class="w-100px">Số cuộn sử dụng</th>
+                        <th class="w-100px">Số lượng tồn sau trừ</th>
+                        <th class="w-100px">Số lượng cần nhập</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (subMaterialsList != null) {
+                        foreach(var item in subMaterialsList) {
+                            int inventory = item.Inventory ?? 0;
+                            switch(item.ProductCode) {
+                                case "YYMF11354V":
+                                    int? qtyProdPreDay = item.QtyProdPerDay;
+                                    int? qtyPrintedPreDay = item.QtyPrintedPerRoll;
+                                    int qtyRollUsed = (int)Math.Ceiling((decimal)(qtyProdPreDay ?? 0) / (decimal)(qtyPrintedPreDay ?? 0));
+
+                                    <tr class="align-middle base-content" id="PrintedDay1" data-qty_print="@qtyPrintedPreDay" data-product_code="YYMF11354V">
+                                        <td><div>YYMF11354V</div></td>
+                                        <td>
+                                            <div class="title-material">Băng in chuôi</div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="InventoryPre1" min="0" class="input-field ivt-qty" value="@item.InventoryPre" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" id="PrintPreDay1" class="input-field qty-print-day" value="@item.QtyPrintedPerRoll" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="SafeInventory1" min="0" class="input-field save-inventory" value="@item.SafeInventory" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" class="input-field qty-prod-day same-qty" value="@item.QtyProdPerDay" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" class="input-field qty-rolls" value="@qtyRollUsed" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="Inventory1" min="0" class="input-field ivt-after-minus" value="@(inventory)" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" id="QtyCanImport1" class="input-field qty-import" value="@item.QtyCanInput" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    break;
+                                case "YY00XB110A30":
+                                    qtyProdPreDay = item.QtyProdPerDay / 5;
+                                    qtyPrintedPreDay = item.QtyPrintedPerRoll;
+                                    qtyRollUsed = (int)Math.Ceiling((decimal)(qtyProdPreDay ?? 0) / (decimal)(qtyPrintedPreDay ?? 0));
+
+                                    <tr class="align-middle base-content" id="PrintedDay2" data-qty_print="@qtyPrintedPreDay" data-product_code="YY00XB110A30">
+                                        <td><div>YY00XB110A30</div></td>
+                                        <td>
+                                            <div class="title-material">Băng in nhãn cạnh</div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="InventoryPre2" min="0" class="input-field ivt-qty" value="@item.InventoryPre" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="PrintPreDay2" min="0" class="input-field qty-print-day" value="@item.QtyPrintedPerRoll" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="SafeInventory2" min="0" class="input-field save-inventory" value="@item.SafeInventory" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" class="input-field qty-prod-day div-qty-5" value="@qtyProdPreDay" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" class="input-field qty-rolls" value="@qtyRollUsed" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" id="Inventory2" class="input-field ivt-after-minus" value="@(inventory)" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" id="QtyCanImport2" class="input-field qty-import" value="@item.QtyCanInput" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    break;
+                                case "YY00XB110A110":
+                                    qtyProdPreDay = item.QtyProdPerDay / 25;
+                                    qtyPrintedPreDay = item.QtyPrintedPerRoll;
+                                    qtyRollUsed = (int)Math.Ceiling((decimal)(qtyProdPreDay ?? 0) / (decimal)(qtyPrintedPreDay ?? 0));
+
+                                    <tr class="align-middle base-content" id="PrintedDay3" data-qty_print="@qtyPrintedPreDay" data-product_code="YY00XB110A110">
+                                        <td><div>YY00XB110A110</div></td>
+                                        <td>
+                                            <div class="title-material">Băng in nhãn thùng xuất xưởng</div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="InventoryPre3" min="0" class="input-field ivt-qty" value="@item.InventoryPre" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" id="PrintPreDay3" class="input-field qty-print-day" value="@item.QtyPrintedPerRoll" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="SafeInventory3" min="0" class="input-field save-inventory" value="@item.SafeInventory" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" class="input-field qty-prod-day div-qty-25" value="@qtyProdPreDay" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" class="input-field qty-rolls" value="@qtyRollUsed" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" id="Inventory3" min="0" class="input-field ivt-after-minus" value="@(inventory)" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" id="QtyCanImport3" class="input-field qty-import" value="@item.QtyCanInput" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    break;
+                                case "YY00XB110A70":
+                                    qtyProdPreDay = item.QtyProdPerDay / 5;
+                                    qtyPrintedPreDay = item.QtyPrintedPerRoll;
+                                    qtyRollUsed = (int)Math.Ceiling((decimal)(qtyProdPreDay ?? 0) / (decimal)(qtyPrintedPreDay ?? 0));
+
+                                    int qtyRollUsedBags = (int)Math.Ceiling((decimal)(item.QtyProdPerDay ?? 0) / (decimal)(qtyPrintedPreDay ?? 0));
+
+                                    <tr class="align-middle base-content" id="PrintedDay4" data-qty_print="@qtyPrintedPreDay" data-product_code="YY00XB110A70">
+                                        <td rowspan="2"><div>YY00XB110A70</div></td>
+                                        <td rowspan="2">
+                                            <div class="title-material">Băng in nhãn túi, hộp</div>
+                                        </td>
+                                        <td rowspan="2">
+                                            <div class="input-group disabled">
+                                                <input type="number" id="InventoryPre4" min="0" class="input-field ivt-qty" value="@item.InventoryPre" />
+                                            </div>
+                                        </td>
+                                        <td rowspan="2">
+                                            <div class="input-group disabled">
+                                                <input type="number" min="0" id="PrintPreDay4" class="input-field qty-print-day" value="@qtyPrintedPreDay" />
+                                            </div>
+                                        </td>
+                                        <td rowspan="2">
+                                            <div class="input-group disabled">
+                                                <input type="number" id="SafeInventory4" min="0" class="input-field save-inventory" value="@item.SafeInventory" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <label>Túi:</label>
+                                                <input type="number" min="0" class="input-field qty-prod-day same-qty" value="@item.QtyProdPerDay" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <label>Túi:</label>
+                                                <input type="number" min="0" class="input-field qty-rolls" value="@qtyRollUsedBags" />
+                                            </div>
+                                        </td>
+                                        <td rowspan="2">
+                                            <div class="input-group disabled">
+                                                <input type="number" id="Inventory4" min="0" class="input-field ivt-after-minus" value="@inventory" />
+                                            </div>
+                                        </td>
+                                        <td rowspan="2">
+                                            <div class="input-group disabled">
+                                                <input type="number" id="QtyCanImport4" min="0" class="input-field qty-import" value="@item.QtyCanInput" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="align-middle base-content" id="PrintedDay5" data-product_code="YY00XB110A70" data-qty_print="@qtyPrintedPreDay">
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <label>Hộp:</label>
+                                                <input type="number" min="0" class="input-field qty-prod-day div-qty-5" value="@qtyProdPreDay" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group disabled">
+                                                <label>Hộp:</label>
+                                                <input type="number" min="0" class="input-field qty-rolls" value="@qtyRollUsed" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    break;
+                            }
+                        }
+                    }  
+                </tbody>
+            </table>
+        </div>
+        <div class="modal form-enter-qty">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="button-close text-end">
+                        <button class="btn-close-modal btn" title="Đóng thông tin chi tiết" type="button"><span class="bx bx-x"></span></button>
+                    </div>
+                    <div class="modal-header justify-content-center">
+                        <h4 class="modal-title">Nhập thông tin cho các NVL phụ</h4>
+                    </div>
+                    <div class="modal-body" id="detailContent"></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success btn-calculator disabled">Tính số lượng</button>
+                        <button class="btn btn-save-data btn-save-info disabled">Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

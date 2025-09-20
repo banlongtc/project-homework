@@ -1,0 +1,195 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Quản lý tồn kho";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var Listtonkho = ViewData["Listtonkho"] as List<TblProduct>;
+    var Listcd = ViewData["Listcd"] as List<TblLocation>;
+    var Listeink = ViewData["ListEink"] as List<Labelstatus>;
+    var Checkeink = ViewData["CheckEink"] as List<Link>;
+}
+
+@await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+<form>
+    <fieldset>
+        <legend style="color:#198754"><b>Quản lý tồn kho</b></legend>
+        <div class="Box1">
+            <label class="form-label mt-4">Mã Barcode</label>
+            <input type="text" class="form-control" id="tbarcode">
+        </div>
+        <div class="Box1">
+            <label class="form-label mt-4">Mã sản phẩm</label>
+            <input type="text" class="form-control" name="txtmasp" id="titem">
+        </div>
+        <div class="Box1">
+            <label class="form-label mt-4">Số lot</label>
+            <input type="text" class="form-control" name="txtsolot" id="tlot">
+        </div>
+        <div class="Box1">
+            <label for="exampleSelect1" class="form-label mt-4">Nhập công đoạn</label>
+            <select class="form-select" id="exampleSelect1" name="result">
+                <option></option>
+                @if (Listcd != null)
+                {
+                    foreach (var item in Listcd)
+                    {
+                        <option value="@item.LocationCode">@item.LocationCode: @item.LocationName </option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="Box2">
+            <button type="submit" class="btn btn-primary" asp-controller="Stock" method="post">Search</button>
+
+
+            @*  <button type="submit" class="btn btn-primary" asp-controller="Stock" asp-action="StockMes" method="post">Seafggrch</button>  *@
+            <button type="submit" class="btn btn-primary" asp-controller="Stock" asp-action="Export" method="post"
+            style="background-color:darkgreen; border-color:darkgreen">
+                Export dữ liệu
+            </button>
+        </div>
+
+
+    </fieldset>
+</form>
+
+<table id="tblStockInfo" class="table table-hover table-bordered border-dark" style="font-size:small">
+    <thead class="bg-secondary text-light">
+        <tr>
+            <th scope="col" class="text-center align-middle">ESL</th>
+            <th scope="col" class="text-center align-middle">Mã sản phẩm</th>
+            <th scope="col" class="text-center align-middle">Số lot</th>
+            <th scope="col" class="text-center align-middle">Tên sản phẩm</th>
+            <th scope="col" class="text-center align-middle">Hạn sử dụng</th>
+            <th scope="col" class="text-center align-middle">Tổng tồn</th>
+            <th scope="col" class="text-center align-middle">Tồn dở dang</th>
+            <th scope="col" class="text-center align-middle">Tồn chưa sử dụng</th>
+            <th scope="col" class="text-center align-middle">Mã công đoạn</th>
+            <th scope="col" class="text-center align-middle">Tên công đoạn</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Listtonkho != null)
+        {
+            var sortLists = Listtonkho.OrderBy(x => x.MaCd).ToList();
+            var dateht = DateTime.Now;
+            foreach (var it in sortLists)
+            {
+                <tr>
+                    <td class="text-center align-middle">
+                        @{
+                            if (Checkeink != null)
+                            {
+                                var check = Checkeink.Where(s => s.Id == it.Iditem.ToString()).ToList();
+                                if (check.Count > 0)
+                                {
+                                    <button type="submit" class="btn btn-primary btn-show-eink" style="background-color:#198754; font-size:small; width: 70px;">
+                                        Linked
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary btn-show-eink" style="background-color: #0d6efd; font-size:small; width: 70px;">
+                                        Link
+                                    </button>
+                                }
+                            }
+                        }
+                    </td>
+                    <td class="text-center align-middle item-material-code" data-productcode="@it.ItemCode">@it.ItemCode</td>
+                    <td class="text-center align-middle item-lot" data-lotno="@it.LotNo">@it.LotNo</td>
+                    <td class="text-center align-middle item-material-name">@it.TenSp</td>
+                    @if (it.RInt2 < 2 && it.RInt2 > 0)
+                    {
+                        <td style="background-color:#F08080" data-date="@(it.RDatetime1.HasValue ? it.RDatetime1.Value.ToString("dd/MM/yyyy") : "")" class="text-center align-middle item-date">
+                            @(it.RDatetime1.HasValue ? it.RDatetime1.Value.ToString("dd/MM/yyyy") : "")
+                        </td>
+                    }
+                    else if (it.RInt2 > 2 && it.RInt2 < 7 && it.RInt2 > 0)
+                    {
+                        <td style="background-color:#FCE0A6" class="text-center align-middle item-date" data-date="@(it.RDatetime1.HasValue ? it.RDatetime1.Value.ToString("dd/MM/yyyy") : "")">
+                            @(it.RDatetime1.HasValue ? it.RDatetime1.Value.ToString("dd/MM/yyyy") : "")
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="text-center align-middle item-date" data-date="@(it.RDatetime1.HasValue ? it.RDatetime1.Value.ToString("dd/MM/yyyy") : "")">
+                            @(it.RDatetime1.HasValue ? it.RDatetime1.Value.ToString("dd/MM/yyyy") : "")
+                        </td>
+                    }
+                    @if (it.Qty < 0)
+                    {
+                        <td style="background-color:#F08080" class="text-center align-middle item-total-ivt" data-tongton="@it.Qty">@it.Qty</td>
+                    }
+                    else
+                    {
+                        <td class="text-center align-middle item-total-ivt" data-tongton="@it.Qty">@it.Qty</td>
+                    }
+                    @if (it.QtyPlan > it.Qty)
+                    {
+                        <td style="background-color:#FCE0A6" class="text-center align-middle item-ivtdd" data-tondd="@it.QtyPlan">@it.QtyPlan</td>
+                    }
+                    else
+                    {
+                        <td class="text-center align-middle item-ivtdd" data-tondd="@it.QtyPlan">@it.QtyPlan</td>
+                    }
+                    <td class="text-center align-middle item-ivtcsd" data-toncsd="@it.QtyOk">@it.QtyOk</td>
+                    <td class="text-center align-middle item-location-code" data-macd="@it.MaCd">@it.MaCd</td>
+                    <td class="text-center align-middle item-location-name" style="width: 160px;" data-ideink="@it.Iditem">@it.TenCd</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel" style="color:darkblue">Thông tin liên kết E-ink </h5>
+                <button class="btn-close-modal btn" data-bs-dismiss="modal" aria-label="Close" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-body">
+                <div id="noticeContainer"></div>
+                @*  <div style="color:#008d61">Các thẻ E-ink đã liên kết:</div>
+                <label id="LbEink"></label><br /> *@
+                <div style="margin-bottom:20px; width:250px">
+                    <label for="exampleSelect1" class="form-label mt-4">Đọc barcode thẻ E-ink mới: </label>
+                    @* <select class="form-select" id="eink_select" name="result_eink">
+                    <option></option>
+                    @if (Listeink != null)
+                    {
+                    foreach (var ei in Listeink)
+                    {
+                    <option value="@ei.Mac">@ei.Variant: @ei.Mac </option>
+                    }
+                    }
+                    </select> *@
+                    <input type="text" class="form-control" name="txtbarEink" id="txtbarEink">
+
+                </div>
+                <table class="table table-bordered" id="modalTable">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Lot No</th>
+                            <th>Hạn sử dụng</th>
+                            <th>Tổng tồn</th>
+                            <th>Tồn dở dang</th>
+                            <th>Tồng chưa sử dụng</th>
+                            <th>Mã công đoạn</th>
+                        </tr>
+                    </thead>
+                    <tbody id="showContent">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="BtnSave" class="btn btn-primary d-none">Save</button>
+                <span class="spinner-border spinner-border-sm d-none check-load" role="status" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+</div>
+

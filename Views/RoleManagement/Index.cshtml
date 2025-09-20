@@ -1,0 +1,81 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Quyền truy cập";
+    var roleList = ViewData["RoleList"] as List<TblRole>;
+}
+<div class="container">
+    <div class="page-title">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+    <div class="action-add mt-3">
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddRole">Thêm mới</button>
+    </div>
+    <div class="table-all-roles mt-4">
+        <table class="table table-bordered border-dark text-center" style="font-size: 14px;">
+            <thead>
+                <tr>
+                    <th class="align-middle text-center" data-title="STT"></th>
+                    <th class="align-middle text-center" data-title="Quyền"></th>
+                    <th class="align-middle text-center" data-title="Code"></th>
+                    <th class="align-middle text-center" data-title="Mô tả"></th>
+                    <th class="align-middle text-center" data-title="Hành động"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(roleList != null) {
+                    int index = 1;
+                    foreach(var item in roleList) {
+                        <tr>
+                            <td class="align-middle text-center">@index</td>
+                            <td class="align-middle text-center">@item.RoleName</td>
+                            <td class="align-middle text-center">@item.RoleCode</td>
+                            <td class="align-middle text-center">@item.RoleDescriptions</td>
+                            <td class="align-middle text-center">
+                                <a href="javascript:void(0)" data-role_id="@item.IdRole" class="text-decoration-none delete-role text-danger text-center">Xóa</a>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal moda-add-role fade" id="modalAddRole" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm Role mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <div class="input-group">
+                            <label class="form-label">Tên Role:</label>
+                            <input type="text" class="name-role w-100" value="" id="roleName" />
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="input-group">
+                            <label class="form-label">Mã Role:</label>
+                            <input type="text" class="code-role w-100" value="" id="roleCode" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group">
+                            <label class="form-label">Mô tả:</label>
+                            <textarea class="descriptions-role" rows="3" style="width: 100%;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-save-role">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

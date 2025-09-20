@@ -1,0 +1,134 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Theo Dõi Tỷ Lệ Tồn Kho";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var listItemMaterials = ViewData["ListAllMaterials"] as List<MPLUS_GW_WebCore.Controllers.Materials.ListAllMaterials>;
+    var listAllWips = ViewData["ListAllWips"] as List<MPLUS_GW_WebCore.Controllers.Materials.ListAllWIP>;
+    var groupItems = listItemMaterials?.GroupBy(x => x.ProcessName).ToList();
+    var groupWips = listAllWips?.GroupBy(x => x.ProcessName).ToList();
+}
+<div class="text-center page-title">
+    <h1 class="display-6">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+    <ul class="nav nav-tabs" id="tabFlowPercentStock" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="materialTab" data-bs-toggle="tab" data-bs-target="#percentStockMaterial" type="button" role="tab" aria-controls="percentStockMaterial" aria-selected="true">Nguyên Vật Liệu</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="wipsTab" data-bs-toggle="tab" data-bs-target="#percentStockWips" type="button" role="tab" aria-controls="percentStockWips" aria-selected="false">Bán Thành Phẩm</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="tabFlowPercentContent">
+        <div class="tab-pane fade show active" id="percentStockMaterial" role="tabpanel" aria-labelledby="materialTab">
+            @if (groupItems != null)
+            {
+                <table class="table table-bordered border-dark text-center">
+                    <thead>
+                        <tr>
+                            <th class="align-middle">Công đoạn</th>
+                            <th class="align-middle">Loại nguyên vật liệu</th>
+                            <th class="align-middle">Tổng tồn</th>
+                            <th class="align-middle">Tồn chưa có kế hoạch sử dụng</th>
+                            <th class="align-middle">Tỷ lệ NVL sản xuất(%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var group in groupItems)
+                        {
+                            var rowSpan = group.Count();
+                            bool isFirstRow = true;
+                            foreach (var item in group)
+                            {
+                                float totalQtyNoPlanUse = item.StockNotUsed > 0 ? (float)item.StockNotUsed : 0;
+                                float totalStockQty = item.TotalQty > 0 ? (float)item.TotalQty : 0;
+                                int percentQty = (int)((totalStockQty - totalQtyNoPlanUse) / totalStockQty * 100);
+                                <tr>
+                                    @* Chỉ render cột ProcessName ở dòng đầu tiên của nhóm *@
+                                    @if (isFirstRow)
+                                    {
+                                        <td class="align-middle" rowspan="@rowSpan">
+                                            <div>@group.Key</div>
+                                        </td>
+                                    }
+                                    <td class="align-middle"><div>@item.TypeMaterial</div></td>
+                                    <td class="align-middle"><div>@item.TotalQty</div></td>
+                                    <td class="align-middle" style="width: 150px;"><div>@item.StockNotUsed</div></td>
+                                    <td class="align-middle" style="width: 400px;">
+                                        <div class="d-flex content-percent">
+                                            <div class="percent-used">@(percentQty)%</div>
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                     role="progressbar" style="width: @(percentQty)%"
+                                                     aria-valuenow="@item.StockNotUsed">
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </td>
+                                </tr>
+                                isFirstRow = false;
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div class="tab-pane fade" id="percentStockWips" role="tabpanel" aria-labelledby="wipsTab">
+            @if (groupWips != null)
+            {
+                <table class="table table-bordered border-dark text-center">
+                    <thead>
+                        <tr>
+                            <th class="align-middle">Công đoạn</th>
+                            <th class="align-middle">Loại bán thành phẩm</th>
+                            <th class="align-middle">Tổng tồn</th>
+                            <th class="align-middle">Tồn chưa có kế hoạch sử dụng</th>
+                            <th class="align-middle">Tỷ lệ(%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var group in groupWips)
+                        {
+                            var rowSpan = group.Count();
+                            bool isFirstRow = true;
+                            foreach (var item in group)
+                            {
+                                float totalQtyNoPlanUse = item.StockNotUsed > 0 ? (float)item.StockNotUsed : 0;
+                                float totalStockQty = item.TotalQty > 0 ? (float)item.TotalQty : 0;
+                                int percentQty = (int)((totalStockQty - totalQtyNoPlanUse) / totalStockQty * 100);
+                                <tr>
+                                    @* Chỉ render cột ProcessName ở dòng đầu tiên của nhóm *@
+                                    @if (isFirstRow)
+                                    {
+                                        <td class="align-middle" rowspan="@rowSpan">
+                                            <div>@group.Key</div>
+                                        </td>
+                                    }
+                                    <td class="align-middle"><div>@item.TypeMaterial</div></td>
+                                    <td class="align-middle"><div>@item.TotalQty</div></td>
+                                    <td class="align-middle" style="width: 150px;"><div>@item.StockNotUsed</div></td>
+                                    <td class="align-middle" style="width: 400px;">
+                                        <div class="d-flex content-percent">
+                                            <div class="percent-used">@(percentQty)%</div>
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                     role="progressbar" style="width: @(percentQty)%"
+                                                     aria-valuenow="@item.StockNotUsed">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                isFirstRow = false;
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

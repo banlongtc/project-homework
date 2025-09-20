@@ -1,0 +1,782 @@
+﻿body {
+}
+
+.main-content {
+    height: 90vh;
+    overflow: auto;
+}
+
+.admin-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
+
+.header-shadow {
+    background-color: #181516 !important;
+    color: #fff;
+    height: 36px;
+    padding: 0;
+}
+
+.header-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    height: 100%;
+}
+
+.header-shadow a {
+    color: #fff !important;
+}
+
+
+.right-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .right-content .logo-web {
+        width: 32px;
+    }
+
+        .right-content .logo-web img {
+            width: 100%;
+        }
+
+.user-actions .display-name {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: space-between;
+}
+
+    .user-actions .display-name i {
+        font-size: 24px;
+    }
+
+.user-actions .dropdown-menu {
+    background-color: #181516;
+    left: unset;
+    right: 0;
+    margin-top: 0;
+}
+
+    .user-actions .dropdown-menu .dropdown-item a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .user-actions .dropdown-menu .dropdown-item:hover {
+        background-color: #0063ff;
+    }
+
+.content-admin {
+    position: relative;
+    margin-top: 36px;
+}
+
+.show-navs {
+    position: fixed;
+    top: 36px;
+    left: 0;
+    width: 250px;
+    background-color: #181516;
+    height: 100vh;
+    z-index: 1025;
+    font-size: 14px;
+    transition: all .3s ease-in-out;
+    overflow:auto;
+}
+
+    .show-navs.collapse-sidebar {
+        width: 50px;
+    }
+
+    .show-navs a .collapse-menu {
+        transition: all .3s ease-in-out;
+    }
+
+    .show-navs.collapse-sidebar a .collapse-menu {
+        font-size: 0;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .show-navs.collapse-sidebar .right-collapse {
+        transform: rotateY(-180deg);
+    }
+
+    .show-navs a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+.list-nav-admin {
+    margin-top: 15px;
+}
+
+    .list-nav-admin .list-item {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+        .list-nav-admin .list-item .item-link {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .list-nav-admin .list-item i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .list-nav-admin .list-item:hover {
+            background-color: #808080;
+        }
+
+        .list-nav-admin .list-item a.item-link.active {
+            position: relative;
+            background-color: #0063ff;
+        }
+
+            .list-nav-admin .list-item a.item-link.active::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid #fff;
+            }
+
+.collapse-menu-dropdown {
+    width: 100%;
+    background-color: #595555;
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+}
+
+    .collapse-menu-dropdown.show {
+        height: fit-content;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .collapse-menu-dropdown .list-group-item {
+        background-color: transparent;
+    }
+
+        .collapse-menu-dropdown .list-group-item a.item-dropdown {
+            width: 100%;
+            display: block;
+        }
+
+            .collapse-menu-dropdown .list-group-item a.item-dropdown.disabled {
+                pointer-events: none;
+            }
+
+            .collapse-menu-dropdown .list-group-item a.item-dropdown.active {
+                color: #fff;
+                font-weight: bolder;
+            }
+
+    .collapse-menu-dropdown.collapse-fixed {
+        position: absolute;
+        top: 0;
+        opacity: 0;
+        visibility: hidden;
+        width: 200px;
+        left: 100%;
+        transition: all .3s ease-in-out;
+    }
+
+.has-collapse:hover .collapse-menu-dropdown.collapse-fixed {
+    opacity: 1;
+    visibility: visible;
+    height: fit-content;
+}
+
+.left-width {
+    margin-left: 250px;
+    transition: all .3s ease-in-out;
+}
+
+    .left-width.collapse-sidebar {
+        margin-left: 50px;
+    }
+
+.main-content {
+    padding: 25px 0;
+}
+
+
+.list-user table {
+    font-size: 14px;
+}
+
+    .list-user table thead th,
+    .list-user table td {
+        text-align: center !important;
+    }
+
+.status-display {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.btn-action a {
+    padding: 0;
+}
+
+.form-add-user {
+    margin-top: 30px;
+}
+
+    .form-add-user .input-group {
+        margin-top: 15px;
+    }
+
+.input-group-text {
+    border: 1px solid #000;
+}
+
+.form-add-user .input-group input.new-username {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border: 1px solid #000;
+}
+
+.needs-validation .input-group input[type="text"]:not(.new-username),
+.needs-validation .input-group input[type="password"],
+.needs-validation .input-group input[type="email"],
+.needs-validation .input-group select {
+    border: 1px solid #000;
+    height: 40px;
+    outline: none;
+    padding: 0 10px;
+    border-radius: 5px !important;
+    cursor: pointer;
+}
+
+.was-validated .input-group input[type="text"],
+.was-validated .input-group input[type="password"],
+.was-validated .input-group input[type="email"],
+.was-validated .input-group select {
+    border-color: #ff0000;
+}
+
+.option-select {
+    width: 100%;
+    position: relative;
+}
+
+    .option-select select {
+        background-image: none !important;
+    }
+
+    .option-select i {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 10px;
+        font-size: 20px;
+    }
+
+    .option-select.open i {
+        top: 25%;
+        transform: rotate(180deg);
+    }
+
+.update-checksheet .component-layout {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#renderConfigChecksheet .box-custom {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #282828;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+#renderConfigChecksheet input[type="text"] {
+    height: 40px;
+    border: 1px solid #000;
+    padding: 0 10px;
+}
+
+#renderConfigChecksheet .datepickter-component {
+    display: flex;
+    position: relative;
+}
+
+#renderConfigChecksheet .ui-datepicker-trigger {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#selectRole {
+}
+
+.select-roles {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #000;
+    height: 40px;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .select-roles i {
+        font-size: 20px;
+        transition: all .3s ease-in-out;
+    }
+
+    .select-roles.icon-up i {
+        transform: rotate(-180deg);
+    }
+
+.form-add-user .input-group .new-password {
+    padding-right: 40px;
+}
+
+.form-add-user .input-group button.show-password {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+}
+
+.form-add-user .form-label {
+    text-transform: capitalize;
+}
+
+.form-add-user .btn-add-user,
+.form-add-user .btn-update-user {
+    padding: 6px 12px;
+    text-transform: capitalize;
+    border-radius: 5px;
+    line-height: 1;
+    box-shadow: 2px 3px 0 0 #000000;
+    transition: all .5s ease-in-out;
+}
+
+    .form-add-user .btn-add-user:hover,
+    .form-add-user .btn-update-user:hover {
+        box-shadow: none;
+    }
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+.form-add-user .render-new-password {
+    color: #000;
+    height: 40px;
+    background-color: #ccc;
+}
+
+.form-add-user .disabled {
+    opacity: 0.6;
+    background-color: #ccc;
+    pointer-events: none;
+}
+
+.form-add-new textarea,
+.form-add-new input,
+.form-add-new select {
+    height: 40px;
+    border-color: #000;
+    border-radius: 5px !important;
+}
+
+#managerProductionsContent #tableAllProductions tr th,
+#managerProductionsContent #tableAllProductions tr td {
+    text-align: center;
+}
+
+#managerProductionsContent #tableAllProductions a {
+    text-decoration: none;
+    color: #000;
+    font-size: 15px;
+}
+
+#managerProductionsContent #tableAllProductions a i {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    font-size: 20px;
+    color: #0063ff
+}
+
+#updateResultsProcess .update-item {
+    margin-top: 15px;
+}
+
+    #updateResultsProcess .update-item .element-content {
+        height: 70px;
+        display: flex;
+        align-items: center;
+    }
+
+#listWorkOrdersProduction tbody tr.disabled {
+    pointer-events: none;
+}
+
+#listWorkOrdersProduction tbody tr.disabled button.btn-show-download {
+    background-color: #808080;
+    border-color: #808080;
+}
+
+/*Start CSS theo kiểu mới, style tạo form*/
+.control-item {
+    margin-right: 10px;
+}
+
+#formContainer .section.ui-active {
+    border: 1px solid #ccc;
+}
+
+#isRepeatable {
+    width: 24px;
+    height: 24px;
+}
+
+input.disabled {
+    pointer-events: none;
+}
+
+.box-layout {
+    width: 50px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#formContainer .button-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+#formContainer .btn-add-layout {
+    width: 26px;
+    height: 26px;
+    border: 1px solid #00ff21;
+    background-color: #00ff21;
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.layout-default {
+    width: 300px;
+    position: absolute;
+    top: 30px;
+    left: calc(-300px / 2 + 20px);
+    border: 1px dashed #000;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+#addForm .layout-default {
+    padding: 10px;
+}
+
+.content-layout {
+    display: flex;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    padding: 5px 0;
+}
+
+    .content-layout .content-item {
+        font-size: 14px;
+        margin: 5px 0;
+        height: 50px;
+    }
+
+        .content-layout .content-item .btn-add-item {
+            border: 1px solid #ccc;
+            background-color: transparent;
+            height: 100%;
+            width: 100%;
+        }
+
+            .content-layout .content-item .btn-add-item i {
+                width: 100%;
+            }
+
+.layout-default .render-item {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+    .layout-default .render-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .layout-default .render-item .row {
+        margin: 0;
+    }
+
+        .layout-default .render-item .row > * {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+    .layout-default .render-item .col-layout {
+        background-color: #0063ff;
+        height: 30px;
+        border-radius: 5px;
+    }
+
+    .layout-default .render-item:hover .col-layout {
+        background-color: #23c3f7;
+    }
+
+#formContainer .element-content {
+    min-height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #808080;
+    flex-wrap: wrap;
+    padding: 5px 10px;
+    position: relative;
+}
+
+    #formContainer .element-content .element-item {
+        cursor: pointer;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+        #formContainer .element-content .element-item.input-custom {
+            width: 100%;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+            #formContainer .element-content .element-item.input-custom label {
+                margin-bottom: 10px;
+            }
+
+    #formContainer .element-content .btn-add-content {
+        border: 1px solid #0063ff;
+        background-color: #0063ff;
+        color: #fff;
+        border-radius: 50%;
+        line-height: 1;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #formContainer .element-content .action-content {
+        display: flex;
+        justify-content: center;
+        font-size: 12px;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all .3s ease-in-out;
+    }
+
+    #formContainer .element-content .element-item:hover .action-content {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #formContainer .element-content .element-item input,
+    #formContainer .element-content .element-item label {
+        pointer-events: none;
+    }
+
+    #formContainer .element-content .action-content button {
+        border-radius: 50%;
+        line-height: 1;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+            #formContainer .element-content .action-content button.btn-edit-content {
+                border: 1px solid #23c3f7;
+                background-color: #23c3f7;
+                color: #181516;
+            }
+
+            #formContainer .element-content .action-content button.btn-delete-content {
+                border: 1px solid #ff0000;
+                background-color: #ff0000;
+                margin-left: 10px;
+                color: #fff;
+            }
+
+.ui-state-highlight {
+    background: none;
+    color: #000;
+    border: none;
+}
+
+.ui-state-hover {
+    background-color: #23c3f7;
+}
+
+.control-item:last-child {
+    margin-right: 0;
+}
+
+#editElement .row {
+    margin-bottom: 15px;
+}
+
+small {
+    font-size: 12px !important;
+    color: #0063ff;
+    margin-top: 3px;
+}
+
+#editElement .invalid-value {
+     font-size: 12px;
+}
+
+#editElement .modal-body input,
+#editElement .modal-body select {
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+#editElement #fieldNameMapping.disabled {
+    opacity: 0.5;
+}
+
+.create-template {
+    position: relative;
+}
+
+.edit-section {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .5s ease-in-out;
+    display: flex;
+}
+
+.btn-delete-section {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    line-height: 1;
+    padding: 0;
+    justify-content: center;
+    font-size: 14px;
+    color: #fff;
+    align-items: center;
+    background-color: #ff0000;
+    border-radius: 50%;
+    border: 1px solid #ff0000;
+}
+
+.btn-edit-section {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    line-height: 1;
+    padding: 0;
+    justify-content: center;
+    font-size: 14px;
+    color: #fff;
+    align-items: center;
+    background-color: #0063ff;
+    border-radius: 50%;
+    border: 1px solid #0063ff;
+    margin-right: 5px;
+}
+
+#formContainer .section:hover .edit-section {
+    opacity: 1;
+    visibility: visible;
+}
+
+#formContainer {
+    width: 100%;
+    min-height: 400px;
+    border: 1px solid #000;
+}
+
+    #formContainer .section {
+        min-height: 60px;
+        margin-top: 15px;
+        padding: 15px 15px 0 15px;
+        position: relative;
+    }
+
+        #formContainer .section:first-child {
+            margin-top: 0;
+        }
+
+        #formContainer .section p {
+            min-height: 60px;
+            margin: 0;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+
+    #formContainer .form-label {
+        margin-bottom: 0;
+    }
+@keyframes fadeInLeft {
+    from {
+        transform: translate3d(-90px, 0, 0);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}

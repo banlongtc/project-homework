@@ -1,0 +1,94 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Master Item Number";
+    Layout = "_Admin";
+    var Listitem = ViewData["ListItem"] as List<TblMasterProductItem>;
+}
+<h4 style="color:#008d61; font-weight:600">Master Item Number</h4><br />
+
+<div style="float:left">
+    <button type="button" id="Btnthemitem" class="btn btn-primary" style="background-color:cadetblue; border-color:cadetblue; margin:20px;margin-left:0">
+        Thêm mới
+    </button>
+</div>
+
+<table class="table table-hover" style="font-size:small">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Item code</th>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Remark</th>
+            <th scope="col" width="90px">Sửa & Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Listitem != null)
+        {
+            foreach (var it in Listitem)
+            {
+                <tr class="table-light">
+                    <td class="iditem" data-id="@it.IdItem"> @it.IdItem</td>
+                    <td class="itemcode" data-itemcode="@it.ItemCode"> @it.ItemCode</td>
+                    <td class="itemname" data-itemname="@it.ItemName"> @it.ItemName</td>
+                    <td class="itemtype" data-itemtype="@it.ItemType"> @it.ItemType</td>
+                    <td class="unit" data-unit="@it.Unit"> @it.Unit</td>
+                    <td class="remark" data-remark="@it.Remarks"> @it.Remarks</td>
+                    <td class="align-middle text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="action-item text-decoration-none" id="Edititem"><i class="bx bx-edit"></i></a>
+                            <a class="action-item text-decoration-none text-danger" id="Deleteitem"><i class="bx bx-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="modal fade" id="Popup_Themitem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lbtditem" style="color:darkblue;font-weight:600"></h5>
+                <button class="btn-close-modal btn" data-bs-dismiss="modal" aria-label="Close" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-body">
+                <div id="noticeContainer"></div>
+                <label id="Lbiditem"></label>
+                <div style="margin-bottom:10px">
+                    <label>Item Code: </label>
+                    <input type="text" class="form-control" id="txtitemcode">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Tên Item: </label>
+                    <input type="text" class="form-control" id="txtnameitem">
+                </div>
+                <div style="margin-bottom:10px;width:250px">
+                    <label>Type:</label>
+                    <select class="form-select" id="typeitem" name="typeitem">
+                        <option>RM</option>
+                        <option>WIP</option>
+                        <option>FG</option> 
+                    </select>
+                </div>
+                <div style="margin-bottom:10px; width:250px">
+                    <label>Unit: </label>
+                    <input type="text" class="form-control" name="unititem" id="unititem">
+                </div>
+                <div style="margin-bottom:10px">
+                    <label>Remark: </label>
+                    <input type="text" class="form-control" id="remarkitem">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="BtnSave_item" class="btn btn-primary">Lưu</button>
+                <span class="spinner-border spinner-border-sm d-none check-load" role="status" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+</div>

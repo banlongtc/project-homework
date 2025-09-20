@@ -1,0 +1,363 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Kiểm tra trước";
+    var userLogin = Context.Session.GetString("User ID")?.ToString();
+    var checksheetCondition = ViewData["ChecksheetCondition"];
+    var checksheetPreCheck = ViewData["ChecksheetPreCheck"];
+    var listFrequencies = ViewData["ListFrequencies"] as List<TblTansuat>;
+}
+<div class="info-box-operations">
+    <div class="title-section text-center mt-3">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="content-read-workorder">
+        <div class="info-wrapper">
+            <div class="title-info"><h5>Thông tin lô sản xuất: </h5></div>
+            <div class="w-100 d-flex justify-content-evenly" id="lotProdContent"></div>
+        </div>
+        <div class="confirm-condition">
+            <div class="confirm-condition-process"></div>
+        </div>
+        <div class="group-btn mt-3" id="groupBtnActions">
+        </div>
+        <div class="list-trays-container mt-3" id="listContentEntered">
+        </div>
+    </div>
+
+    @* Đọc mã chỉ thị sản xuất *@
+    <div class="modal fade" id="readWorkOrderQR" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="readWorkOrderLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="readWorkOrderLabel">Đọc mã chỉ thị</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label for="qrWOValue" class="col-sm-3 col-form-label">Mã chỉ thị:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="valueWorkOrder" id="qrWOValue" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="notice-error text-danger"></div>
+                </div>
+                <div class="modal-footer d-none">
+                    <button type="button" class="btn btn-primary btn-confirm-data" id="confirmWorkOrder">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal hiển thị tần suất kiểm tra điều kiện *@
+    <div class="modal fade" id="showFrequencyConditions" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="showFrequencyConditionsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="showFrequencyConditionsLabel">Xác nhận tần suất đọc điều kiện tại vị trí hiện tại</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if (listFrequencies != null)
+                    {
+                        <div class="row">
+                            @foreach (var item in listFrequencies)
+                            {
+                                <div class="col-4">
+                                    <div class="frequency-item">
+                                        <div class="form-check">
+                                            <input type="radio" id="checkFrequency@(item.Id)" data-frequencyid="@(item.Id)" name="CheckFrequency" class="form-check-input" />
+                                            <label class="button-check" for="checkFrequency@(item.Id)">@(item.Name)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary disabled" id="btnReadCondition">Đọc điều kiện</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal hiển thị kiểm tra thiết bị cho thao tác kiểm tra trước *@
+    <div class="modal fade" id="showConditionPreOperation" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="showLabelPreOperation" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center w-100">
+                        <h6 class="modal-title" id="showLabelPreOperation">Kiểm tra điều kiện dụng cụ <strong>Kiểm tra trước</strong></h6>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formConditions"></form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div class="checksheet-used">
+                        <span id="checksheetCodeCondition" class="checksheet-condition"></span>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-confirm-preoperation d-none" id="btnSaveCondition">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Đọc mã nguyên vật liệu *@
+    <div class="modal fade" id="readLotMaterials" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="readLotMaterialLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="readLotMaterialLabel">Đọc phiếu nguyên vật liệu</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label for="qrMaterialValue" class="col-sm-4 col-form-label">Mã phiếu nguyên vật liệu:</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="valueMaterial" id="qrMaterialValue" class="form-control" />
+                            <button class="btn-count-qr d-none"></button>
+                        </div>
+                    </div>
+                    <form id="formReadMaterials" class="mt-3"></form>
+                    <div class="info-productions mt-2"></div>
+                    <div class="info-materials mt-3"></div>
+                    <div class="mt-3">
+                        <div class="form-check">
+                            <label class="form-check-label" for="remarkOperations0">Có bất thường?</label>
+                            <input class="form-check-input checkAbnormal" type="checkbox" id="remarkOperations0" name="checkAbnormal" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-start">
+                    <button type="button" class="btn btn-primary btn-confirm-material disabled" id="btnConfirmWireHasBeenWorked">Thao tác với dây dẫn</button>
+                    <div class="checksheet-used d-none">
+                        <span id="checksheetCodePreCheck" class="checksheet-operation"></span>
+                    </div>
+                    <button type="button" class="btn btn-warning ms-3 btn-pause-abnormal d-none" id="btnPauseAbnormal0">Xác nhận bất thường</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal hiển thị xác nhận thao tác *@
+    <div class="modal fade" id="confirmWireHasBeenWorked" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="confirmWorkedLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="confirmWorkedLabel">Xác nhận đã thao tác với dây dẫn?</h5>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="confirm-operation d-none">
+                        <div class="row">
+                            <div class="col-sm-8 ">
+                                <label for="confirmHasWorkedValue" class="form-check-label">Xác nhận đã thao tác:</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="checkbox" name="ConfirmHasWorkedValue" id="confirmHasWorkedValue" class="form-check-input" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="enter-qty-processing mt-3 d-none">
+                        <div class="row">
+                            <div class="col-sm-8 ">
+                                <label for="qtyProcessingRealTime" class="form-label">Số lượng đã thao tác:</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="number" name="QtyProcessingRealTime" id="qtyProcessingRealTime" class="form-control border-1 border-dark" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="form-check">
+                            <label class="form-check-label" for="remarkOperations1">Có bất thường?</label>
+                            <input class="form-check-input checkAbnormal" type="checkbox" id="remarkOperations1" name="checkAbnormal" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-end">
+                    <button type="button" class="btn btn-warning ms-3 btn-pause-abnormal d-none" id="btnPauseAbnormal1">Xác nhận bất thường</button>
+                    <button type="button" class="btn btn-primary btn-confirm-material disabled" id="confirmDataTray">Nhập kết quả sản xuất</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Thông báo đang đợi leader xác nhận *@
+    <div class="modal fade" id="alertPauseOperation" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="alertPauseOperationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="alertPauseOperationLabel">Thông báo</h5>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger fst-italic">
+                        Chỉ thị này đang trong quá trình đợi Leader xác nhận lý do bất thường.
+                        Vui lòng không thực hiện gì trong khi chờ.
+                        Xin cảm ơn!
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-target="#leaderComfirmedAbnormal" data-bs-toggle="modal">Leader xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal leader xác nhận bất thường *@
+    <div class="modal fade" id="leaderComfirmedAbnormal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="leaderComfirmedAbnormalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="leaderComfirmedAbnormalLabel"></h5>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="enter-password-leader">
+                        <div class="row mb-2">
+                            <label for="leaderEmployeeNo" class="col-sm-6 col-form-label">Mã nhân viên:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="leaderEmployeeNo" name="LeaderEmployeeNo" class="form-control" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="passwordLeaderConfirmedLv2" class="col-sm-6 col-form-label">Mật khẩu cấp 2:</label>
+                            <div class="col-sm-6">
+                                <input type="password" id="passwordLeaderConfirmedLv2" name="PasswordLv2" class="form-control" autocomplete="current-password" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="leaderConfirmReason"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary disabled" id="btnPauseAndNewLot">Tạm dừng và chuyển lô</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal hiển thị nhập đạt lỗi *@
+    <div class="modal fade" id="enterSuccessErrorTray" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="enterValueLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="enterValueLabel"></h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">Số lượng đã thao tác: <span id="qtyProcessing"></span></div>
+                    <form class="pass-error-container" id="formEnterResults">
+                        <div class="error-container"></div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div class="checksheet-used">
+                        <span class="checksheet-operation" id="checksheetCodePreCheckFinal"></span>
+                    </div>
+                    <div class="action-item">
+                        <button type="button" id="countErrors" class="d-none"></button>
+                        <button type="button" id="saveDataForPreOperation" class="btn btn-primary btn-enter-data disabled">Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal hiển thị các loại lỗi *@
+    <div class="modal fade" id="showChildErrors" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="showChildErrorsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="showChildErrorsLabel">Danh sách các loại lỗi</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-other-errors" id="listErrors"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-confirm-data disabled" id="confirmCountErrors">Xác nhận số lỗi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@* Modal xác nhận lỗi để đọc lại đường kính đuôi dây dẫn*@
+@*     <div class="modal fade" id="confirmErrorDiameter" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="confirmErrorDiameterLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="confirmErrorDiameterLabel">Xác nhận đọc lại đường kính đuôi</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="enter-password-leader">
+                        <div class="row">
+                            <label for="confirmPasswordLeader" class="col-sm-6 col-form-label">Mật khẩu leader xác nhận:</label>
+                            <div class="col-sm-6">
+                                <input type="password" id="confirmPasswordLeader" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="notice"></div>
+                    </div>
+                    <div class="enter-remarks-text d-none">
+                        <div class="input-group">
+                            <label for="remarksContentErrorDiameter" class="col-sm-3 col-form-label">Lý do lỗi:</label>
+                            <textarea rows="4" id="remarksContentErrorDiameter"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-confirm-data d-none" id="confirmSaveNote">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    @* Modal hiển thị đọc mã eink *@
+    <div class="modal fade" id="readEinkValue" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="readEinkValueLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center">
+                        <h5 class="modal-title" id="readEinkValueLabel">Đọc mã Eink kết nối</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label for="einkTray" class="col-sm-3 col-form-label">Mã E-Ink:</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="einkTray" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="notice-error text-danger"></div>
+                </div>
+                <div class="modal-footer d-none">
+                    <button type="button" class="btn btn-primary btn-confirm-data" id="confirmEink">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

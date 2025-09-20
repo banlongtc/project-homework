@@ -1,0 +1,127 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Chi tiết tiêu chuẩn";
+    Layout = "_Admin";
+    var ListdetailTc = ViewData["ListdetailTC"] as List<TblDetailTc>;
+    var Listc = ViewData["Listc"] as List<TblMasterTc>;
+}
+<h4 style="color:#008d61; font-weight:600">Chi tiết tiêu chuẩn</h4>
+<div style="float:left">
+    <button type="button" id="Btnthem_detc" class="btn btn-primary" style="background-color:cadetblue; border-color:cadetblue; margin:20px;margin-left:0">
+        Thêm mới
+    </button>
+</div>
+<br />
+<table class="table table-hover" style="font-size:small">
+    <thead>
+        <tr>
+            <th scope="col">ID </th>
+            <th scope="col">Tên tiêu chuẩn</th>
+            <th scope="col">Mô tả</th>
+            <th scope="col">Text</th>
+            <th scope="col">Int</th>
+            <th scope="col">Decimal</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Value unit</th>
+            <th scope="col">ID cha</th>
+            <th scope="col" width="90px">Sửa & Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ListdetailTc != null)
+        {
+            foreach (var it in ListdetailTc)
+            {
+                <tr class="table-light">
+                    <td class="detcid" data-detcid="@it.IdDetail"> @it.IdDetail</td>
+                    <td class="detcname" data-detcname="@it.TenTc"> @it.TenTc</td>
+                    <td class="detcmota" data-detcmota="@it.MoTa"> @it.MoTa</td>
+                    <td class="detctext" data-detctext="@it.ValueText"> @it.ValueText</td>
+                    <td class="detcint" data-detcint="@it.ValueInt"> @it.ValueInt</td>
+                    @if (it.ValueDecimal != null)
+                    {
+                        <td class="detcdecimal" data-detcdecimal="@it.ValueDecimal">
+                            @it.ValueDecimal.Value.ToString("G29")
+                        </td>
+                    }
+                    <td class="detcunit" data-detcunit="@it.Unit"> @it.Unit</td>
+                    <td class="detcvaunit" data-detcvaunit="@it.ValueText"> @it.ValueUnit</td>
+                    <td class="deidtc" data-deidtc="@it.IdTc"> @it.IdTc</td>
+                    <td class="align-middle text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="action-item text-decoration-none" id="Editdetc123"><i class="bx bx-edit"></i></a>
+                            <a class="action-item text-decoration-none text-danger" id="Deletedetc"><i class="bx bx-trash"></i></a>                              
+                        </div>
+                    </td>                   
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="modal fade" id="Popup_Themdetc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lbtddetc" style="color:darkblue;font-weight:600"></h5>
+                <button class="btn-close-modal btn" data-bs-dismiss="modal" aria-label="Close" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-body">
+                <div id="noticeContainer"></div>
+                <label id="Lbiddetc"></label>
+
+                <div style="margin-bottom:10px; width:280px; float:left">
+                    <label>Chọn Mã Tiêu chuẩn cha: </label>
+                    <select class="form-select" id="dropcha">
+                        <option></option>
+                        @if (Listc != null)
+                        {
+                            foreach (var item in Listc) 
+                            {
+                                <option value="@item.IdTc">@item.IdTc: @item.TenTieuchuan </option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div style="margin-bottom:10px; width:410px; float:left; margin-left:30px">
+                    <label>List chi tiết Tiêu chuẩn hiện có: </label>
+                    <select class="form-select" id="dropdetail">                      
+                    </select>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Tên Tiêu chuẩn: </label>
+                    <input type="text" class="form-control" id="txtdename">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Mô tả Tiêu chuẩn: </label>
+                    <input type="text" class="form-control" id="txtdemota">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Giá trị dạng chữ (abc...): </label>
+                    <input type="text" class="form-control" id="txtdetext">
+                </div>
+                <div style="margin-bottom:10px;width:250px">
+                    <label>Giá trị dạng số nguyên (vd: 1,2,3): </label>
+                    <input type="text" class="form-control" id="txtdeint">
+                </div>
+                <div style="margin-bottom:10px;width:250px">
+                    <label>Giá trị dạng số phảy (vd: 1.2): </label>
+                    <input type="text" class="form-control" id="txtdedecimal">
+                </div>               
+                <div style="margin-bottom:10px;">
+                    <label>Unit (vd: s,mpa...): </label>
+                    <input type="text" class="form-control" id="txtdeunit">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Giá trị Unit (vd: G,P...): </label>
+                    <input type="text" class="form-control" id="txtdevalunit">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="BtnSave_detc" class="btn btn-primary">Lưu</button>
+                <span class="spinner-border spinner-border-sm d-none check-load" role="status" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+</div>

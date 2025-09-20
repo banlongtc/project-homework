@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Import";
+    Layout = "_Admin";   
+    var Listitem = ViewData["Listitem"] as List<TblMasterProductItem>;
+    var Listcd = ViewData["Listcd"] as List<TblLocation>;
+
+}
+@{
+    if (TempData["SuccessMess"] != null)
+    {
+        <div id="success-message" class="alert alert-success">
+            @TempData["SuccessMess"]
+        </div>
+    }
+    else if (TempData["ErrorMess"] != null)
+    {
+        <div id="error-message" class="alert alert-danger">
+            @TempData["ErrorMess"]
+        </div>
+    }
+}
+<div class="container" style="padding-bottom:265px">
+<h4 style="color:#008d61; font-weight:600">Import dữ liệu</h4>
+<br />
+<form enctype="multipart/form-data" style="float:left;" asp-action="Btnimpo_Click" asp-controller="Import" method="post">
+    <div style="float:left">
+        <label for="exampleSelect1" style="margin-top:0">Chọn loại Import</label>
+        <select class="form-select" id="mySelect1" name="SelectedValue" style="float:left">
+            <option></option>
+            <option value="1">Import Item Master</option>
+            <option value="2">Import Item - Location</option>
+            <option value="3">Import Tiêu chuẩn Master</option>
+            <option value="4">Import Chi tiết tiêu chuẩn Master</option>
+            <option value="5">Import Item - Tiêu chuẩn thông số</option>
+            <option value="6">Import Master Máy</option>
+            <option value="7">Import Mã máy - Tiêu chuẩn máy</option>
+            <option value="8">Import Master Error</option>
+            <option value="9">Import Tần suất theo vị trí</option>
+
+        </select>
+        <div class="form-group" style="margin-bottom:10px">
+            <label for="FileUpload1">Chọn file:</label>
+            <input class="form-control" type="file" id="FileUpload1" name="FileUpload1">
+        </div>
+    </div>
+    <div style="float:left">
+        <button type="submit" class="btn btn-primary" id="Btn_impo"
+                style="background-color:cadetblue; border-color:cadetblue;margin:22px">
+            Import Item
+        </button>
+    </div>
+    <br />
+    <div style="float:left">
+        <label for="exampleSelect1" >Chọn Template</label>
+        <select class="form-select" name="SelectedTem">
+            <option></option>
+            <option value="1">Template (Item Master)</option>
+            <option value="2">Template (Item - Location)</option>
+            <option value="3">Template (Tiêu chuẩn Master)</option>
+            <option value="4">Template (Chi tiết tiêu chuẩn Master)</option>
+            <option value="5">Template (Item - Tiêu chuẩn thông số)</option>
+            <option value="6">Template (Master Máy)</option>
+            <option value="7">Template (Mã máy - Tiêu chuẩn máy)</option>
+            <option value="8">Template (Master Error)</option>
+        </select>
+    </div>
+    <div style="float:left">
+        <button id="Btnex_item" class="btn btn-primary" type="submit" asp-controller="Import" asp-action="Export" formmethod="post"
+                style="background-color:darkgreen; border-color:darkgreen;margin:22px">
+            Tải Template
+        </button>       
+    </div>
+</form>
+</div>
+
+

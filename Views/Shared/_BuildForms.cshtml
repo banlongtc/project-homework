@@ -1,0 +1,152 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="box-content-design">
+    <div class="d-flex justify-content-between">
+        <h6 class="text-center w-100">Thêm content</h6>
+        <button class="btn-close-box"><span class="bx bx-x"></span></button>
+    </div>
+
+    <hr />
+    <div class="row">
+        <div class="col-6">
+            <div class="item-content" data-type="heading">
+                <div class="icon">
+                    <i class='bx bx-heading'></i>
+                </div>
+                <div class="text text-center">
+                    Tiêu đề
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="item-content" data-type="paragraph">
+                <div class="icon">
+                    <i class='bx bx-text'></i>
+                </div>
+                <div class="text text-center">
+                    Text
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-6">
+            <div class="item-content" data-type="input">
+                <div class="icon">
+                    <img src="~/images/input-text.png" alt="Alternate Text" />
+                </div>
+                <div class="text text-center">
+                    Input
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="item-content" data-type="select">
+                <div class="icon">
+                    <img src="~/images/dropdown-arrow.png" alt="Alternate Text" />
+                </div>
+                <div class="text text-center">
+                    Dropdown
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-6">
+            <div class="item-content" data-type="textarea">
+                <div class="icon">
+                    <img src="~/images/input-text.png" alt="Alternate Text" />
+                </div>
+                <div class="text text-center">
+                    Text Area
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="item-content" data-type="button">
+                <div class="icon">
+                    <span style="border: 1px solid #0064ff;font-size: 12px;padding: 5px 15px;border-radius: 5px;">Button</span>
+                </div>
+                <div class="text text-center">
+                    Button
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="box-custom-content">
+    <div class="text-end">
+        <button class="btn-close-box"><span class="bx bx-x"></span></button>
+    </div>
+    <nav>
+        <div class="nav nav-tabs" id="navTabCustomContent" role="tablist">
+            <button class="nav-link active" id="navContentTab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="nav-content" aria-selected="true">Content</button>
+            <button class="nav-link" id="navStyleTab" data-bs-toggle="tab" data-bs-target="#nav-styles" type="button" role="tab" aria-controls="nav-styles" aria-selected="false">Style</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="navContent">
+        <div class="tab-pane fade show active" id="nav-content" role="tabpanel" aria-labelledby="navContentTab">
+            <div id="tabContent"></div>
+            <div class="save-data text-end">
+                <button class="btn btn-sm btn-danger me-2" id="deleteElement">Xóa</button>
+                <button class="btn btn-sm btn-secondary" id="closeBoxContent">Đóng</button>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-styles" role="tabpanel" aria-labelledby="navStyleTb">
+            <div class="save-data text-end">
+                <button class="btn btn-sm btn-primary" id="closeBox">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="box-custom-section">
+    <nav>
+        <div class="nav nav-tabs" id="tabSections" role="tablist">
+            <button class="nav-link active" id="globalSection" data-bs-toggle="tab" data-bs-target="#sectionContent" type="button" role="tab" aria-controls="sectionContent" aria-selected="true">Section</button>
+            <button class="nav-link" id="advancedStyleTab" data-bs-toggle="tab" data-bs-target="#advancedStyleContent" type="button" role="tab" aria-controls="advancedStyleContent" aria-selected="false">Advanced</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="sectionStyles">
+        <div class="tab-pane fade show active" id="sectionContent" role="tabpanel" aria-labelledby="globalSection">
+            <div class="list-items">
+                <div class="item id-section mt-3">
+                    <label for="customSectionId" class="label-text mb-2">
+                        Id:
+                    </label>
+                    <div class="input-value">
+                        <input type="text" id="customSectionId" class="form-control w-100" value="" />
+                    </div>
+                </div>
+                <div class="item class-section mt-3">
+                    <label for="customClassSection" class="label-text mb-2">
+                        Class:
+                    </label>
+                    <div class="input-value">
+                        <input type="text" id="customClassSection" class="form-control w-100" value="" />
+                    </div>
+                </div>
+                <div class="item section-width mt-3">
+                    <label for="customWidthSection" class="label-text mb-2">
+                        Độ rộng(%):
+                    </label>
+                    <div class="input-value d-flex justify-content-between align-items-center">
+                        <input type="text" id="customWidthSection" class="form-control w-100" />
+                        <span class="ms-1 unit-width">%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="save-data text-end mt-3">
+                <button class="btn btn-sm btn-primary" id="saveCustomSection">Lưu</button>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="advancedStyleContent" role="tabpanel" aria-labelledby="advancedStyleTab">
+            <div class="save-data text-end">
+                <button class="btn btn-sm btn-primary" id="closeBox">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

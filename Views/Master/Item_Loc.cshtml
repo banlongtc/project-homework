@@ -1,0 +1,39 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Master Item - Location";
+    Layout = "_Admin";
+    var Listitloc = ViewData["ListitLoc"] as List<TblItemLocation>;
+}
+<h4 style="color:#008d61; font-weight:600">Master Item - Location</h4>
+<br />
+<table class="table table-hover" style="font-size:small">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">ItemCode</th>
+            <th scope="col">LocationCode</th>            
+            <th scope="col" width="90px">Sửa & Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Listitloc != null)
+        {
+            foreach (var it in Listitloc)
+            {
+                <tr class="table-light">
+                    <td class="iditloc" data-idloc="@it.Id"> @it.Id</td>
+                    <td class="itlocitem" data-loccode="@it.ItemCode"> @it.ItemCode</td>
+                    <td class="itlocloc" data-locname="@it.LocationCode"> @it.LocationCode</td>                 
+                    <td class="align-middle text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="action-item text-decoration-none" id="Edititloc"><i class="bx bx-edit"></i></a>
+                            <a class="action-item text-decoration-none text-danger" id="Deleteitloc"><i class="bx bx-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

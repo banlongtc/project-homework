@@ -1,0 +1,103 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Gia công đầu mút";
+    var listFrequencies = ViewData["ListFrequencies"] as List<TblTansuat>;
+}
+<div class="container-fluid mt-4">
+    <div class="title-section text-center">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="info-position-working d-flex mt-3 mb-3">
+        <div class="title-info">
+            <h6>Thông tin chủng loại sản xuất:</h6>
+            <span id="detailPosition"></span>
+        </div>
+    </div>
+    <div class="content-read-workorder">
+        <div class="info-wrapper">
+            <div class="title-info">
+                <h6>Thông tin lô sản xuất: </h6>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="showFrequencyConditions" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="showFrequencyConditionsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="showFrequencyConditionsLabel">Xác nhận tần suất đọc điều kiện tại vị trí hiện tại</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (listFrequencies != null)
+                {
+                    <div class="row">
+                        @foreach (var item in listFrequencies)
+                        {
+                            <div class="col-4">
+                                <div class="frequency-item">
+                                    <div class="form-check">
+                                        <input type="radio" id="checkFrequency@(item.Id)" data-frequencyid="@(item.Id)" name="CheckFrequency" class="form-check-input" />
+                                        <label class="button-check" for="checkFrequency@(item.Id)">@(item.Name)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary disabled" id="btnReadCondition">Đọc điều kiện</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* *@
+<div class="modal fade" id="readQRTrayData" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="readWorkOrderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="readQRTrayDataLabel">Đọc mã QR code của máng</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label for="qrWOValue" class="col-sm-3 col-form-label">Mã QR code máng:</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="QRTrayData" id="QRTraydata" class="form-control" />
+                    </div>
+                </div>
+                <div class="notice-error text-danger"></div>
+            </div>
+            <div class="modal-footer d-none">
+                <button type="button" class="btn btn-primary btn-confirm-data" id="confirmWorkOrder">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="conditionGuideWireProduction" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="labelGWProd" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center w-100">
+                    <h6 class="modal-title" id="labelGWProd">Kiểm tra điều kiện tại vị trí <strong>Gia công đâu mút</strong></h6>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="conditions-content">
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-primary btn-confirm-preoperation disabled">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>

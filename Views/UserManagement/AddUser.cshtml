@@ -1,0 +1,116 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Thêm người dùng";
+    var roleList = ViewData["RoleList"] as List<TblRole>;
+    var sectionList = ViewData["SectionList"] as List<TblSection>;
+    var processList = ViewData["ProcessList"] as List<TblLocation>;
+}
+
+<div class="container">
+    <h2>@ViewData["Title"]</h2>
+    <p>Tạo mới nhân viên khi có nhân viên mới cần truy cập vào hệ thống. Đảm bảo thông tin đúng với yêu cầu.</p>
+
+    <div class="form-add-user">
+        <div class="message-alt"></div>
+        <form class="row mt-3 needs-validation" method="post">
+            <div class="col-6">
+                <div class="align-items-center">
+                    <label class="form-label" for="username">Tên đăng nhập(<span class="text-danger">*</span>): </label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="inputGroupPrepend2">GW</span>
+                        <input type="text" id="username" name="Username" class="form-control new-username" aria-describedby="inputGroupPrepend2" placeholder="Tên đăng nhập" required />
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group align-items-center">
+                    <label class="form-label" for="FullName">Tên hiển thị:</label>
+                    <input class="form-control new-fullname w-100" id="Displayname" placeholder="Tên hiển thị khi đăng nhập" name="FullName" type="text" value="">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group align-items-center">
+                    <label class="form-label" for="EmployeeNo">Mã nhân viên(<span class="text-danger">*</span>):</label>
+                    <input class="form-control new-employeeno w-100" id="EmployeeNo" placeholder="Mã nhân viên" name="EmployeeNo" type="text" value="" required>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group align-items-center">
+                    <labe class="form-label" l for="PasswordHash">Mật khẩu(<span class="text-danger">*</span>):</labe>
+                    <div class="d-flex position-relative align-items-center w-100">
+                        <input class="form-control new-password w-100" id="PasswordHash" name="PasswordHash" placeholder="Mật khẩu đăng nhập là mã nhân viên" type="password" value="" required>
+                        <button class="input-field show-password"><i class="bx bx-show"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group align-items-center">
+                    <label class="form-label" for="Email">Email(<span class="text-danger">*</span>):</label>
+                    <input class="form-control new-email w-100" id="Email" name="Email" placeholder="Email" type="email" value="" required>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group select-role-container align-items-center">
+                    <label class="form-label" for="selectRole">Chọn quyền(<span class="text-danger">*</span>):</label>
+                    <div class="option-select">
+                        <select class="form-select" name="RoleID" id="selectRole" required>
+                            <option value="">--Chọn quyền truy cập--</option>
+                            @if (roleList != null)
+                            {
+                                foreach (var item in roleList)
+                                {
+                                    <option value="@item.IdRole">@item.RoleName</option>
+                                }
+                            }
+                        </select>
+                        <i class="bx bxs-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group align-items-center">
+                    <label class="form-label" for="selectSection">Bộ phận(<span class="text-danger">*</span>):</label>
+                    <div class="option-select">
+                        <select class="form-select" name="SectionID" id="selectSection" required>
+                            <option value="">--Chọn bộ phận--</option>
+                            @if (sectionList != null)
+                            {
+                                foreach (var item in sectionList)
+                                {
+                                    <option value="@item.IdSection">@item.SectionName</option>
+                                }
+                            }
+                        </select>
+                        <i class="bx bxs-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group align-items-center">
+                    <label class="form-label" for="selectProcess">Công đoạn(<span class="text-danger">*</span>):</label>
+                    <div class="option-select">
+                        <select class="form-select" name="LocationID" id="selectProcess">
+                            <option value="">--Chọn công đoạn--</option>
+                            @if (processList != null)
+                            {
+                                foreach (var item in processList)
+                                {
+                                    <option value="@item.IdLocation">@item.LocationName (@item.LocationCode)</option>
+                                }
+                            }
+                        </select>
+                        <i class="bx bxs-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary btn-add-user">Thêm</button>
+                <div class="spinner-border text-primary d-none"></div>
+            </div>
+        </form>
+       
+    </div>
+</div>

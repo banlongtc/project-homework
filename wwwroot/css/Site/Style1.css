@@ -1,0 +1,23 @@
+﻿.Box1 {
+    width: 18%;
+    float: left;
+    margin: 2px 5px 25px 8px
+}
+    .Box1 .form-label mt-4{
+        margin-top:0px;
+    }
+
+    .Box2 {
+        width: 20%;
+        float: left;
+        margin: 56px 5px 5px 8px;
+        align-items: center
+    }
+
+.Imp1{
+    float:left;
+}
+.Imp2{
+    float:left;
+    margin:0 5px 0 10px;
+}

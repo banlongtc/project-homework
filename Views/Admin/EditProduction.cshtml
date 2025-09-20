@@ -1,0 +1,55 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Xem và In dữ liệu";
+    string? workOrder = ViewData["WorkOrderProduction"]?.ToString();
+    string? jsonEntriesData = ViewData["JsonValueEntries"]?.ToString();
+}
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <div class="sub-title mt-3">
+        <p>Cập nhật thông tin kết quả sản xuất của chỉ thị: @(workOrder)</p>
+    </div>
+    <div class="content-info-workorder">
+        <div class="content-title d-flex justify-content-between">
+            <h4>Thông tin cơ bản các máng đã thực hiện trên chỉ thị này</h4>
+            <div class="reload-content">
+                <button class="btn btn-success btn-reload-content d-flex align-items-center"><i class="bx bx-refresh"></i><span class="ms-2">Làm mới</span></button>
+            </div>
+        </div>
+        <input type="hidden" id="jsonEntriesData" value="@jsonEntriesData" />
+        <div class="mt-3" id="listEntriesData">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateResultsProcess" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="updateResultsProcessLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="updateResultsProcessLabel">Cập nhật lại kết quả của: <span id="trayNumber"></span></h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="error-container"></div>
+                <div class="old-error-others d-none mt-2">
+                    <p class="mb-2">Danh sách lỗi khác</p>
+                    <ul class="nav" id="listOldOtherErrors">
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <div class="checksheet-used">
+                    <span class="value-checksheet" id="checksheetCodePreCheckFinal"></span>
+                </div>
+                <div class="action-item">
+                    <button type="button" id="countErrors" class="d-none"></button>
+                    <button type="button" id="saveDataForPreOperation" class="btn btn-primary btn-enter-data disabled">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

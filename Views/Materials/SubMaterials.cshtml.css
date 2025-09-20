@@ -1,0 +1,40 @@
+﻿.addition-material {
+    padding-top: 20px;
+}
+
+.addition-material,
+.addition-material .btn {
+    font-size: 14px;
+}
+
+.addition-material .head-table {
+    margin-bottom: 15px;
+}
+
+.addition-material .qty-content input {
+    height: 100%;
+}
+
+.addition-material .table .th-table-data th.w-100px {
+    width: 100px;
+}
+
+.addition-material .table .input-group {
+    width: 100px;
+}
+
+    .addition-material .table .input-group.disabled {
+        cursor: not-allowed;
+    }
+
+        .addition-material .table .input-group.disabled input {
+            pointer-events: none;
+        }
+
+.addition-material .table input {
+    width: 100%;
+}
+
+.button-close .btn-close-modal {
+    font-size: 30px;
+}

@@ -1,0 +1,195 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Đóng Gói";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var listWoProductions = ViewData["ListWoProduction"] as List<ListWoProduction>;
+    var listWoDivLines = ViewData["ListWoDivLine"] as List<ListWoDivLine>;
+    var listDivLineForLot = ViewData["listDivLineForLot"] as List<ListDivLineForLot>;
+    var classTableBordered = string.Empty;
+    if (listWoProductions?.Count > 0)
+    {
+        classTableBordered = "table table-collapse";
+    }
+    else
+    {
+        classTableBordered = "table table-bordered border-dark";
+    }
+}
+<div class="text-center page-title">
+    <h1 class="display-6">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+</div>
+<hr />
+<div class="table-div-line">
+    <div class="title-table text-center mb-2">
+        <h5>Bảng chia line</h5>
+        <div class="comment-color">
+            <div class="comment-title">Chú thích</div>
+            <div class="d-flex justify-content-around">
+                <div class="box-item-color">
+                    <div class="bg-on-going"></div>
+                    <span>On Going Production</span>
+                </div>
+                <div class="box-item-color">
+                    <div class="bg-has-content"></div>
+                    <span>Đã chia line</span>
+                </div>
+                <div class="box-item-color">
+                    <div class="bg-hasdivline-lot"></div>
+                    <span>Đã chia line theo Lot</span>
+                </div>
+                <div class="box-item-color">
+                    <div class="bg-divnot-enough"></div>
+                    <span>Chia line chưa đủ</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-end">
+            <button class="btn btn-save-line btn-md disabled">Lưu</button>
+        </div>
+    </div>
+    <div class="table-line-process" id="tableLineProcessing">
+        <div class="message">
+            <div class="error-total text-danger fst-italic"></div>
+            <div class="error-input text-danger fst-italic"></div>
+        </div>
+        <div class="table-responsive-xxl">
+            <table class="@classTableBordered">
+                <thead class="">
+                    <tr>
+                        <th scope="col" class="align-middle item-freezer" data-col_title="workOrder" data-title="Số WO"></th>
+                        <th scope="col" class="align-middle item-freezer" data-col_title="itemCode" data-title="Danh sách sản phẩm"></th>
+                        <th scope="col" class="align-middle item-freezer" data-col_title="lotNo" data-title="Số lô"></th>
+                        <th scope="col" class="align-middle item-freezer" data-col_title="qtyUsed" data-title="Số lượng"></th>
+                        <th scope="col" class="align-middle item-freezer" data-col_title="character" data-title="Chữ cái"></th>
+                        <th scope="col" class="align-middle item-freezer" data-col_title="dateProd" data-title="Ngày sản xuất"></th>
+                        <th scope="col" class="align-middle item-freezer" data-col_title="timeProd" data-title="Giờ sản xuất"></th>
+                        <th scope="col" class="align-middle" data-col_title="line1" data-title="Line 1"></th>
+                        <th scope="col" class="align-middle" data-col_title="line2" data-title="Line 2"></th>
+                        <th scope="col" class="align-middle" data-col_title="line3" data-title="Line 3"></th>
+                        <th scope="col" class="align-middle" data-col_title="line4" data-title="Line 4"></th>
+                        <th scope="col" class="align-middle" data-col_title="changeControl" data-title="Mã thay đổi"></th>
+                        <th scope="col" class="align-middle" data-col_title="note" data-title="Ghi chú"></th>
+                        <th scope="col" class="align-middle" data-col_title="processCode" data-title="Công đoạn"></th>
+                        <th scope="col" class="align-middle" data-title="Kiểm tra"></th>
+                    </tr>
+                </thead>
+                <tbody id="contentTable" class="">
+                    @if (listWoProductions?.Count > 0)
+                    {
+                        foreach (var itemData in listWoProductions)
+                        {
+                            string line1 = string.Empty;
+                            string line2 = string.Empty;
+                            string line3 = string.Empty;
+                            string line4 = string.Empty;
+                            string changeControl = string.Empty;
+                            string note = string.Empty;
+                            string classChangeControl = string.Empty;
+                            string classOldItem = string.Empty;
+                            string classOnGoing = string.Empty;
+                            string classHasDivLot = string.Empty;
+                            string classNotEnoughQty1 = string.Empty;
+                            string classNotEnoughQty2 = string.Empty;
+                            string classNotEnoughQty3 = string.Empty;
+                            string classNotEnoughQty4 = string.Empty;
+                            if (itemData.StatusName == "On Going Production")
+                            {
+                                classOnGoing = "on-going";
+                            }
+                            if (listWoDivLines?.Count > 0)
+                            {
+                                foreach (var itemOld in listWoDivLines)
+                                {
+                                    if (itemData.WorkOrderNo == itemOld.WorkOrder)
+                                    {
+                                        line1 = itemOld.Line1 ?? "0";
+                                        line2 = itemOld.Line2 ?? "0";
+                                        line3 = itemOld.Line3 ?? "0";
+                                        line4 = itemOld.Line4 ?? "0";
+                                        changeControl = itemOld.ChangeControl ?? "";
+                                        note = itemOld.Note ?? "";
+                                        if (line1 == "0" && line2 == "0" && line3 == "0" && line4 == "0")
+                                        {
+                                            classOldItem = "";
+                                        } else
+                                        {
+                                            classOldItem = "has-content";
+                                        }
+
+                                    }
+                                }
+                            }
+                            if (listDivLineForLot?.Count > 0)
+                            {
+                                foreach (var itemDiv in listDivLineForLot)
+                                {
+                                    if (itemData.WorkOrderNo == itemDiv.WorkOrder)
+                                    {
+                                        classHasDivLot = "has-div-lot";
+                                        if (int.Parse(line1) < int.Parse(itemDiv.Line1 ?? "0"))
+                                        {
+                                            classNotEnoughQty1 = "not-enough-qty";
+                                        }
+                                        if (int.Parse(line2) < int.Parse(itemDiv.Line2 ?? "0"))
+                                        {
+                                            classNotEnoughQty2 = "not-enough-qty";
+                                        }
+                                        if (int.Parse(line3) < int.Parse(itemDiv.Line3 ?? "0"))
+                                        {
+                                            classNotEnoughQty3 = "not-enough-qty";
+                                        }
+                                        if (int.Parse(line4) < int.Parse(itemDiv.Line4 ?? "0"))
+                                        {
+                                            classNotEnoughQty4 = "not-enough-qty";
+                                        }
+                                    }
+                                }
+                            }
+                            if (changeControl != "")
+                            {
+                                classChangeControl = "has-change-control";
+                            }
+                            <tr class="@classHasDivLot @classOldItem @classChangeControl @classOnGoing" data-workorder="@itemData.WorkOrderNo" data-product_code="@itemData.ProductCode" data-lotno="@itemData.LotNo" data-qty="@itemData.QtyProd">
+                                <td class="align-middle render item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" style="width: 70px;" class="input-line show-div-line work-order">@itemData.WorkOrderNo</a>
+                                    <input type="hidden" class="input-line" value="@itemData.WorkOrderNo" />
+                                </td>
+                                <td class="align-middle render item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" style="width: 120px;" class="input-line show-div-line product-code">@itemData.ProductCode</a>
+                                    <input type="hidden" class="input-line" value="@itemData.ProductCode" />
+                                </td>
+                                <td class="align-middle render item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" style="width: 80px;" class="input-line show-div-line lot-no">@itemData.LotNo</a>
+                                    <input type="hidden" class="input-line" value="@itemData.LotNo" />
+                                </td>
+                                <td class="align-middle render item-freezer">
+                                    <span style="width: 60px;" class="input-line qty-used">@itemData.QtyProd</span>
+                                    <input type="hidden" class="input-line" value="@itemData.QtyProd" />
+                                </td>
+                                <td class="align-middle item-freezer"><input type="text" style="width: 40px;" class="input-line character-wo" value="@itemData.Character" /></td>
+                                <td class="align-middle render item-freezer"><input type="text" style="width: 80px;" class="input-line disabled date-intended" value="@itemData.DateProd?.ToString("dd/MM/yyyy")" /></td>
+                                <td class="align-middle render item-freezer" data-date_intended="@itemData.DateProd?.ToString("yyyy/MM/dd")"><input type="text" class="input-line disabled time-intended" style="width: 60px;" value="@itemData.TimeProd" /></td>
+                                <td class="align-middle @classNotEnoughQty1"><input type="number" class="input-line line-1" min="0" value="@line1" style="width: 70px;" /></td>
+                                <td class="align-middle @classNotEnoughQty2"><input type="number" class="input-line line-2" min="0" value="@line2" style="width: 70px;" /></td>
+                                <td class="align-middle @classNotEnoughQty3"><input type="number" class="input-line line-3" min="0" value="@line3" style="width: 70px;" /></td>
+                                <td class="align-middle @classNotEnoughQty4"><input type="number" class="input-line line-4" min="0" value="@line4" style="width: 70px;" /></td>
+                                <td class="align-middle"><input type="text" class="input-line change-control" value="@changeControl" style="width: 70px;" /></td>
+                                <td class="align-middle"><textarea class="input-line" style="width: 100px; height: 30px;">@note</textarea></td>
+                                <td class="align-middle"><input type="text" class="input-line processcode" value="@itemData.ProcessCode" /></td>
+                                <td class="align-middle"><input type="checkbox" class="check-data" /></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="_PartialConditionsProcessing" />

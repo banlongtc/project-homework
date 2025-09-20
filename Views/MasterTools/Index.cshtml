@@ -1,0 +1,52 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Master dụng cụ";
+    var listAllItems = ViewData["AllItems"] as List<TblMasterTool>;
+}
+
+<div class="container">
+    <h2>@ViewData["Title"]</h2>
+    <p>Hiển thị toàn bộ master dụng cụ đã đăng ký</p>
+    <a class="btn btn-primary btn-sm" asp-controller="MasterTools" asp-action="Add">Thêm mới</a>
+    <div class="content-boby">
+        <div class="table-responsive">
+            <table id="allTools" class="table table-bordered border-dark table-all-items text-center">
+                <thead>
+                    <tr>
+                        <th class="align-middle text-center" data-title="STT"></th>
+                        <th class="align-middle text-center" data-title="Mã dụng cụ"></th>
+                        <th class="align-middle text-center" data-title="Tên"></th>
+                        <th class="align-middle text-center" data-title="Mô tả"></th>
+                        <th class="align-middle text-center" data-title=""></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (listAllItems != null)
+                    {
+                        int count = 1;
+                        foreach (var item in listAllItems)
+                        {
+                            <tr>
+                                <td class="align-middle text-center">@count</td>
+                                <td class="align-middle text-center">@item.ToolCode</td>
+                                <td class="align-middle text-center">@item.ToolName</td>
+                                <td class="align-middle text-center">@item.Descriptions</td>
+                                <td class="align-middle text-center">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a class="action-item text-decoration-none" asp-controller="MasterTools" asp-action="Edit" asp-route-id="@item.Id"><i class="bx bx-edit"></i></a>
+                                        <a class="action-item text-decoration-none text-danger" asp-controller="MasterTools" asp-action="Delete" asp-route-id="@item.Id"><i class="bx bx-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

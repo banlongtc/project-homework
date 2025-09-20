@@ -1,0 +1,579 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "In Nhãn";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var listWoPrintLabels = ViewData["ListWOPrintLabels"] as List<MPLUS_GW_WebCore.Models.ListWoProduction>;
+}
+<div class="text-center page-title">
+    <h1 class="display-6">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+</div>
+<hr />
+<div class="table-div-line">
+    <div class="title-table text-center mb-2">
+        <h5>Bảng chia line</h5>
+        <div class="comment-color">
+            <div class="comment-title">Chú thích</div>
+            <div class="d-flex justify-content-around">
+                <div class="box-item-color">
+                    <div class="bg-on-going"></div>
+                    <span>Đang sản xuất</span>
+                </div>
+                <div class="box-item-color">
+                    <div class="bg-has-content"></div>
+                    <span>Đã chia số lượng</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div class="button-show-details">
+                <a class="btn btn-md" asp-controller="PrintLabels" asp-action="FlowDivLinePrintLabel">Xem chia máy theo ca trong ngày</a>
+            </div>
+            <div class="button-save-layout">
+                <button class="btn btn-save-printlabel btn-md disabled">Lưu</button>
+            </div>
+        </div>
+    </div>
+    <div class="filter-results mb-3"></div>
+    <div class="table-responsive-xxl table-print-label">
+        <div class="message">
+            <div class="error-total"></div>
+            <div class="error-input"></div>
+        </div>
+        <div class="table-layout">
+            <table class="table">
+                <thead class="table-freezer-column">
+                    <tr>
+                        <th rowspan="2" scope="col" class="align-middle item-freezer" data-col_title="workOrder">Số WO</th>
+                        <th rowspan="2" scope="col" class="align-middle item-freezer" data-col_title="itemCode">Danh sách sản phẩm</th>
+                        <th rowspan="2" scope="col" class="align-middle item-freezer" data-col_title="lotNo">Số lô</th>
+                        <th rowspan="2" scope="col" class="align-middle item-freezer" data-col_title="qtyUsed">Số lượng</th>
+                        <th rowspan="2" scope="col" class="align-middle item-freezer" data-col_title="character">Chữ cái</th>
+                        <th rowspan="2" scope="col" class="align-middle item-freezer" data-col_title="typeLabel">Loại nhãn</th>
+                        <th rowspan="2" scope="col" class="align-middle item-freezer" data-col_title="dateProd">Ngày sản xuất</th>
+                        <th colspan="4" scope="col" class="align-middle" data-col_title="shift1">Ca 1</th>
+                        <th colspan="4" scope="col" class="align-middle" data-col_title="shift2">Ca 2</th>
+                        <th colspan="4" scope="col" class="align-middle" data-col_title="shift3">Ca 3</th>
+                        <th rowspan="2" scope="col" class="align-middle" data-col_title="note">Ghi chú</th>
+                        <th rowspan="2" scope="col" class="align-middle d-none" data-col_title="processCode"></th>
+                    </tr>
+                    <tr>
+                        <td scope="col" data-shift_id="shift1">Máy 1</td>
+                        <td scope="col" data-shift_id="shift1">Máy 2</td>
+                        <td scope="col" data-shift_id="shift1">Máy 3</td>
+                        <td scope="col" data-shift_id="shift1">Máy 4</td>
+                        <td scope="col" data-shift_id="shift2">Máy 1</td>
+                        <td scope="col" data-shift_id="shift2">Máy 2</td>
+                        <td scope="col" data-shift_id="shift2">Máy 3</td>
+                        <td scope="col" data-shift_id="shift2">Máy 4</td>
+                        <td scope="col" data-shift_id="shift3">Máy 1</td>
+                        <td scope="col" data-shift_id="shift3">Máy 2</td>
+                        <td scope="col" data-shift_id="shift3">Máy 3</td>
+                        <td scope="col" data-shift_id="shift3">Máy 4</td>
+                    </tr>
+                </thead>
+                <tbody id="contentTablePrintLabels" class="table-freezer-column">
+                    @if (listWoPrintLabels != null)
+                    {
+                        foreach (var item in listWoPrintLabels)
+                        {
+                            string classRowSpan = "";
+                            string typeLabel = "Hộp,Nắp";
+                            string classOnGoing = "";
+                            if (item.ProductCode?.Contains(".G") == true)
+                            {
+                                typeLabel = "Túi";
+                                classRowSpan = "merge-row";
+                            }
+                            else if (item.ProductCode?.Contains(".F") == true)
+                            {
+                                typeLabel = "Thùng";
+                                classRowSpan = "merge-row";
+                            }
+
+                            string newTypeLabel = "";
+                            if (typeLabel.Contains(","))
+                            {
+                                classRowSpan = "merge-row";
+                                var arrTypeLabel = typeLabel.Split(",");
+                                for (int i = 0; i < arrTypeLabel.Length; i++)
+                                {
+                                    if (i > 0)
+                                    {
+                                        typeLabel = arrTypeLabel[i - 1];
+                                    }
+                                    newTypeLabel = arrTypeLabel[i];
+                                }
+                            }
+
+                            if (item.StatusName == "On Going Production")
+                            {
+                                classOnGoing = "on-going";
+                            }
+                            if (newTypeLabel != "")
+                            {
+                                <tr class="@classOnGoing" data-workorder="@item.WorkOrderNo"
+                                    data-qty_prod="@item.QtyProd"
+                                    data-character="@item.Character"
+                                    data-product_code="@item.ProductCode"
+                                    data-lot_no="@item.LotNo"
+                                    data-typelabel="@typeLabel">
+                                    <td class="align-middle render merge-row-4 item-freezer" rowspan="4">
+                                        <div class="workorder" style="width: 64px;">
+                                            <a href="#showDivMC" data-bs-toggle="modal" class="input-line show-div-mc">@item.WorkOrderNo</a>
+                                            <input type="hidden" class="input-line" value="@item.WorkOrderNo" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle render merge-row-4 item-freezer" rowspan="4">
+                                        <div class="product-code" style="width: 100px;">
+                                            <a href="#showDivMC" data-bs-toggle="modal" class="input-line show-div-mc">@item.ProductCode</a>
+                                            <input type="hidden" class="input-line" value="@item.WorkOrderNo" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle render merge-row-4 item-freezer" rowspan="4">
+                                        <div class="lot-no" style="width: 64px;">
+                                            <a href="#showDivMC" data-bs-toggle="modal" class="input-line show-div-mc">@item.LotNo</a>
+                                            <input type="hidden" class="input-line" value="@item.WorkOrderNo" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 item-freezer" rowspan="4">
+                                        <div class="qty-used" style="width: 60px;">@item.QtyProd</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 item-freezer" rowspan="4">
+                                        <div style="width: 60px;">
+                                            <input type="text" class="input-line character-wo text-center w-100" value="@item.Character" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle @classRowSpan item-freezer" rowspan="2">
+                                        <div class="type-label" style="width: 60px; text-transform: capitalize;">@typeLabel</div>
+                                    </td>
+                                    <td class="align-middle date-prod-column item-freezer">
+                                        <div class="input-group" style="width: 120px;">
+                                            <input type="text" class="input-line date-prod w-100" placeholder="dd/MM/yyyy" value="" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1">
+                                        <input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1">
+                                        <input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1">
+                                        <input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1">
+                                        <input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift2">
+                                        <input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift2">
+                                        <input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift2">
+                                        <input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift2">
+                                        <input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift3">
+                                        <input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift3">
+                                        <input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift3">
+                                        <input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle" data-flag="shift3">
+                                        <input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" />
+                                    </td>
+                                    <td class="align-middle">
+                                        <textarea class="input-line" style="width: 150px;"></textarea>
+                                    </td>
+                                    <td class="align-middle d-none">
+                                        <input type="text" class="input-line processcode" value="@item.ProcessCode" />
+                                    </td>
+                                </tr>
+                                <tr class="@classOnGoing" data-workorder="@item.WorkOrderNo"
+                                    data-qty_prod="@item.QtyProd"
+                                    data-character="@item.Character"
+                                    data-product_code="@item.ProductCode"
+                                    data-lot_no="@item.LotNo"
+                                    data-typelabel="@typeLabel">
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="work-order" style="width: 64px;">@item.WorkOrderNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="product-code" style="width: 100px;">@item.ProductCode</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="lot-no" style="width: 64px;">@item.LotNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="qty-used" style="width: 60px;">@item.QtyProd</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 item-freezer hidden">
+                                        <div style="width: 60px;">
+                                            <input type="text" class="input-line character-wo text-center w-100" value="@item.Character" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle @classRowSpan render item-freezer hidden">
+                                        <div class="type-label" style="width: 60px; text-transform: capitalize;">@typeLabel</div>
+                                    </td>
+                                    <td class="align-middle date-prod-column item-freezer">
+                                        <div class="input-group" style="width: 120px;">
+                                            <input type="text" class="input-line date-prod w-100" placeholder="dd/MM/yyyy" value="" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle"><textarea class="input-line" style="width: 150px;"></textarea></td>
+                                    <td class="align-middle d-none"><input type="text" class="input-line processcode" value="@item.ProcessCode" /></td>
+                                </tr>
+                                <tr class="@classOnGoing" data-workorder="@item.WorkOrderNo"
+                                    data-qty_prod="@item.QtyProd"
+                                    data-character="@item.Character"
+                                    data-product_code="@item.ProductCode"
+                                    data-lot_no="@item.LotNo"
+                                    data-typelabel="@newTypeLabel">
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="work-order" style="width: 64px;">@item.WorkOrderNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="product-code" style="width: 100px;">@item.ProductCode</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="lot-no" style="width: 64px;">@item.LotNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="qty-used" style="width: 60px;">@item.QtyProd</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 item-freezer hidden">
+                                        <div style="width: 60px;">
+                                            <input type="text" class="input-line character-wo text-center w-100" value="@item.Character" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle @classRowSpan item-freezer render" rowspan="2">
+                                        <div class="type-label" style="width: 60px; text-transform: capitalize;">@newTypeLabel</div>
+                                    </td>
+                                    <td class="align-middle date-prod-column item-freezer">
+                                        <div class="input-group" style="width: 120px;">
+                                            <input type="text" class="input-line date-prod w-100" placeholder="dd/MM/yyyy" value="" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle"><textarea class="input-line" style="width: 150px;"></textarea></td>
+                                    <td class="align-middle d-none"><input type="text" class="input-line processcode" value="@item.ProcessCode" /></td>
+                                </tr>
+                                <tr class="@classOnGoing" data-workorder="@item.WorkOrderNo"
+                                    data-qty_prod="@item.QtyProd"
+                                    data-character="@item.Character"
+                                    data-product_code="@item.ProductCode"
+                                    data-lot_no="@item.LotNo"
+                                    data-typelabel="@newTypeLabel">
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="work-order" style="width: 64px;">@item.WorkOrderNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="product-code" style="width: 100px;">@item.ProductCode</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="lot-no" style="width: 64px;">@item.LotNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 render item-freezer hidden">
+                                        <div class="qty-used" style="width: 60px;">@item.QtyProd</div>
+                                    </td>
+                                    <td class="align-middle merge-row-4 item-freezer hidden">
+                                        <div style="width: 60px;">
+                                            <input type="text" class="input-line character-wo text-center w-100" value="@item.Character" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle @classRowSpan item-freezer render hidden">
+                                        <div class="type-label" style="width: 60px; text-transform: capitalize;">@newTypeLabel</div>
+                                    </td>
+                                    <td class="align-middle date-prod-column item-freezer">
+                                        <div class="input-group" style="width: 120px;">
+                                            <input type="text" class="input-line date-prod w-100" placeholder="dd/MM/yyyy" value="" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle"><textarea class="input-line" style="width: 150px;"></textarea></td>
+                                    <td class="align-middle d-none"><input type="text" class="input-line processcode" value="@item.ProcessCode" /></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr class="@classOnGoing" data-workorder="@item.WorkOrderNo"
+                                    data-qty_prod="@item.QtyProd"
+                                    data-character="@item.Character"
+                                    data-product_code="@item.ProductCode"
+                                    data-lot_no="@item.LotNo"
+                                    data-typelabel="@typeLabel">
+                                    <td class="align-middle merge-row render item-freezer" rowspan="2">
+                                        <div class="workorder" style="width: 64px;">
+                                            <a href="#showDivMC" data-bs-toggle="modal" class="input-line show-div-mc">@item.WorkOrderNo</a>
+                                            <input type="hidden" class="input-line" value="@item.WorkOrderNo" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer" rowspan="2">
+                                        <div class="product-code" style="width: 100px;">
+                                            <a href="#showDivMC" data-bs-toggle="modal" class="input-line sshow-div-mc">@item.ProductCode</a>
+                                            <input type="hidden" class="input-line" value="@item.WorkOrderNo" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer" rowspan="2">
+                                        <div class="lot-no" style="width: 64px;">
+                                            <a href="#showDivMC" data-bs-toggle="modal" class="input-line show-div-mc">@item.LotNo</a>
+                                            <input type="hidden" class="input-line" value="@item.WorkOrderNo" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer" rowspan="2">
+                                        <div class="input-line qty-used">@item.QtyProd</div>
+                                    </td>
+                                    <td class="align-middle merge-row item-freezer" rowspan="2">
+                                        <div style="width: 60px;">
+                                            <input type="text" class="input-line character-wo text-center w-100" value="@item.Character" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer" rowspan="2">
+                                        <div class="type-label" style="text-transform: capitalize;">@typeLabel</div>
+                                    </td>
+                                    <td class="align-middle date-prod-column item-freezer">
+                                        <div class="input-group" style="width: 120px;">
+                                            <input type="text" class="input-line date-prod w-100" placeholder="dd/MM/yyyy" value="" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle"><textarea class="input-line" style="width: 150px;"></textarea></td>
+                                    <td class="align-middle d-none"><input type="text" class="input-line processcode" value="@item.ProcessCode" /></td>
+                                </tr>
+                                <tr class="@classOnGoing" data-workorder="@item.WorkOrderNo"
+                                    data-qty_prod="@item.QtyProd"
+                                    data-character="@item.Character"
+                                    data-product_code="@item.ProductCode"
+                                    data-lot_no="@item.LotNo"
+                                    data-typelabel="@typeLabel">
+                                    <td class="align-middle merge-row render item-freezer hidden">
+                                        <div class="input-line work-order">@item.WorkOrderNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer hidden">
+                                        <div class="input-line product-code">@item.ProductCode</div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer hidden">
+                                        <div class="input-line lot-no">@item.LotNo</div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer hidden">
+                                        <div class="input-line qty-used">@item.QtyProd</div>
+                                    </td>
+                                    <td class="align-middle merge-row item-freezer hidden">
+                                        <div style="width: 60px;">
+                                            <input type="text" class="input-line character-wo text-center w-100" value="@item.Character" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle merge-row render item-freezer hidden">
+                                        <div class="type-label" style="text-transform: capitalize;">"@typeLabel</div>
+                                    </td>
+                                    <td class="align-middle date-prod-column item-freezer">
+                                        <div class="input-group" style="width: 120px;">
+                                            <input type="text" class="input-line date-prod w-100" placeholder="dd/MM/yyyy" value="" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift1"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift2"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-1" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-2" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-3" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle" data-flag="shift3"><input type="number" class="input-line machine-4" min="0" value="" style="width: 80px;" /></td>
+                                    <td class="align-middle"><textarea class="input-line" style="width: 150px;"></textarea></td>
+                                    <td class="align-middle d-none"><input type="text" class="input-line processcode" value="@item.ProcessCode" /></td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="d-none hidden-content">
+            @if (listWoPrintLabels != null)
+            {
+                foreach (var item in listWoPrintLabels)
+                {
+                    if (item.DateProd != null && item.TimeProd != null)
+                    {
+                        var newDate = item.DateProd.Value.Date.ToString("yyyy-MM-dd");
+                        <div class="item">
+                            <input type="text" class="input-line work-order" value="@item.WorkOrderNo" />
+                            <input type="text" class="input-line qty-used" value="@item.QtyProd" />
+                            <input type="text" class="input-line processcode" value="@item.ProcessCode" />
+                            <span class="align-middle render" data-date_intended="@newDate">
+                                <input type="text" class="input-line time-intended" style="width: 70px;" value="@item.TimeProd" />
+                            </span>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="showDivMC" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="showDivMCLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center w-100">
+                    <h6 class="modal-title" id="showDivMCLabel">Chia số lượng cho từng line</h6>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="form-label mb-0" for="selectMaterial">Chọn nguyên vật liệu:</label>
+                    <select class="form-select-sm" id="selectMaterial" name="SelectMaterial"></select>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered border-dark text-center d-none" id="tableDivMC">
+                        <thead>
+                            <tr> 
+                                <th rowspan="2" scope="col" class="align-middle">Mã Nguyên Vật Liệu</th>
+                                <th rowspan="2" scope="col" class="align-middle">Lô Nguyên Vật Liệu</th>
+                                <th rowspan="2" scope="col" class="align-middle">Số lượng</th>
+                                <th colspan="4" scope="col" class="align-middle" data-col_title="shift1">Ca 1</th>
+                                <th colspan="4" scope="col" class="align-middle" data-col_title="shift2">Ca 2</th>
+                                <th colspan="4" scope="col" class="align-middle" data-col_title="shift3">Ca 3</th>
+                            </tr>
+                            <tr>
+                                <td scope="col" data-shift_id="shift1">Máy 1</td>
+                                <td scope="col" data-shift_id="shift1">Máy 2</td>
+                                <td scope="col" data-shift_id="shift1">Máy 3</td>
+                                <td scope="col" data-shift_id="shift1">Máy 4</td>
+                                <td scope="col" data-shift_id="shift2">Máy 1</td>
+                                <td scope="col" data-shift_id="shift2">Máy 2</td>
+                                <td scope="col" data-shift_id="shift2">Máy 3</td>
+                                <td scope="col" data-shift_id="shift2">Máy 4</td>
+                                <td scope="col" data-shift_id="shift3">Máy 1</td>
+                                <td scope="col" data-shift_id="shift3">Máy 2</td>
+                                <td scope="col" data-shift_id="shift3">Máy 3</td>
+                                <td scope="col" data-shift_id="shift3">Máy 4</td>
+                            </tr>
+                        </thead>
+                        <tbody class="data-render"></tbody>
+                    </table>
+                </div>
+                <div class="d-none" id="tableHasDivMaterial">
+                    <div class="text-center">
+                        <h5>Nguyên vật liệu đã chia trước đó</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered border-dark text-center">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" scope="col" class="align-middle">Mã Nguyên Vật Liệu</th>
+                                    <th rowspan="2" scope="col" class="align-middle">Lô Nguyên Vật Liệu</th>
+                                    <th colspan="4" scope="col" class="align-middle" data-col_title="shift1">Ca 1</th>
+                                    <th colspan="4" scope="col" class="align-middle" data-col_title="shift2">Ca 2</th>
+                                    <th colspan="4" scope="col" class="align-middle" data-col_title="shift3">Ca 3</th>
+                                </tr>
+                                <tr>
+                                    <td scope="col" data-shift_id="Shift1">Máy 1</td>
+                                    <td scope="col" data-shift_id="Shift1">Máy 2</td>
+                                    <td scope="col" data-shift_id="Shift1">Máy 3</td>
+                                    <td scope="col" data-shift_id="Shift1">Máy 4</td>
+                                    <td scope="col" data-shift_id="Shift2">Máy 1</td>
+                                    <td scope="col" data-shift_id="Shift2">Máy 2</td>
+                                    <td scope="col" data-shift_id="Shift2">Máy 3</td>
+                                    <td scope="col" data-shift_id="Shift2">Máy 4</td>
+                                    <td scope="col" data-shift_id="Shift3">Máy 1</td>
+                                    <td scope="col" data-shift_id="Shift3">Máy 2</td>
+                                    <td scope="col" data-shift_id="Shift3">Máy 3</td>
+                                    <td scope="col" data-shift_id="Shift3">Máy 4</td>
+                                </tr>
+                            </thead>
+                            <tbody class="data-render"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-end">
+                    <button class="btn btn-success btn-save-data disabled" id="btnSaveDivMaterialForMC">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="enterChangeValue" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="enterChangeValueLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="enterChangeValueLabel">Nhập lý do sửa đổi</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="textNote" class="form-label">Lý do thay đổi:</label>
+                    <textarea id="textNote" class="form-control" rows="5" style="width: 100%"></textarea>
+                </div>
+                <div class="notice-error text-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-confirm-note" id="confirmNote">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>

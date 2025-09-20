@@ -1,0 +1,73 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Quản lý sản phẩm";
+    var allProductions = ViewData["ListProductProductions"] as List<MPLUS_GW_WebCore.Controllers.Admin.RenderProductions>;
+}
+
+<div class="container">
+    <h1>Thông tin các chỉ thị sản xuất</h1>
+    <div class="sub-title">
+        <p class="mb-2">Tổng hợp các chỉ thị sản xuất mà công nhân thao tác. Cho phép xem, cập nhật thông tin sản xuất đó nếu có thông tin thay đổi.</p>
+        <p class="text-decoration-underline fst-italic text-danger mb-0">(*)Lưu ý: </p>
+        <p class="text-danger">Khi thay đổi thông tin và cập nhật lại thì phải có sự xác nhận của cấp trên mới được phép lưu lại thông tin đã sửa đó</p>
+    </div>
+    <div class="content-sub" id="managerProductionsContent">
+        <div class="table-responsive">
+            <table class="table table-bordered border-dark text-center" id="tableAllProductions">
+                <thead>
+                    <tr>
+                        <th class="align-middle">STT</th>
+                        <th class="align-middle">Chỉ thị</th>
+                        <th class="align-middle">Mã sản phẩm</th>
+                        <th class="align-middle">Lô sản xuất</th>
+                        <th class="align-middle">Tên sản phẩm</th>
+                        <th class="align-middle">Trạng thái</th>
+                        <th class="align-middle"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (allProductions != null)
+                    {
+                        int count = 1;
+                        foreach (var item in allProductions)
+                        {
+                            <tr>
+                                <td>@count</td>
+                                <td>
+                                    <div class="item-production">
+                                        <a class="btn-edit" title="Xem và Sửa" asp-controller="Admin" asp-action="EditProduction" asp-route-productionWO="@(item.WorkOrder)">@(item.WorkOrder)</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="item-production">@(item.ProductCode)</div>
+                                </td>
+                                <td>
+                                    <div class="item-production">@(item.LotNo)</div>
+                                </td>
+                                <td>
+                                    <div class="item-production">@(item.ProductName)</div>
+                                </td>
+                                <td>
+                                    <div class="item-production">@(item.StatusProduction)</div>
+                                </td>
+                                <td>
+                                    <div class="group-action d-flex">
+                                        <a class="btn-edit btn-group-item" title="Xem và Sửa" asp-controller="Admin" asp-action="EditProduction" asp-route-productionWO="@(item.WorkOrder)"><i class="bx bx-edit"></i></a>
+                                        @if (item.IsStopped == true)
+                                        {
+                                            <button class="btn-continue-production btn-group-item" data-workorder="@(item.WorkOrder)"><i class="bx bx-play"></i></button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

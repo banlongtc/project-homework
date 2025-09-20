@@ -1,0 +1,170 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Xuất Kho Nguyên Vật Liệu Phụ";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var subMaterialList = ViewData["SubMaterialsList"] as List<TblSubMaterial>;
+    var oldSubMaterialList = ViewData["OldSubMaterialsList"] as List<MPLUS_GW_WebCore.Controllers.Materials.SubMaterialHolding>;
+    var dateCurrent = DateTime.Now.Date;
+}
+<div class="text-center page-title">
+    <h1 class="display-6 mb-0">@ViewData["Title"]</h1>
+</div>
+
+@* Hiển thị breadcrumb *@
+@await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+<hr />
+<div class="sub-materials-card border-dotted card-style">
+    <div class="head-content">
+        <div class="text-center"><h5>Viết phiếu cho NVL phụ</h5></div>
+        <div class="d-flex align-items-center mb-3">
+            <span class="sub-title">Ngày lập phiếu:</span>
+            <span id="datetimecurrent" class="ms-2 fw-bold">@dateCurrent.ToString("dd/MM/yyyy")</span>
+        </div>
+    </div>
+    <div class="content-table mt-3">
+        <div class="data-table-responsive">
+            <div class="message text-danger fst-italic mb-2"></div>
+            <div class="message-date text-danger fst-italic mb-2"></div>
+            <div class="message-time text-danger fst-italic mb-2"></div>
+            <table class="table table-bordered border-dark text-center">
+                <thead>
+                    <tr>
+                        <th scope="col" data-title="Mã NVL" class="align-middle"></th>
+                        <th scope="col" data-title="Tên NVL" class="align-middle"></th>
+                        <th scope="col" class="align-middle" data-title="Số lượng cần nhập"></th>
+                        <th scope="col" class="align-middle" data-title="Ngày nhập NVL"></th>
+                        <th scope="col" class="align-middle" data-title="Thời gian nhập"></th>
+                        <th scope="col" class="align-middle" data-title="Số lượng nhập thực tế"></th>
+                        <th scope="col" class="align-middle" data-title="Phiếu 1"></th>
+                        <th class="d-none">Check</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (subMaterialList != null)
+                    {
+                        foreach (var item in subMaterialList)
+                        {
+                            string valueDate = string.Empty;
+                            string valueTime = string.Empty;
+                            string qtyImport = "";
+
+                            string classIsChange = string.Empty;
+
+                            if (oldSubMaterialList != null) {
+                                foreach(var oldItem in oldSubMaterialList) {
+                                    if (item.ProductCode == oldItem.ItemCode) {
+
+                                        valueDate = oldItem.DateImport.HasValue ? oldItem.DateImport.Value.Date.ToString("dd/MM/yyyy") : "";
+                                        valueTime = oldItem.TimeImport.HasValue ? oldItem.TimeImport.Value.ToString(@"hh\:mm") : "";
+                                        qtyImport = oldItem.QtyEx.ToString();
+                                    }
+                                }
+                            }
+
+                            if (valueDate != "" && valueTime != "" && qtyImport != "") {
+                                classIsChange = "is-changed";
+                            }
+                            <tr class="@classIsChange">
+                                <td data-process_prod='CHE-GW' data-product_code="@item.ProductCode" data-input="" class="process-prod">@item.ProductCode</td>
+                                <td data-item_code="@item.ProductCode" data-unit_code="PC" class="item-code"><div class="title-subs">@item.ProductName</div></td>
+                                <td class="qty-can-input" data-input="@item.QtyCanInput"><div class="">@item.QtyCanInput</div></td>
+                                <td><div class="input-group"><input type="text" class="sub-material-date" value="@valueDate" /></div></td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" title="Thời gian nhập" class="time-input time-import" placeholder="HH:mm" value="@valueTime" />
+                                        <i class='bx bxs-time-five'></i>
+                                    </div>
+                                </td>
+                                <td data-can_import="@qtyImport">
+                                    <input type="number" data-parent_elem="sub-materials-card" min='0' class="qty-import" value="@qtyImport" />
+                                </td>
+                                <td class="qty-ticket-1 disabled" data-title='Phiếu 1' data-qty_ticket="@qtyImport">
+                                    <input type="number" min="0" data-parent_elem="sub-materials-card" class="control-qty-ticket" value="@qtyImport" />
+                                </td>
+                                <td class="d-none"><button type='button' title='Kiểm tra tổng số lượng' class='btn btn-check-data'><i class='bx bx-git-compare'></i></button></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td class="button-export">
+                            <button class="btn btn-save-details btn-sm disabled btn-success" data-class_parent="sub-materials-card" type="button">Lưu</button>
+                            <button class="btn btn-show-details btn-sm d-none btn-success" data-class_parent="sub-materials-card" type="button">Chi tiết</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ticketDetails" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="button-close text-end">
+                <button class="btn-close-modal btn" title="Đóng thông tin chi tiết" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title">Thông tin chi tiết phiếu xuất kho</h4>
+            </div>
+            <div class="modal-body" id="detailContent">
+                <div class="time-delivery mb-3">
+                    <span>Thời gian yêu cầu giao nhận:</span>
+                    <span class="time-value"></span>
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="ticket-1" data-title_ticket="Phiếu 1" role="tabpanel" aria-labelledby="ticket-tab-1">
+                        <div class="table-responsive">
+                            <table class="table table-bordered border-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Mã sản phẩm</th>
+                                        <th>Số lô</th>
+                                        <th>Đơn vị</th>
+                                        <th>Số lượng y/c xuất</th>
+                                        <th>Vị trí kho</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ticket-content"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs" id="tabTicketEx" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="ticket-tab-1" data-bs-toggle="tab" data-bs-target="#ticket-1" type="button" role="tab" aria-controls="ticket-1" aria-selected="true">Phiếu 1</button>
+                    </li>
+                </ul>
+                <div class="hidden-input"></div>
+            </div>
+            <div class="modal-footer justify-content-center" runat="server">
+                <button id="buttonCreated" class="btn btn-created btn-success">Viết Phiếu</button>
+                <div class="loading d-none"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="showNotification">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="button-close text-end">
+                <button class="btn-close-modal btn" title="Đóng thông tin chi tiết" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title">Thông báo</h4>
+            </div>
+            <div class="modal-body text-center" id="notificationContent">
+            </div>
+            <div class="modal-footer justify-content-center" runat="server">
+                <button id="buttonExported" class="btn btn-exported btn-success">Tải Về</button>
+            </div>
+        </div>
+
+    </div>
+</div>

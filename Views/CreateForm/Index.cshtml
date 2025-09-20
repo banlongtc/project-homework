@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Danh sách các form được tạo";
+    var listAllForms = ViewData["ListAllFormData"] as List<MPLUS_GW_WebCore.Controllers.Admin.CreateForms.RenderAllFormData>;
+}
+<div class="container">
+    <div class="title-section">
+        <h2>@ViewData["Title"]</h2>
+        <a asp-controller="CreateForm" asp-action="Add" class="btn mt-2 btn-primary">Thêm mới</a>
+    </div>
+    <div class="list-templates mt-5">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center border-dark">
+                <thead>
+                    <tr>
+                        <th class="text-center align-middle">STT</th>
+                        <th class="text-center align-middle">Tên</th>
+                        <th class="text-center align-middle">Checksheet</th>
+                        <th class="text-center align-middle">Vị trí thao tác</th>
+                        <th class="text-center align-middle">Version</th>
+                        <th class="text-center align-middle">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (listAllForms != null)
+                    {
+                        int count = 1;
+                        foreach (var item in listAllForms)
+                        {
+                            <tr>
+                                <td class="text-center align-middle">@count</td>
+                                <td class="text-center align-middle">@item.FormName</td>
+                                <td class="text-center align-middle">@item.ChecksheetCode</td>
+                                <td class="text-center align-middle">@item.PositionWorkName</td>
+                                <td class="text-center align-middle">@item.VersionNumber</td>
+                                <td>
+                                    <div class="action-modify">
+                                        <a asp-controller="CreateForm" class="text-primary" asp-action="Edit" asp-route-id="@item.IdForm">
+                                            <i class="bx bx-edit"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" class="text-danger btn-delete-item" data-id_template="@item.IdForm.ToString()">
+                                            <i class="bx bx-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

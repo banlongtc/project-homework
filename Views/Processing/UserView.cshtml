@@ -1,0 +1,73 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Gia Công";
+    var userLogin = Context.Session.GetString("User ID")?.ToString();
+}
+
+<div class="container-fluid mt-4">
+    <div id="btnReadPositionAgian"></div>
+    <div class="content-action-process d-none">
+        <div class="title text-center"><h5 class="mb-0">Các thao tác chính của Gia Công</h5></div>
+        <div class="row">
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="processing" asp-action="preoperation" class="btn btn-pre-operation disabled">
+                        <div class="card-body text-center">
+                            <p class="fs-6">kiểm tra trước</p>
+                            <img src="~/images/checking.png" alt="alternate text" />
+                        </div>
+                     </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="processing" asp-action="guidewireproduction" class="btn btn-gcdm disabled">
+                        <div class="card-body text-center">
+                            <p class="fs-6">gia công đầu mút</p>
+                            <img src="~/images/worker.png" alt="alternate text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="processing" asp-action="preoperation" class="btn btn-ktdm disabled">
+                        <div class="card-body text-center">
+                            <p class="fs-6">kiểm tra đầu mút</p>
+                            <img src="~/images/checking.png" alt="alternate text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="processing" asp-action="preoperation" class="btn btn-ktloi disabled">
+                        <div class="card-body text-center">
+                            <p class="fs-6">kiểm tra lồi</p>
+                            <img src="~/images/checking.png" alt="alternate text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="processing" asp-action="preoperation" class="btn btn-ktnq disabled">
+                        <div class="card-body text-center">
+                            <p class="fs-6">kiểm tra ngoại quan</p>
+                            <img src="~/images/checking.png" alt="alternate text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Hiển thị popup xác nhận đọc vị trí thao tác khi là user *@
+@if (userLogin != null)
+{
+    <partial name="_CheckPosition" />
+}

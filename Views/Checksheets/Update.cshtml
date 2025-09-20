@@ -1,0 +1,49 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Cập nhật checksheet";
+    var listAllChilds = ViewData["ListAllChilds"] as List<TblLocationC>;
+    var checksheetVerId = ViewData["ChecksheetVerId"];
+}
+
+<div class="container">
+    <div class="update-checksheet">
+        <h2>@ViewData["Title"]</h2>
+        <div class="mt-3">
+            <p>Cập nhật phiên bản checksheet.</p>
+            <p>Chọn kiểu cập nhật phiên bản của checksheet theo hai cách:</p>
+            <p class="ms-4 fst-italic">
+                <strong>
+                    - Chọn áp dụng checksheet theo ngày hiệu lực. Khi đó sẽ dùng checksheet version hiện tại.
+                </strong>
+            </p>
+            <p class="ms-4 fst-italic">
+                <strong>
+                    - Chọn áp dụng checksheet theo từng chủng loại và lô. Khi đó sẽ nhập các chủng loại, số lô sử dụng
+                    checksheet với version hiện tại.
+                </strong>
+            </p>
+        </div>
+
+        <div class="component-layout mt-4">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-check">
+                        <label class="form-check-label" for="setTimeEffective">Theo thời điểm</label>
+                        <input type="radio" name="UpdateChecksheet" class="form-check-input" id="setTimeEffective" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-check">
+                        <label class="form-check-label" for="setChecksheetItems">Theo chủng loại, lô</label>
+                        <input type="radio" name="UpdateChecksheet" class="form-check-input" id="setChecksheetItems" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="checksheetVerId" value="@checksheetVerId" />
+        <div class="mt-4" id="renderConfigChecksheet"></div>
+    </div>
+</div>

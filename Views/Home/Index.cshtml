@@ -1,0 +1,177 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var existUser = Context.Session.GetString("UserID");
+    var roleUser = Context.Session.GetString("RoleName") ?? string.Empty;
+    string classDisabled = string.Empty;
+    string blockCard = string.Empty;
+    // if (existUser != null) {
+    //     classDisabled = string.Empty;
+    //     var roleName = Context.Session.GetString("RoleName");
+    //     if (roleName != null)
+    //     {
+    //         if (roleName.Contains("User"))
+    //         {
+    //             blockCard = "disabled";
+    //         }
+    //     }
+    // } else {
+    //     classDisabled = "disabled";
+    // }
+
+}
+<div class="box-actions">
+    <div class="text-center">
+        <h1 class="display-6">Hệ thống M+ GW</h1>
+        <h3 class="mt-3 fst-italic">Các chức năng chính</h3>
+    </div>
+
+@*     <div class="container mt-4">
+        <div class="tets">
+            <button class="btn btn-secondary btn-supplementary-condition" data-modeevent="supplementaryCondition">Đọc bổ sung</button>
+            <button class="btn btn-secondary btn-read-condition">Đọc điều kiện</button>
+        </div>
+        <div class="modal fade" id="editElement" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="editElementLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="text-center">
+                            <h5 class="modal-title" id="editElementLabel">Sửa thông tin element</h5>
+                        </div>
+                        <button type="button" class="btn-close" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <button class="countQR">CountQR</button> 
+                        <form id="dynamicForm"></form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnSaveCondition" class="btn btn-success mt-3 disabled">💾 Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    @if (roleUser == "" || !roleUser.Contains("User"))
+    {
+        <div class="row">
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="Materials" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">Nguyên Vật Liệu</p>
+                            <img src="~/images/processing.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="Processing" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">Gia Công</p>
+                            <img src="~/images/iteration.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="PrintGrips" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">In Chuôi</p>
+                            <img src="~/images/grip.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="Assembly" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">Lắp Ráp</p>
+                            <img src="~/images/worker.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="PrintLabels" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">In Nhãn</p>
+                            <img src="~/images/device.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="Packaging" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">Đóng Gói</p>
+                            <img src="~/images/package.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="Processing" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">Gia Công</p>
+                            <img src="~/images/iteration.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="PrintGrips" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">In Chuôi</p>
+                            <img src="~/images/grip.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom">
+                    <a asp-controller="Assembly" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">Lắp Ráp</p>
+                            <img src="~/images/worker.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom mt-3">
+                    <a asp-controller="PrintLabels" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">In Nhãn</p>
+                            <img src="~/images/device.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-custom mt-3">
+                    <a asp-controller="Packaging" asp-action="Index" class="action-link">
+                        <div class="card-body text-center">
+                            <p class="fs-6">Đóng Gói</p>
+                            <img src="~/images/package.png" alt="Alternate Text" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

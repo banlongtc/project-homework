@@ -1,0 +1,81 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Thêm mới checksheet";
+    var listAllLocations = ViewData["AllLocations"] as List<TblLocation>;
+    var groupLocations = listAllLocations?.GroupBy(x => x.LocationName)
+    .Select(s => new
+    {
+        LocationName = s.Key,
+        IdLocation = s.FirstOrDefault()?.IdLocation,
+        LocationCode = string.Join(',', s.Select(x => x.LocationCode).ToArray())
+    }).ToList();
+}
+
+<div class="container">
+    <h2>@ViewData["Title"]</h2>
+    <p>Thêm mới checksheet để sử dụng cho sản xuất. Và sẽ được gán trực tiếp cho line sử dụng checksheet.</p>
+    <div class="upload-component mt-3">
+        <div class="upload-checksheet">
+            <div class="alert alert-danger d-none" id="alertContent"></div>
+            <form class="action-upload mb-3" id="formUpload" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3 form-group d-flex flex-wrap">
+                            <label for="filePathExcel">Chọn Checksheet:</label>
+                            <input type="file" name="file" class="mt-2 form-control" id="filePathExcel" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3 form-group d-flex flex-wrap">
+                            <label for="checksheetCode">Checksheet Code:</label>
+                            <input type="text" name="checksheetCode" class="mt-2 form-control" id="checksheetCode" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3 form-group d-flex flex-wrap">
+                            <label for="checksheetType">Checksheet Type:</label>
+                            <select class="form-select mt-2" id="selectLocation">
+                                <option value="">--Chọn loại checksheet--</option>
+                                <option value="CHECKSHEET_CONDITIONS">CHECKSHEET_OPERATIONS</option>
+                                <option value="CHECKSHEET_OPERATIONS">CHECKSHEET_OPERATIONS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3 form-group d-flex flex-wrap">
+                            <label for="selectLocation">Chọn công đoạn:</label>
+                            <select class="form-select mt-2" id="selectLocation">
+                                <option value="">--Công đoạn--</option>
+                                @if (groupLocations != null && groupLocations.Count > 0)
+                                {
+                                    foreach (var item in groupLocations)
+                                    {
+                                        <option value="@(item.IdLocation)">@(item.LocationName)(@item.LocationCode)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 form-group d-flex flex-wrap d-none" id="layoutSelectLocationChild">
+                            <label for="selectLocationChild">Chọn vị trí thao tác:</label>
+                            <select class="form-select mt-2" id="selectLocationChild"></select>
+                        </div>
+                        <div class="mt-3 d-none" id="renderDetailsLocationChild"></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3 form-group d-flex flex-wrap">
+                            <label class="form-label w-100" for="isChangeForm">Có thay đổi form nhập dữ liệu không?</label>
+                            <input type="checkbox" name="IsChangeForm" id="isChangeForm" style="width: 20px; height: 20px;" class="form-check-input" />
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-upload-checksheet mt-3">Thêm <i class="bx bx-upload"></i></button>
+            </form>
+            <div id="listFiles"></div>
+        </div>
+    </div>
+</div>
+<script>
+</script>

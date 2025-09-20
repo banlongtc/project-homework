@@ -1,0 +1,132 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Phiếu Xuất Kho";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+}
+
+<div class="text-center page-title">
+    <h1 class="display-6 mb-0">@ViewData["Title"]</h1>
+</div>
+@* Hiển thị breadcrumb *@
+@await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+<hr />
+<div class="notification" style="font-size: 13px;">
+    <p class="mb-0 text-danger fst-italic">*Lưu ý:</p>
+    <ol>
+        <li class="text-danger fst-italic">Viết phiếu theo thứ tự từ trên xuống dưới</li>
+    </ol>
+</div>
+<div class="delivery-container" id="listOtherMaterials"></div>
+<div class="list-rg90-items mt-4 d-none">
+    <h5 class="text-center mb-4">Danh sách các mã nguyên vật liệu RG90</h5>
+    <div class="delivery-container" id="listRG90Materials"></div>
+</div>
+
+<div class="modal" id="ticketDetails" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="button-close text-end">
+                <button class="btn-close-modal btn" title="Đóng thông tin chi tiết" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title">Thông tin chi tiết phiếu xuất kho</h4>
+            </div>
+            <div class="modal-body" id="detailContent">
+                <div class="time-delivery mb-3">
+                    <span>Thời gian yêu cầu giao nhận:</span>
+                    <span class="time-value"></span>
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="ticket-1" data-title_ticket="Phiếu 1" role="tabpanel" aria-labelledby="ticket-tab-1">
+                        <div class="table-responsive">
+                            <table class="table table-bordered border-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Mã sản phẩm</th>
+                                        <th>Số lô</th>
+                                        <th>Đơn vị</th>
+                                        <th>Số lượng y/c xuất</th>
+                                        <th>Vị trí kho</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ticket-content"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade d-none" id="ticket-2" data-title_ticket="Phiếu 2" role="tabpanel" aria-labelledby="ticket-tab-2">
+                        <div class="table-responsive">
+                            <table class="table table-bordered border-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Mã sản phẩm</th>
+                                        <th>Số lô</th>
+                                        <th>Đơn vị</th>
+                                        <th>Số lượng y/c xuất</th>
+                                        <th>Vị trí kho</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ticket-content"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade d-none" id="ticket-3" data-title_ticket="Phiếu 3" role="tabpanel" aria-labelledby="ticket-tab-3">
+                        <div class="table-responsive">
+                            <table class="table table-bordered border-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Mã sản phẩm</th>
+                                        <th>Số lô</th>
+                                        <th>Đơn vị</th>
+                                        <th>Số lượng y/c xuất</th>
+                                        <th>Vị trí kho</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ticket-content"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs" id="tabTicketEx" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="ticket-tab-1" data-bs-toggle="tab" data-bs-target="#ticket-1" type="button" role="tab" aria-controls="ticket-1" aria-selected="true">Phiếu 1</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link d-none" id="ticket-tab-2" data-bs-toggle="tab" data-bs-target="#ticket-2" type="button" role="tab" aria-controls="ticket-2" aria-selected="false">Phiếu 2</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link d-none" id="ticket-tab-3" data-bs-toggle="tab" data-bs-target="#ticket-3" type="button" role="tab" aria-controls="ticket-3" aria-selected="false">Phiếu 3</button>
+                    </li>
+                </ul>
+                <div class="hidden-input"></div>
+            </div>
+            <div class="modal-footer justify-content-center" runat="server">
+                <button id="buttonCreated" class="btn btn-created btn-success">Viết Phiếu</button>
+                <div class="loading d-none"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="showNotification">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="button-close text-end">
+                <button class="btn-close-modal btn" title="Đóng thông tin chi tiết" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title">Thông báo</h4>
+            </div>
+            <div class="modal-body text-center" id="notificationContent">
+            </div>
+            <div class="modal-footer justify-content-center" runat="server">
+                <button id="buttonExported" class="btn btn-exported btn-success">Tải Về</button>
+            </div>
+        </div>
+    
+    </div>
+</div>

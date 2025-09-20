@@ -1,0 +1,168 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<MPLUS_GW_WebCore.Models.CustomRenderProcess>
+@{
+    ViewData["Title"] = "Nhập Nguyên Vật Liệu";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var listItemRecevingPlan = ViewData["ListItemRecv"] as List<MPLUS_GW_WebCore.Controllers.Materials.ListItemReceivingNow>;
+}
+<div class="text-center page-title">
+    <h1 class="display-6">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+    <hr />
+</div>
+
+<div class="box-actions import-materials-layout">
+    <div class="row">
+        <div class="col-6">
+            <div class="card card-custom">
+                <a class="btn-show-modal" data-bs-toggle="modal" href="#staticImportWire">
+                    <div class="card-body text-center">
+                        <p>Dây dẫn</p>
+                        <img src="~/images/import.png" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card card-custom">
+                <a class="btn-show-modal btn-other-materials" data-bs-toggle="modal" href="#staticImportOthers">
+                    <div class="card-body text-center">
+                        <p>Nguyên vật liệu khác</p>
+                        <img src="~/images/import.png" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal nhập nguyên vật liệu dây dẫn *@
+<div class="modal modal-import-materials fade" id="staticImportWire"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center w-100">
+                    <h5 class="modal-title" id="staticBackdropLabel">Nhập dây dẫn</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="hold-count"></div>
+                <div class="qty-receving"></div>
+                <div class="box-read-barcode w-100">
+                    <div class="input-group">
+                        <label class="from-label" for="barcodeInput">Mã NVL cần nhập: </label>
+                        <input type="text" id="barcodeInput" class="barcode-input" />
+                    </div>
+                    <button class="btn-reload-content"><i class='bx bx-refresh'></i></button>
+                    <button class="btn-convert-content d-none">Convert</button>
+                </div>
+                <div class="content-qr-render"></div>
+                <div class="list-item-plan">
+                    <table class="table table-bordered border-dark">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">STT</th>
+                                <th class="align-middle">Mã NVL</th>
+                                <th class="align-middle">Lot NVL</th>
+                                <th class="align-middle">Số lượng nhập</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (listItemRecevingPlan != null)
+                            {
+                                if(listItemRecevingPlan.Count > 0) {
+                                    int count = 1;
+                                    foreach (var item in listItemRecevingPlan)
+                                    {
+                                        <tr data-material_code="@item.MaterialCode" data-idreceiving="@item.IdItem" data-material_lot="@item.LotMaterial" data-material_qty="@item.QtyReceiving">
+                                            <td class="align-middle">@count</td>
+                                            <td class="align-middle">@item.MaterialCode</td>
+                                            <td class="align-middle">@item.LotMaterial</td>
+                                            <td class="align-middle">@item.QtyReceiving</td> 
+                                        </tr>
+                                        count++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr class="align-middle"><td colspan="5">Không có nguyên vật liệu trên Receiving Plan List</td></tr>
+                                }
+                               
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-md btn-pause-import disabled">
+                    <i class="bx bx-pause"></i>
+                    Tạm dừng
+                </button>
+                <button type="button" class="btn btn-md btn-save-import disabled" data-bs-toggle="modal" data-bs-target="#enterRequestNo"><i class="bx bx-import"></i>Nhập số Request</button>
+            </div>
+            <div class="overlay d-none"></div>
+            <div class="spinner-border d-none"></div>
+        </div>
+    </div>
+</div>
+
+@* Modal nhập nguyên vật liệu khác *@
+<div class="modal modal-import-materials fade" id="staticImportOthers" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center w-100">
+                    <h5 class="modal-title" id="staticBackdropLabel">Nhập Nguyên Vật Liệu Khác</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="select-location d-none select-layout" id="layoutSelectLocation">
+                    <div class="form-select-sm dropdown d-none" id="selectToLocationMaterials">
+                        @foreach (var processProd in Model)
+                        {
+                            <div class="dropdown-item" data-value="@processProd.ProcessCode">@processProd.ProcessName (@processProd.ProcessCode)</div>
+                        }
+                    </div>
+                </div>
+                <div class="content-other-material w-100">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-end mt-4">
+                    <button type="button" class="btn btn-md btn-save-others disabled"><i class="bx bx-import"></i>Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal nhập số request cho dây dẫn *@
+<div class="modal modal-request-no fade" id="enterRequestNo" tabindex="-1" aria-labelledby="requestNoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-md-down modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center w-100">
+                    <h5 class="modal-title" id="requestNoLabel">Nhập mã Request</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="requestNo" class="form-label">Mã request:</label>
+                    <input type="text" id="requestNo" name="requestNo" value="" class="request-input w-100" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-save-requestno">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

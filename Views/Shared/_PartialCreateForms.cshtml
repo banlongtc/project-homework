@@ -1,0 +1,233 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="modal fade" id="editElement" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="editElementLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="editElementLabel">Configs Field</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formFieldMapping">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group mt-2">
+                                <label class="form-label" for="fieldNameMapping">Field Name (<span class="text-danger">*</span>)</label>
+                                <input type="text" name="FieldNameMapping" id="fieldNameMapping" class="form-control w-100" required />
+                            </div>
+                            <small class="small fst-italic">
+                                Biến nội bộ để xác định value khi gọi ra để add vào checksheet,
+                                là id của element và name của element.
+                            </small>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group mt-2">
+                                <label class="form-label" for="cellValueMapping">Start Cell (<span class="text-danger">*</span>)</label>
+                                <input type="text" name="CellValueMapping" id="cellValueMapping" class="form-control text-uppercase w-100" required />
+                            </div>
+                            <small class="small fst-italic">Địa chỉ ô thêm dữ liệu trong excel. Ví dụ(A, B, C,....).</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group mt-2">
+                                <label class="form-label" for="customClass">Custom Class</label>
+                                <input type="text" name="CustomClass" id="customClass" class="form-control w-100" />
+                            </div>
+                            <small class="small fst-italic">Custom class cho phần tử này để hiển thị tại client</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group mt-2">
+                                <label class="form-label" for="labelNameMapping">Label Name</label>
+                                <input type="text" name="LabelNameMapping" id="labelNameMapping" class="form-control w-100" />
+                            </div>
+                            <small class="small fst-italic">Label hiển thị khi render form nhập dữ liệu</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group mt-2">
+                                <label class="form-label" for="typeInputRender">Type Input</label>
+                                <select name="TypeInputRender" id="typeInputRender" class="form-select w-100">
+                                    <option value="">-- Type Input --</option>
+                                    <option value="text">Text</option>
+                                    <option value="number">Number</option>
+                                    <option value="checkbox">CheckBox</option>
+                                </select>
+                            </div>
+                            <small class="small fst-italic">Type của input khi render ra form nhập</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group mt-2">
+                                <label class="form-label" for="dataSource">Data Source</label>
+                                <input type="text" name="DataSource" id="dataSource" class="form-control w-100" />
+                            </div>
+                            <small class="small fst-italic">Xác định tự thêm dữ liệu khi element bị ẩn</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="condition-container mt-2">
+                                <p class="mb-2">Điều kiện <button class="btn btn-success btn-add-condition btn-sm"><i class="bx bx-plus"></i></button></p>
+                                <div id="conditionContents"></div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="event-container mt-2">
+                                <p class="mb-2">Sự kiện JS <button class="btn btn-success btn-add-event btn-sm"><i class="bx bx-plus"></i></button></p>
+                                <div id="eventContents"></div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check mt-2">
+                                <label class="form-check-label" for="isMergedCell">Merge Cell</label>
+                                <input type="checkbox" name="IsMergedCell" id="isMergedCell" class="form-check-input" />
+                            </div>
+                            <small class="small fst-italic">Merge cell trong excel</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check mt-2">
+                                <label class="form-check-label" for="checkCalcTotal">Tính tổng?</label>
+                                <input type="checkbox" class="form-check-input" id="checkCalcTotal" value="">
+                            </div>
+                            <small class="small fst-italic">Kiểm tra ô hiện tại có tính tổng?</small>
+                        </div>
+                    </div>
+                    <div class="show-merged-cell d-none">
+                        <div class="row">
+                            <div class="col-6 d-none">
+                                <div class="form-group">
+                                    <label class="form-label" for="rowSpanMerged">Row Span</label>
+                                    <input type="number" name="RowSpanMerged" id="rowSpanMerged" class="form-control w-100" />
+                                </div>
+                                <small class="small fst-italic">Số lượng hàng cần merge</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="colSpanMerged">Col Span</label>
+                                    <input type="number" name="ColSpanMapping" id="colSpanMerged" class="form-control w-100" />
+                                </div>
+                                <small class="small fst-italic">Số lượng cột cần merge</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notice-error text-danger"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-save-custom" id="saveCustomElement">Lưu và đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editParagraph" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="editParagraphLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="editParagraphLabel">Sửa đoạn văn</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <label class="form-label" for="paragraphValue">Content</label>
+                            <textarea name="ParagraphValue" id="paragraphValue" class="form-control w-100" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="notice-error text-danger"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editSection" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="editSectionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="editSectionLabel">Sửa section</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group align-items-center">
+                            <label class="form-label mb-0 me-2 col-4" for="sectionId">Section Id:</label>
+                            <input type="text" name="SectionId" id="sectionId" class="form-control border-dark" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group align-items-center mt-2">
+                            <label class="form-label mb-0 me-2 col-4" for="sectionClass">Section Class:</label>
+                            <input type="text" name="SectionClass" id="sectionClass" class="form-control border-dark" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group align-items-center mt-2">
+                            <label class="form-label mb-0 me-2 col-4" for="rowCellIndex">Row Cell Value:</label>
+                            <input type="number" name="RowCellIndex" id="rowCellIndex" class="form-control border-dark" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-save-custom" id="saveCustomSection">Lưu và đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editButtonElement" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="editButtonElementLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="editButtonElementLabel">Sửa section</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formButtonCustom">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group align-items-center">
+                                <label class="form-label mb-0 me-2 col-4" for="buttonId">Button Id:</label>
+                                <input type="text" name="ButtonId" id="buttonId" class="col-8 form-control border-dark" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group align-items-center mt-2">
+                                <label class="form-label mb-0 me-2 col-4" for="buttonClass">Button Class:</label>
+                                <input type="text" name="ButtonClass" id="buttonClass" class="col-8 form-control border-dark" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group align-items-center mt-2">
+                                <label class="form-label mb-0 me-2 col-4" for="textButton">Text button:</label>
+                                <input type="text" name="textButton" id="textButton" class="col-8 form-control border-dark" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group align-items-center mt-2">
+                                <label class="form-label mb-0 me-2 col-4" for="typeButton">Type Button:</label>
+                                <input type="text" name="TypeButton" id="typeButton" class="col-8 form-control border-dark" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="event-container input-group align-items-center mt-2">
+                                <label class="form-label mb-0 me-2 col-4" for="eventButton">Button Event:</label>
+                                <textarea class="form-control col-8 border-dark" rows="4" id="eventButton"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-save-custom" id="saveCustomButton">Lưu và đóng</button>
+            </div>
+        </div>
+    </div>
+</div>

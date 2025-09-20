@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MPLUS_GW</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/OIP.ico" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/jquery-ui.min.css" />
+@*     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-icons/font/bootstrap-icons.min.css" /> *@
+    <link rel="stylesheet" href="~/css/boxicons.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/timepicker.min.css" />
+    <link rel="stylesheet" href="~/css/dataTables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MPLUS_GW_WebCore.styles.css" asp-append-version="true" />
+    <script src="~/js/site.js"></script>
+    <script src="~/js/manage-eink.js"></script>    
+   @*  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" /> *@
+    <link href="~/css/site/style1.css" rel="stylesheet" />
+</head>
+<body>
+    <header class="admin-header">
+        <nav class="header-shadow navbar navbar-toggleable-sm navbar-light bg-white box-shadow sticky-top">
+            <div class="header-nav">
+                <div class="right-content">
+                    <a class="navbar-brand d-flex logo-web" asp-controller="Admin" asp-action="Index">
+                        <img src="~/images/letter-m.png" alt="Alternate Text" />
+                    </a>
+                    <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                        <i class="bx bx-home me-1"></i>
+                        <span class="fs-6">MPLUS_GW</span>
+                    </a>
+                </div>
+                @if (Context.Session.GetString("DisplayName") != null)
+                {
+                    <div class="dropdown user-actions">
+                        <div class="display-name" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bx-user-circle me-1"></i>
+                            <span>@Context.Session.GetString("DisplayName")</span>
+                            <i class="bx bx-caret-down ms-1"></i>
+                        </div>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <div class="dropdown-item">
+                                <a class="nav-link">Thông tin tài khoản</a>
+                            </div>
+                            <div class="dropdown-item">
+                                <a class="nav-link btn-logout" asp-controller="Home" asp-action="Logout">
+                                    Đăng Xuất
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }  
+            </div>
+        </nav>
+    </header>
+    <div class="content-admin">
+        <div class="show-navs">
+            <div class="list-nav-admin">
+                <div class="list-item">
+                    <a class="item-link" title="Tổng quát" asp-controller="Admin" asp-action="Index">
+                        <i class="bx bxs-tachometer"></i>
+                        <span class="collapse-menu">Tổng quát</span>
+                     </a>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Giá trị tiêu chuẩn" asp-controller="StandardValue" asp-action="Index">
+                        <i class="bx bx-certification"></i>
+                        <span class="collapse-menu">Giá trị tiêu chuẩn</span>
+                    </a>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Quản lý sản xuất" asp-controller="Admin" asp-action="ManagerProducts">
+                        <i class="bx bx-store"></i>
+                        <span class="collapse-menu">Quản lý sản xuất</span>
+                    </a>
+                </div>
+                <div class="list-item has-collapse">
+                    <a class="item-link" title="Người dùng" asp-controller="UserManagement" asp-action="Index">
+                        <i class="bx bxs-user"></i>
+                        <span class="collapse-menu">Tài khoản</span>
+                    </a>
+                    <div class="collapse-menu-dropdown">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="UserManagement" asp-action="Index">Tất cả người dùng</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="UserManagement" asp-action="AddUser">Thêm mới</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="RoleManagement" asp-action="Index">Quyền truy cập</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a asp-controller="UserManagement" asp-action="Edit" class="item-dropdown disabled">Hồ sơ của bạn</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Checksheets" asp-controller="Checksheets" asp-action="Index">
+                        <i class="bx bxs-book-content"></i>
+                        <span class="collapse-menu">Checksheets</span>
+                    </a>
+                    <div class="collapse-menu-dropdown">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Checksheets" asp-action="Index">Tất cả checksheets</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Checksheets" asp-action="Add">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Dụng cụ" asp-controller="MasterTools" asp-action="Index">
+                        <i class='bx bxs-wrench'></i>
+                        <span class="collapse-menu">Master dụng cụ</span>
+                    </a>
+                    <div class="collapse-menu-dropdown">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="MasterTools" asp-action="Index">Tất cả master dụng cụ</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="MasterTools" asp-action="Add">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Master JIGs" asp-controller="MasterJIGs" asp-action="Index">
+                        <i class="bx bx-list-plus"></i>
+                        <span class="collapse-menu">Master JIGs</span>
+                    </a>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Master vị trí" asp-controller="MasterPositions" asp-action="Index">
+                        <i class="bx bx-list-plus"></i>
+                        <span class="collapse-menu">Master vị trí</span>
+                    </a>
+                    <div class="collapse-menu-dropdown">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="MasterPositions" asp-action="Index">Tất cả master vị trí</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="MasterPositions" asp-action="Add">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Template" asp-controller="CreateForm" asp-action="Index">
+                        <i class='bx bxs-book-content'></i>
+                        <span class="collapse-menu">Form nhập dữ liệu</span>
+                    </a>
+                    <div class="collapse-menu-dropdown">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="CreateForm" asp-action="Index">Tất cả form nhập</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="CreateForm" asp-action="Add">Thêm mới</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="CreateForm" asp-action="Edit">Sửa</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Quản lý Master" asp-controller="Import" asp-action="Show">
+                        <i class="bx bx-list-plus"></i>
+                        <span class="collapse-menu">Quản lý Master</span>
+                    </a>
+                    <div class="collapse-menu-dropdown">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="ItemNumber">Master Item Number</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="MasterTC">Master Tiêu chuẩn</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="DetailTC">Chi tiết Tiêu chuẩn</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="TCthongso">Master Tiêu chuẩn thông số</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="TCmay">Master Tiêu chuẩn máy</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="Error">Master Lỗi</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="Location">Master Location</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Master" asp-action="Item_Loc">Master Item - Location</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Import" asp-action="Show">Import dữ liệu</a>
+                            </li>
+                            @* <li class="list-group-item">
+                                <a class="item-dropdown" asp-controller="Import" asp-action="Month">Báo cáo tháng</a>
+                            </li> *@
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <a class="item-link" title="Tải về Checksheet" asp-controller="Admin" asp-action="PrintCheckSheet">
+                        <i class='bx bx-cloud-download'></i>
+                        <span class="collapse-menu">Tải về Checksheet</span>
+                    </a>
+                </div>
+                <div class="list-item">
+                    <a class="item-link collapse-action" title="Thu gọn" href="javascript:void(0)">
+                        <i class='bx bxs-caret-left-circle'></i>
+                        <span class="collapse-menu">Thu gọn Menu</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <main role="main" class="main-content left-width">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer sticky-bottom text-center text-muted left-width">
+        <div class="container">
+            Design by IT Application Team &copy; 2024 - MPLUS_GW
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/jquery-ui/dist/jquery-ui.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/file-saver/dist/filesaver.min.js"></script>
+    <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/js/timepicker.min.js"></script>
+    <script src="~/js/dataTables.js"></script>
+    <script src="~/js/configs.js"></script>
+    <script src="~/js/admin/admin.js" asp-append-version="true"></script>
+    <script src="~/js/admin/add-roles.js" asp-append-version="true"></script>
+    <script src="~/js/admin/add-masters.js" asp-append-version="true"></script>
+    <script src="~/js/admin/form-builder.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

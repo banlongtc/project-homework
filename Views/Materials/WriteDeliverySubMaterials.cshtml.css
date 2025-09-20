@@ -1,0 +1,28 @@
+﻿.sub-materials-card .input-group .ui-datepicker-trigger,
+.sub-materials-card .input-group i {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    cursor: pointer;
+    width: 20px;
+}
+
+.sub-materials-card table thead th[data-dt-column="4"],
+.sub-materials-card table thead th[data-dt-column="2"] {
+    width: 120px;
+}
+
+.sub-materials-card input[type="text"] {
+    width: 120px;
+}
+
+.sub-materials-card input[type="number"] {
+    width: 110px;
+}
+
+th, td {
+    font-size: 14px;
+    text-align: center !important;
+}

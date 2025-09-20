@@ -1,0 +1,86 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Các loại tiêu chuẩn chính";
+    Layout = "_Admin";
+    var ListTc = ViewData["ListTC"] as List<TblMasterTc>;
+}
+<h4 style="color:#008d61; font-weight:600">Master Tiêu chuẩn</h4>
+<div style="float:left">
+    <button type="button" id="Btnthemtc" class="btn btn-primary" style="background-color:cadetblue; border-color:cadetblue; margin:20px;margin-left:0">
+        Thêm mới
+    </button>
+</div>
+<br />
+<table class="table table-hover" style="font-size:small">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Code</th>
+            <th scope="col">Tên tiêu chuẩn</th>           
+            <th scope="col">Tiêu chuẩn máy</th>
+            <th scope="col">Remark</th>
+            <th scope="col" width="90px">Sửa & Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ListTc != null)
+        {
+            foreach (var it in ListTc)
+            {
+                <tr class="table-light">
+                    
+                    <td class="tcid" data-tcid="@it.IdTc"> @it.IdTc</td>
+                    <td class="tccode" data-tccode="@it.TcCode"> @it.TcCode</td>
+                    <td class="tcname" data-tcname="@it.TenTieuchuan"> @it.TenTieuchuan</td>
+                    <td class="tcmay" data-tcmay="@it.TcMay" style="text-align:center">
+                        <input type="checkbox" id="bittcmaybit" @(it.TcMay ?? false ? "checked" : "") />   
+                    </td>
+                    <td class="tcremark" data-tcremark="@it.Remark">                      
+                    </td>
+                    <td class="align-middle text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="action-item text-decoration-none" id="Edittc"><i class="bx bx-edit"></i></a>
+                            <a class="action-item text-decoration-none text-danger" id="Deletetc"><i class="bx bx-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="modal fade" id="Popup_Themtc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lbtdtc" style="color:darkblue;font-weight:600"></h5>
+                <button class="btn-close-modal btn" data-bs-dismiss="modal" aria-label="Close" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-body">
+                <div id="noticeContainer"></div>
+                <label id="Lbidtc"></label>
+                <div style="margin-bottom:10px; width:250px">
+                    <label>Mã Tiêu chuẩn: </label>
+                    <input type="text" class="form-control" id="txttccode">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Tên Tiêu chuẩn: </label>
+                    <input type="text" class="form-control" id="txttcname">
+                </div>
+                <div style="margin-bottom:10px;width:250px">
+                    <input type="checkbox" id="tcmaybit" />  
+                    <label>Tiêu chuẩn máy</label>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Remark: </label>
+                    <input type="text" class="form-control" id="tcremark">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="BtnSave_tc" class="btn btn-primary">Lưu</button>
+                <span class="spinner-border spinner-border-sm d-none check-load" role="status" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+</div>

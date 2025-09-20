@@ -1,0 +1,53 @@
+{
+  "version": "3.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "@aspnet/signalr@latest",
+      "destination": "wwwroot/lib/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js",
+        "dist/browser/signalr.min.js.map",
+        "dist/browser/signalr.js.map",
+        "README.md"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "file-saver@2.0.5",
+      "destination": "wwwroot/lib/file-saver/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "chart.js@3.9.1",
+      "destination": "wwwroot/lib/chart.js/",
+      "files": [
+        "dist/chart.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "chartjs-plugin-datalabels@2.0.0",
+      "destination": "wwwroot/lib/chartjs-plugin-datalabels/",
+      "files": [
+        "dist/chartjs-plugin-datalabels.min.js"
+      ]
+    },
+    {
+      "library": "jquery-ui@1.14.1",
+      "destination": "wwwroot/lib/jquery/jquery-ui/",
+      "files": [
+        "dist/jquery-ui.min.js",
+        "dist/themes/base/jquery-ui.min.css"
+      ]
+    },
+    {
+      "library": "sweetalert@2.1.2",
+      "destination": "wwwroot/lib/sweetalert/",
+      "files": [
+        "dist/sweetalert.min.js"
+      ]
+    }
+  ]
+}

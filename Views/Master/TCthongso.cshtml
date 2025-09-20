@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Master tiêu chuẩn thông số";
+    Layout = "_Admin";
+    var Listitem = ViewData["Listitem"] as List<TblItemValTc>;
+    var Listtc = ViewData["Listtc"] as List<TblDetailTc>;
+}
+<h4 style="color:#008d61; font-weight:600">Master tiêu chuẩn thông số</h4>
+<br />
+<table class="table table-hover" style="font-size:small">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Item Code</th>
+            <th scope="col">ID Detail</th>
+            <th scope="col">Tên tiêu chuẩn</th>
+            <th scope="col">Mô tả</th>
+            <th scope="col">ID cha</th>
+            <th scope="col">Text</th>
+            <th scope="col">Int</th>
+            <th scope="col">Decimal</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Value Unit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var tcthongso = (from s in Listitem
+                             join d in Listtc
+                             
+                             on s.IdValTc equals d.IdDetail
+                             select new
+                             {
+                                 s.Id,
+                                 s.ItemCode,
+                                 s.IdValTc,
+                                 d.TenTc,
+                                 d.MoTa,
+                                 d.IdTc,
+                                 d.ValueText,
+                                 d.ValueInt,
+                                 d.ValueDecimal,
+                                 d.Unit,
+                                 d.ValueUnit
+
+
+                             }).ToList();
+            if (tcthongso != null)
+            {
+                foreach (var it in tcthongso)
+                {
+                    <tr class="table-light">
+                        <td> @it.Id</td>
+                        <td> @it.ItemCode</td>
+                        <td> @it.IdValTc</td>
+                        <td> @it.TenTc </td>
+                        <td> @it.MoTa</td>
+                        
+
+                        <td> @it.IdTc </td>
+                        <td> @it.ValueText </td>
+                        <td> @it.ValueInt</td>                       
+                        @if (it.ValueDecimal != null)
+                        {
+                            <td>
+                                @it.ValueDecimal.Value.ToString("G29")
+                            </td>
+                        }
+                        <td> @it.Unit</td>
+                        <td> @it.ValueUnit</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+

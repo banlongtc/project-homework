@@ -1,0 +1,197 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Theo dõi nhãn được chia";
+    var listDivMC = ViewData["ListDivMC"] as List<MPLUS_GW_WebCore.Controllers.Processing.DivMCView>;
+}
+<div id="divMCContent">
+    @if (listDivMC != null)
+    {
+        foreach (var item in listDivMC)
+        {
+            var shifts = item.Shifts;
+            <div class='date-value mt-3 mb-3'><h5>Ngày: @(item.DateProd)</h5></div>
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                @if (shifts != null)
+                {
+                    int index = 0;
+                    foreach (var shift in shifts)
+                    {
+                        string activeClass = index == 0 ? "active" : "";
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeClass)" data-bs-toggle="pill"
+                            data-bs-target="#@(shift.ShiftLabel)" type="button" role="tab"
+                            aria-controls="" aria-selected="@(index == 0 ? "true" : "false")">
+                                Ca @(index + 1)
+                            </button>
+                        </li>
+                        index++;
+                    }
+                }
+            </ul>
+            @if (shifts != null)
+            {
+                int index = 0;
+                <div class="tab-content" id="pills-tabContent">
+                    @foreach (var shift in shifts)
+                    {
+                        string activeClass = index == 0 ? "show active" : "";
+                        <div class="tab-pane fade @(activeClass)" role="tabpanel"
+                        id="@(shift.ShiftLabel)">
+                            <div class="table-responsive">
+                                <table class="table table-bordered border-dark text-center" id="tableMC@(shift.ShiftLabel)" style="font-size: 24px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Chủng loại</th>
+                                            <th>Số lô</th>
+                                            <th>Số lượng</th>
+                                            <th>Chữ cái</th>
+                                            <th>Máy 1</th>
+                                            <th>Máy 2</th>
+                                            <th>Máy 3</th>
+                                            <th>Máy 4</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var info in shift.InfoShifts)
+                                        {
+                                            int qtyDivMC1 = 0;
+                                            int qtyDivMC2 = 0;
+                                            int qtyDivMC3 = 0;
+                                            int qtyDivMC4 = 0;
+                                            string pctMC1 = "";
+                                            string pctMC2 = "";
+                                            string pctMC3 = "";
+                                            string pctMC4 = "";
+                                            int qtyHasProcessed1 = 0;
+                                            int qtyHasProcessed2 = 0;
+                                            int qtyHasProcessed3 = 0;
+                                            int qtyHasProcessed4 = 0;
+                                            string classOngoing = "";
+                                            if(info.StatusWorkOrder == "On Going Production") {
+                                                classOngoing = "on-going";
+                                            }
+                                            foreach (var machine in info.MachineRows)
+                                            {
+                                                if (machine.MachineShift == "1")
+                                                {
+                                                    qtyDivMC1 = machine.QtyDiv != null ? (int)machine.QtyDiv : 0;
+                                                    qtyHasProcessed1 = machine.QtyHasProcessed != null ? (int)machine.QtyHasProcessed : 0;
+                                                    pctMC1 = (int)((float)qtyHasProcessed1 / qtyDivMC1 * 100) + "%" ?? "";
+                                                }
+                                                if (machine.MachineShift == "2")
+                                                {
+                                                    qtyDivMC2 = machine.QtyDiv != null ? (int)machine.QtyDiv : 0;
+                                                    qtyHasProcessed2 = machine.QtyHasProcessed != null ? (int)machine.QtyHasProcessed : 0;
+                                                    pctMC2 = (int)((float)qtyHasProcessed2 / qtyDivMC2 * 100) + "%" ?? "";
+                                                }
+                                                if (machine.MachineShift == "3")
+                                                {
+                                                    qtyDivMC3 = machine.QtyDiv != null ? (int)machine.QtyDiv : 0;
+                                                    qtyHasProcessed3 = machine.QtyHasProcessed != null ? (int)machine.QtyHasProcessed : 0;
+                                                    pctMC3 = (int)((float)qtyHasProcessed3 / qtyDivMC3 * 100) + "%" ?? "";
+                                                }
+                                                if (machine.MachineShift == "4")
+                                                {
+                                                    qtyDivMC4 = machine.QtyDiv != null ? (int)machine.QtyDiv : 0;
+                                                    qtyHasProcessed4 = machine.QtyHasProcessed != null ? (int)machine.QtyHasProcessed : 0;
+                                                    pctMC4 = (int)((float)qtyHasProcessed4 / qtyDivMC4 * 100) + "%" ?? "";
+                                                }
+                                            }
+                                            <tr data-workorder="@(info.WorkOrder)" class="@(classOngoing)">
+                                                <td class="align-middle info-product"><div class="content-item">@(info.ProductCode)(@(info.TypeLabel))</div></td>
+                                                <td class="align-middle info-product"><div class="content-item">@(info.LotNo)</div></td>
+                                                <td class="align-middle info-product"><div class="content-item">@(info.QtyOrder)</div></td>
+                                                <td class="align-middle info-product"><div class="content-item">@(info.Character)</div></td>
+                                                <td class="align-middle" data-machine="1">
+                                                    @if (qtyDivMC1 > 0)
+                                                    {
+                                                        <div class="d-flex flex-wrap justify-content-center">
+                                                            <div class="show-percent">@(pctMC1 ?? "")</div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                                     role="progressbar" style="width: @(pctMC1 ?? "")" aria-valuenow="@qtyDivMC1">
+                                                                    <div class="percent-used">@(pctMC1 ?? "")</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="qty-used">@(qtyHasProcessed1) / @qtyDivMC1</div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="qty-div">@qtyDivMC1</div>
+                                                    }
+                                                </td>
+                                                <td class="align-middle" data-machine="2">
+                                                    @if (qtyDivMC2 > 0)
+                                                    {
+                                                        <div class="d-flex flex-wrap justify-content-center">
+                                                            <div class="show-percent">@(pctMC2 ?? "")</div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                                     role="progressbar" style="width: @(pctMC2 ?? "")" aria-valuenow="@qtyDivMC2">
+                                                                    <div class="percent-used">@(pctMC2 ?? "")</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="qty-used">@(qtyHasProcessed2) / @qtyDivMC2</div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="qty-div">@qtyDivMC2</div>
+                                                    }
+                                                </td>
+                                                <td class="align-middle" data-machine="3">
+                                                    @if (qtyDivMC3 > 0)
+                                                    {
+                                                        <div class="d-flex flex-wrap justify-content-center">
+                                                            <div class="show-percent">@(pctMC3 ?? "")</div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                                     role="progressbar" style="width: @(pctMC3 ?? "")" aria-valuenow="@qtyDivMC3">
+                                                                    <div class="percent-used">@(pctMC3 ?? "")</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="qty-used">@(qtyHasProcessed3) / @qtyDivMC3</div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="qty-div">@qtyDivMC3</div>
+                                                    }
+                                                </td>
+                                                <td class="align-middle" data-machine="4">
+                                                    @if (qtyDivMC4 > 0)
+                                                    {
+                                                        <div class="d-flex flex-wrap justify-content-center">
+                                                            <div class="show-percent">@(pctMC4 ?? "")</div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                                     role="progressbar" style="width: @(pctMC4 ?? "")" aria-valuenow="@qtyDivMC4">
+                                                                    <div class="percent-used">@(pctMC4 ?? "")</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="qty-used">@(qtyHasProcessed4) / @qtyDivMC4</div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="qty-div">@qtyDivMC4</div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        index++;
+                    }
+                </div>
+            }
+        }
+    }
+</div>

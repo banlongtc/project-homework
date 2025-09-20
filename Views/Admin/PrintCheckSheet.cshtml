@@ -1,0 +1,95 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Tải Checksheet";
+    var allWorkOrders = ViewData["AllWorkOrder"] as List<TblWorkOrderProcessing>;
+}
+
+<div class="container">
+    <div class="page-title">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+    <div class="card-subtitle">
+        <p>Chức năng tải checksheet về máy khi có chỉ thị sản xuất. Checksheet này sẽ là checksheet hiện hành. Còn nếu có thay đổi thì người có quyền truy cập sẽ thực hiện chọn phiên bản khác để tải về.</p>
+    </div>
+
+    <div class="list-workorders">
+        <div class="table-responsive">
+            <table class="table table-bordered border-dark text-center" id="listWorkOrdersProduction">
+                <thead>
+                    <tr>
+                        <th class="align-middle text-center">STT</th>
+                        <th class="align-middle text-center">Chỉ thị sản xuất</th>
+                        <th class="align-middle text-center">Chủng loại</th>
+                        <th class="align-middle text-center">Số lô</th>
+                        <th class="align-middle text-center">Trạng thái</th>
+                        <th class="align-middle text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (allWorkOrders != null) {
+                        int count = 1;
+                        foreach (var item in allWorkOrders) {
+                            string classDisabled = "";
+                            if (item.ProcessingStatus == "Exported") {
+                                classDisabled = " disabled";
+                            }
+                            <tr class="">
+                                <td class="align-middle text-center">@count</td>
+                                <td class="align-middle text-center">@item.Woprocessing</td>
+                                <td class="align-middle text-center">@item.ProductCode</td>
+                                <td class="align-middle text-center">@item.LotProcessing</td>
+                                <td class="align-middle text-center">@item.ProcessingStatus</td>
+                                <td class="align-middle text-center">
+                                    <button class="btn btn-sm btn-success btn-show-download@(classDisabled)" data-positioncode="@item.PositionCode" data-workorder="@item.Woprocessing"><i class="bx bx-cloud-download"></i>Tải về</button>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="showSelectCheckSheetForDownload" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="downloadChecksheetLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="downloadChecksheetLabel">Chi tiết tải về</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <label class="form-label" for="selectChecksheet">Chọn checksheet cần tải:</label>
+                            <select name="SelectChecksheet" id="selectChecksheet" class="form-select w-100">
+                                <option value="">--Checksheet--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div class="input-group d-none">
+                            <label class="form-label" for="selectPositionDownload">Chọn vị trí cần tải:</label>
+                            <select name="SelectPositionDownload" id="selectPositionDownload" class="form-select w-100">
+                                <option value="">--Vị trí--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="notice-error text-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm disabled" id="btnCreateFile"><i class="bx bx-cloud-download"></i>Tạo và tải về</button>
+               @*  <button class="btn btn-primary btn-sm d-none" id="btnDownloadChecksheet"><i class="bx bx-cloud-download"></i>Tải về</button> *@
+            </div>
+        </div>
+    </div>
+</div>

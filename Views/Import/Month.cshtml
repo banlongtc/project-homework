@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Import";
+    // Layout = "_Admin";
+    Layout = "_Layout";
+    var Listitem = ViewData["Listitem"] as List<TblMasterProductItem>;
+    var Listcd = ViewData["Listcd"] as List<TblLocation>;
+}
+<div class="container" style="padding-bottom:265px">
+    <h4 style="color:#008d61; font-weight:600">Tổng hợp Báo cáo tháng</h4>
+    <br />
+    @*   <form enctype="multipart/form-data" style="float:left;" method="post"> *@
+    <div style="float:left;width:850px">
+        <button type="button" id="Btnupdate_st" class="btn btn-primary" style="background-color:cadetblue; border-color:cadetblue; margin:20px;margin-left:0">
+            Cập nhật tồn kho
+        </button>
+    </div>
+    <div style="width:350px; float:left">
+        <label>Chọn ngày xuất báo cáo (1) + (2): </label>
+        <input type="date" class="form-control" id="date_stslg">
+    </div>
+    <div class="form-check" style="width:850px; float:left; margin: 20px;">
+        <input type="checkbox" class="form-check-input" id="savebit_tk" />
+        <label class="form-check-label" for="savebit_tk">Có lưu lại dữ liệu tồn kho cuối tháng? (2)</label>
+    </div>
+    <div style="width:850px; float:left">
+        <label for="FileUpload1">Chọn file Template cho Báo cáo Tỷ lệ đạt (3):</label>
+        <input class="form-control" type="file" id="FileUpload1" name="FileUpload1" width="350">
+    </div>
+
+
+
+  
+    <br />
+    <form enctype="multipart/form-data" style="float:left;" method="post">
+        <div style="float:left; ">
+            <button type="button" id="BtnBC_slg" class="btn btn-primary"
+                    style="background-color:cornflowerblue; border-color:cornflowerblue;">
+                1.Báo cáo sản lượng tổng hợp
+            </button>
+            <button type="button" id="BtnBC_thsd" class="btn btn-primary"
+                    style="background-color:darkgreen; border-color:darkgreen;margin:22px">
+                2.Báo cáo tình hình SD
+            </button>
+            <button id="Btnex_itemfgj" class="btn btn-primary" type="button"
+                    style="background-color:darkslategray; border-color:darkslategray;margin-right:22px">
+                3.Báo cáo tỷ lệ đạt
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="Popup_Themstock" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lbtditem" style="color:darkblue;font-weight:600">Cập nhật tồn kho cuối tháng</h5>
+                <button class="btn-close-modal btn" data-bs-dismiss="modal" aria-label="Close" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-body">
+                <div id="noticeContainer"></div>
+                <label id="Lbiditem"></label>
+                <div style="margin-bottom:10px;width:200px">
+                    <label>Item Code: </label>
+                    <input type="text" class="form-control" id="txtitem_st">
+                </div>
+                <div style="margin-bottom:10px;width:200px">
+                    <label>Lot: </label>
+                    <input type="text" class="form-control" id="txtlot_st">
+                </div>
+                <div style="margin-bottom:10px; width:200px">
+                    <label>Số lượng: </label>
+                    <input type="text" class="form-control" id="txtqty_st">
+                </div>
+                <div style="margin-bottom:10px; width:350px">
+                    <label>Ngày tồn kho (tự động chọn ngày đầu tháng): </label>
+                    <input type="date" class="form-control" id="date_st">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="BtnDel_st" class="btn btn-primary" style="background-color:lightcoral">Xóa</button>
+                <button type="button" id="BtnSave_st" class="btn btn-primary">Lưu</button>
+                <span class="spinner-border spinner-border-sm d-none check-load" role="status" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,148 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@* @model MPLUS_GW_WebCore.Models.TblUser *@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Sửa tài khoản"; 
+    // var roleList = ViewData["RoleList"] as List<TblRole>;
+    var roleList = new List<string>();
+    var sectionList = ViewData["SectionList"] as List<TblSection>;
+    var processList = ViewData["ProcessList"] as List<TblLocation>;
+}
+<div class="container">
+    <div class="page-title">
+        <h2>@ViewData["Title"]</h2>
+        <p class="card-subtitle">
+            Sửa thông tin người dùng
+        </p>
+    </div>
+    @if(Model != null) {
+        <div class="form-add-user">
+            <div class="message-alt"></div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label" for="username">Tên đăng nhập: </label>
+                        <input type="text" id="username" name="username" class="input-field username w-100" value="@Model.UserName" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label" for="FullName">Tên hiển thị: </label>
+                        <input class="input-field fullname w-100" id="FullName" name="FullName" type="text" value="@Model.FullName">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label" for="EmpNo">Mã nhân viên: </label>
+                        <input class="input-field employeeno w-100" id="EmpNo" name="EmpNo" type="text" value="@Model.EmpNo">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center flex-wrap">
+                        <labe class="form-label" l for="PasswordHash">Mật khẩu: </labe>
+                        <div class="d-flex position-relative align-items-center w-100">
+                            <input class="new-password w-100 disabled me-1" id="PasswordHash" name="PasswordHash" type="password" value="">
+                            <button class="btn d-none btn-outline-dark btn-show-password">Hiển thị</button>
+                            <button class="btn btn-outline-dark render-new-password" title="Mật khẩu mới">Tạo</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label" for="Email">Email: </label>
+                        <input class="input-field email w-100" id="Email" name="Email" type="email" value="@Model.Email">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label" for="selectRole">Quyền: </label>
+                        <select class="form-select w-100" id="selectRole">
+                            @if (roleList != null && roleList.Any())
+                            {
+                               @*  var selectedItem = roleList.FirstOrDefault(item => item.IdRole == Model.IdRole);
+                                if(selectedItem != null) {
+                                    <option value="@selectedItem.IdRole" selected="selected">@selectedItem.RoleName</option>
+                                }
+                                foreach (var item in roleList)
+                                {
+                                   if(item.IdRole != Model.IdRole) {
+                                        <option value="@item.IdRole">@item.RoleName</option>
+                                    }
+                                }*@
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label" for="selectSection">Bộ phận: </label>
+                        <select class="form-select w-100" id="selectSection">
+                            @if (sectionList != null)
+                            {
+                                var selectedItem = sectionList.FirstOrDefault(item => item.IdSection == Model.IdSection);
+                                if (selectedItem != null)
+                                {
+                                    <option value="@selectedItem.IdSection" selected="selected">@selectedItem.SectionName</option>
+                                }
+                                foreach (var item in sectionList)
+                                {
+                                    if (item.IdSection != Model.IdSection)
+                                    {
+                                        <option value="@item.IdSection">@item.SectionName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label" for="selectProcess">Công đoạn: </label>
+                        <select class="form-select w-100" id="selectProcess">
+                            @if (processList != null)
+                            {
+                                var selectedItem = processList.FirstOrDefault(item => item.IdLocation == Model.IdLocation);
+                                if (selectedItem != null)
+                                {
+                                    <option value="@selectedItem.IdLocation" selected="selected">@selectedItem.LocationName (@selectedItem.LocationCode)</option>
+                                }
+                                foreach (var item in processList)
+                                {
+                                    if (item.IdLocation != Model.IdLocation)
+                                    {
+                                        <option value="@item.IdLocation">@item.LocationCode (@item.LocationCode)</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label mb-0" for="ActiveUser">Active: </label>
+                        <input type="checkbox" class="checkbox ms-3" id="ActiveUser" name="activeUser" @(Model.Active == true ? "checked" : "")/>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label mb-0" for="Deactivation">Deactivation: </label>
+                        <input type="checkbox" class="checkbox ms-3" id="Deactivation" name="deactivationUser" @(Model.Deactivation == true ? "checked" : "") />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group align-items-center">
+                        <label class="form-label mb-0" for="CheckLeaderUp">Leader up: </label>
+                        <input type="checkbox" class="checkbox ms-3" id="CheckLeaderUp" name="CheckLeaderUp" @(Model.LeaderUp == true ? "checked" : "") />
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3">
+                <button type="button" class="btn btn-success btn-sm btn-update-user text-capitalize">Cập nhật</button>
+                <div class="spinner-border text-primary d-none"></div>
+            </div>
+        </div>
+    }
+  
+</div>

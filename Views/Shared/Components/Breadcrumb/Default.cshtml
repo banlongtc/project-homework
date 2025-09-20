@@ -1,0 +1,25 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+@model List<Breadcrumb>
+
+<nav style="--bs-breadcrumb-divider: '>';" class="fst-italic" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        @foreach (var breadcrumb in Model)
+        {
+            if (breadcrumb.IsActive)
+            {
+                <li class="breadcrumb-item active" aria-current="page">@breadcrumb.Title</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item">
+                    <a class="text-decoration-none" href="@breadcrumb.Url">@breadcrumb.Title</a>
+                </li>
+            }
+        }
+    </ol>
+</nav>

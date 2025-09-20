@@ -1,0 +1,92 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var roleName = Context.Session.GetString("RoleName");
+    var position = Context.Session.GetString("PositionWorking");
+}
+@if (roleName == null || !roleName.Contains("User"))
+{
+    <div class="modal fade" id="showDivLine" data-bs-backdrop="static" tabindex="-1" aria-labelledby="showLabelDivLine" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center w-100">
+                        <h6 class="modal-title" id="showLabelDivLine">Chia số lượng cho từng line</h6>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered border-dark" id="tableDivLine">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle text-center">Mã Nguyên Vật liệu</th>
+                                    <th class="align-middle text-center">Lot Nguyên Vật Liệu</th>
+                                    <th class="align-middle text-center">Số lượng</th>
+                                    <th class="align-middle text-center">Line 1</th>
+                                    <th class="align-middle text-center">Line 2</th>
+                                    <th class="align-middle text-center">Line 3</th>
+                                    <th class="align-middle text-center">Line 4</th>
+                                    <th class="align-middle text-center d-none"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="data-render"></tbody>
+                        </table>
+                    </div>
+                    <hr />
+                    <div class="table-responsive" id="oldContentsDivLine">
+                        <div class="text-center"><h6>Đã chia line theo mã nvl trước đó</h6></div>
+                        <table class="table table-bordered border-dark" id="tableShowOld">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle text-center">Mã NVL</th>
+                                    <th class="align-middle text-center">Lot NVL</th>
+                                    <th class="align-middle text-center">Line 1</th>
+                                    <th class="align-middle text-center">Line 2</th>
+                                    <th class="align-middle text-center">Line 3</th>
+                                    <th class="align-middle text-center">Line 4</th>
+                                    <th class="align-middle text-center d-none"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="data-render"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save-line-lot btn-md disabled">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="enterEink" data-bs-backdrop="static" tabindex="-1" aria-labelledby="enterEinkLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center w-100">
+                        <h6 class="modal-title" id="enterEinkLabel">Nhập thẻ Eink</h6>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="label-text">
+                                <label>Thẻ Eink kết nối:</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-field">
+                                <input type="text" id="einkDivLine" class="w-100 form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

@@ -1,0 +1,73 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Quản lý checksheets";
+    var listChecksheets = ViewData["ListChecksheets"] as List<MPLUS_GW_WebCore.Controllers.Admin.Checksheets.RenderChecksheetVersion>;
+}
+<div class="container">
+    <h2>@ViewData["Title"]</h2>
+    <p>Hiển thị toàn bộ checksheets được sử dụng cho toàn bộ công đoạn.</p>
+    <div class="action-button">
+        <a class="btn btn-primary" asp-controller="Checksheets" asp-action="Add">Thêm mới Checksheet</a>
+    </div>
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered border-dark table-all-items" id="allChecksheets">
+            <thead>
+                <tr>
+                    <th class="align-middle text-center" data-title="Mã checksheet"></th>
+                    <th class="align-middle text-center" data-title="Tên checksheet"></th>
+                    <th class="align-middle text-center" data-title="Phiên bản"></th>
+                    <th class="align-middle text-center" data-title="Ngày tạo"></th>
+                    <th class="align-middle text-center" data-title="Ngày có hiệu lực"></th>
+                    <th class="align-middle text-center" data-title="Ngày hết hạn"></th>
+                    <th class="align-middle text-center" data-title="Trạng thái"></th>
+                </tr>
+            </thead>
+            @if (listChecksheets != null)
+            {
+                int count = 1;
+                <tbody>
+                    @foreach (var item in listChecksheets)
+                    {
+     
+                        string createdTime = item.CreatedTime != null ? item.CreatedTime.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty;
+                        string expiryDate = item.ExpiryDate != null ? item.ExpiryDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty;
+                        string effectiveDate = item.EffectiveDate != null ? item.EffectiveDate.Value.ToString("dd/MM/yyyy") : string.Empty;
+                        if(item.Statusname == "Approved") {
+                            effectiveDate = item.EffectiveDate != null ? item.EffectiveDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty;
+                        }
+
+                        <tr data-csversionid="@item.ChecksheetVersionId">
+                            <td class="align-middle text-center">
+                                <div class="cs-item-render checksheet-code">
+                                    <a asp-controller="Checksheets" asp-action="Update" asp-route-id="@item.ChecksheetVersionId">@item.ChecksheetCode</a>
+                                </div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="cs-item-render checksheet-name">@item.ChecksheetName</div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="cs-item-render checksheet-ver">@item.VersionChecksheet</div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="cs-item-render created-time">@createdTime</div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="cs-item-render effec-time">@effectiveDate</div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="cs-item-render expiry-time">@expiryDate</div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="cs-item-render expiry-time">@item.Statusname</div>
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                </tbody>
+            }
+        </table>
+    </div>
+</div>

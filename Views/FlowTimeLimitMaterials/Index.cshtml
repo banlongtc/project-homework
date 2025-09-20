@@ -1,0 +1,115 @@
+﻿@using MPLUS_GW_WebCore.Controllers.Materials
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Theo dõi thời hạn của NVL";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var listAllMaterials = ViewData["ListItems"] as List<ListMaterialTimeLimit>;
+    var searchResults = ViewData["SearchResults"] as List<ListMaterialTimeLimit>;
+}
+<div class="text-center page-title">
+    <h1 class="display-6">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+    <hr />
+    <div class="list-items-wrapper">
+        <div class="title-component text-center mb-4">
+            <h5>Nguyên Vật Liệu đã nhập</h5>
+        </div>
+        @if (ViewData["ErrorMessage"] != null) {
+            <div class="alert alert-danger"><p>@ViewData["ErrorMessage"]</p></div>
+        }
+        <form class="search-history-layout" asp-controller="FlowTimeLimitMaterials" asp-action="SearchData" method="post">
+            <div class="row">
+                <div class="col-3">
+                    <div class="input-group">
+                        <label class="form-label">Mã nguyên vật liệu: </label>
+                        <input type="text" class="input-field" id="materialImported" value="@ViewData["ValueMaterialSearched"]" name="searchMaterials" />
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="input-group">
+                        <label class="form-label">Ngày nhập NVL: </label>
+                        <div class="d-flex">
+                            <div class="datepicker-layout d-flex">
+                                <label for="dateImportedFrom">Từ:</label>
+                                <input type="text" class="input-field text-center input-date-search" id="dateImportedFrom" value="@ViewData["ValueDateFrom"]" name="searchDateFrom" />
+                            </div>
+                            <div class="datepicker-layout d-flex ms-2">
+                                <label for="dateImportedTo">Đến:</label>
+                                <input type="text" class="input-field text-center input-date-search" id="dateImportedTo" value="@ViewData["ValueDateTo"]" name="searchDateTo" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="input-group">
+                        <label class="form-label">Công đoạn: </label>
+                        <input type="text" class="input-field" id="locaionValue" value="@ViewData["ValueLocationSearched"]" name="searchLocation" />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="input-group">
+                        <label class="form-label">Người thực hiện: </label>
+                        <input type="text" class="input-field" id="userExport" value="@ViewData["ValueUserSearched"]" name="searchUser" />
+                    </div>
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-outline-success disabled btn-md">Tìm kiếm</button>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="table table-bordered border-dark" id="tableTimeLimitMaterials">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle text-center" data-title="STT"></th>
+                        <th scope="col" class="align-middle text-center" data-title="Mã Nguyên Liệu"></th>
+                        <th scope="col" class="align-middle text-center" data-title="Lô Nguyên Liệu"></th>
+                        <th scope="col" class="align-middle text-center" data-title="Thời Gian Hết Hạn"></th>
+                        <th scope="col" class="align-middle text-center" data-title="Thời Gian Còn Lại"></th>
+                        <th scope="col" class="align-middle text-center" data-title="Thời Gian Nhập"></th>
+                        <th scope="col" class="align-middle text-center" data-title="Người thực hiện"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(listAllMaterials != null) {
+                        int count = 1;
+                        foreach(var item in listAllMaterials) {
+                            <tr>
+                                <td class="align-middle text-center">@count</td>
+                                <td class="align-middle text-center">@item.ProductCode</td>
+                                <td class="align-middle text-center">@item.LotNo</td>
+                                <td class="align-middle text-center">@(item.TimeLimit ?? "")</td>
+                                <td class="align-middle text-center @item.ClassBg">@item.TimeRemaining Ngày</td>
+                                <td class="align-middle text-center">@item.DateTimeImport</td>
+                                <td class="align-middle text-center">@item.PersonWorking</td>
+                            </tr>
+                            count++;
+                        }
+                    }    
+                    @if (searchResults != null)
+                    {
+                        int count = 1;
+                        foreach (var item in searchResults)
+                        {
+                            <tr>
+                                <td class="align-middle text-center">@count</td>
+                                <td class="align-middle text-center">@item.ProductCode</td>
+                                <td class="align-middle text-center">@item.LotNo</td>
+                                <td class="align-middle text-center">@(item.TimeLimit ?? "")</td>
+                                <td class="align-middle text-center @item.ClassBg">@item.TimeRemaining Ngày</td>
+                                <td class="align-middle text-center">@item.DateTimeImport</td>
+                                <td class="align-middle text-center">@item.PersonWorking</td>
+                            </tr>
+                            count++;
+                        }
+                    }  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

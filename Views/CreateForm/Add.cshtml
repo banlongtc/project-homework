@@ -1,0 +1,163 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Thêm mới form nhập dữ liệu";
+    var listAllChecksheets = ViewData["AllCheckSheets"] as List<MPLUS_GW_WebCore.Controllers.Admin.CreateForms.ListAllCheckSheets>;
+}
+<div class="container">
+    <div class="title-layout">
+        <h2>@ViewData["Title"]</h2>
+        <p>Thêm một mẫu cho nhập dữ liệu dựa vào các ô cần thêm dữ liệu trong checksheet để phù hợp yêu cầu</p>
+        <div class="notification"></div>
+    </div>
+    <div class="mb-4">
+        <div class="row">
+            <div class="col-6">
+                @if (listAllChecksheets != null) {
+                    <label class="form-label">Chọn Checksheet:</label>
+                    <select class="form-select w-100" name="SelectChecksheet" id="selectCheckSheet">
+                        <option value="">--Chọn checksheet cần tạo form--</option>
+                        @foreach(var item in listAllChecksheets) {
+                            <option value="@item.IdCheckSheet" data-checksheetverid="@item.ChecksheetVerId">@(item.ChecksheetCode)_v@(item.VersionNumber)</option>
+                        }
+                    </select>
+                } else {
+                    <p>Không có checksheet nào</p>
+                }
+            </div>
+            <div class="col-6">
+                <div class="mb-2" id="showPosition">
+                    <label for="positionFormEntryData">Vị trí của form nhập:</label>
+                    <input type="text" name="PositionFormEntryData" class="form-control mt-2 disabled" value="" id="positionFormEntryData" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex flex-wrap">
+                    <label for="formName" class="mb-2">Form Name: </label>
+                    <input type="text" name="FormName" id="formName" class="w-100" value="" />
+                    <small class="small fst-italic">Tên của form nhập dữ liệu để hiển thị cho client nhập dữ liệu</small>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-wrap">
+                    <label for="orderForm" class="mb-2">Form Order: </label>
+                    <input type="number" name="OrderForm" id="orderForm" class="w-100" value="" />
+                    <small class="small fst-italic">Vị trí xuất hiện của form khi render cho người dùng nhập dữ liệu</small>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6">
+                <div class="form-check">
+                    <label for="isRepeatable" class="me-3 form-check-label">Form nhập nhiều lần? </label>
+                    <input type="checkbox" name="IsRepeatable" id="isRepeatable" class="form-check-input me-3 mt-0" />
+                </div>
+                <small class="small fst-italic">Xác định loại form 1 lần hay lặp lại nhiều lần</small>
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-wrap">
+                    <label for="formType" class="mb-2">Form Type: </label>
+                    <select type="text" name="FormType" id="formType" class="form-select border-dark w-100">
+                        <option value="">--Chọn loại form--</option>
+                        <option value="form-info">Thông tin chủng loại sản xuất</option>
+                        <option value="form-enter-condition">Nhập dữ liệu điều kiện sản xuất</option>
+                        <option value="form-enter-info">Nhập dữ liệu sản xuất</option>
+                        <option value="form-enter-results">Nhập dữ liệu kết quả sản xuất</option>
+                        <option value="form-notes-operation">Ghi chú thao tác</option>
+                        <option value="form-summary-results">Tổng hợp kết quả thao tác</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="create-template" id="addForm">
+        <p>Tạo Form:</p>
+        <div id="formContainer" style="position: relative;">
+            <div class="box-layout">
+                <div class="button-add"><button class="btn btn-add-layout" id="addCustomLayout" ><i class="bx bx-plus"></i></button></div>
+                <div class="layout-default d-none">
+                    <div class="title-box-layout text-center">
+                        <p class="title">Chọn layout</p>
+                    </div>
+                    <div class="render-item" data-colnumber="1">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="col-layout"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="render-item" data-colnumber="2">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="col-layout"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="render-item" data-colnumber="3">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="col-layout"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="render-item" data-colnumber="4">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-3">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-3">
+                                <div class="col-layout"></div>
+                            </div>
+                             <div class="col-3">
+                                <div class="col-layout"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="render-item" data-colnumber="6">
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-2">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-2">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-2">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-2">
+                                <div class="col-layout"></div>
+                            </div>
+                            <div class="col-2">
+                                <div class="col-layout"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-end">
+        <button type="button" class="btn btn-primary btn-save-template mt-3">Lưu</button>
+    </div>
+</div>
+
+<partial name="_PartialCreateForms" />

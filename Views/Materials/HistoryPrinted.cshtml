@@ -1,0 +1,76 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Lịch Sử Xuất Kho";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+}
+
+<div class="text-center page-title">
+    <h1 class="display-6">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+</div>
+<hr />
+<div class="container">
+    <div class="d-flex">
+        <div class="search-history-layout">
+            <div class="row">
+                <div class="col-3">
+                    <div class="input-group">
+                        <label class="form-label">Mã nguyên vật liệu: </label>
+                        <input type="text" class="input-field" id="materialHistoryExported" value="" name="searchMaterials" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-group">
+                        <label class="form-label">Ngày nhập NVL: </label>
+                        <div class="datepicker-layout">
+                            <input type="text" class="input-field" id="dateImportExported" value="" name="searchDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-group">
+                        <label class="form-label">Vị trí kho: </label>
+                        <input type="text" class="input-field" id="whLocation" value="" name="searchWHLocation" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-group">
+                        <label class="form-label">Người thực hiện: </label>
+                        <input type="text" class="input-field" id="userExport" value="" name="searcUserExport" />
+                    </div>
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button class="btn btn-outline-success btn-md" id="searchBtn">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="history-block">
+    <div class="spinner-grow d-none spinner-border text-primary"></div>
+    <div class="layout-content d-none">
+        <h5 class="text-center">Thông tin các NVL đã viết</h5>
+        <div class="history-item item-content">
+            <div class="list-item-ex">
+                <table class="table table-bordered text-center border-dark" id="tableHistory">
+                    <thead>
+                        <tr>
+                            <th>Ngày xuất NVL</th>
+                            <th>Mã NVL</th>
+                            <th>Số lượng xuất</th>
+                            <th>Vị trí kho</th>
+                            <th>Người thực hiện</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyContent">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

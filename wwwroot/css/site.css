@@ -1,0 +1,2027 @@
+﻿:root {
+    --color-bg-primary: #008d61;
+    --color-text-primary: #fff;
+    --box-shadow-btn: 3px 5px 0 0 #000;
+    --bg-success: #00ff82;
+}
+
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+}
+
+#ui-datepicker-div {
+    z-index: 100 !important;
+}
+
+@font-face {
+    font-family: "Open Sans Light";
+    src: url(../fonts/OpenSans-Light.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: "Open Sans Regular";
+    src: url(../fonts/OpenSans-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: "Open Sans Medium";
+    src: url(../fonts/OpenSans-Medium.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: "Open Sans Bold";
+    src: url(../fonts/OpenSans-Bold.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: "Open Sans SemiBold";
+    src: url(../fonts/OpenSans-SemiBold.ttf) format('truetype');
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+
+.main-content {
+    height: 85vh;
+    overflow-y: auto;
+}
+
+#loginModal .modal-dialog {
+    max-width: 800px;
+}
+
+.user-actions .dropdown-menu[data-bs-popper] {
+    left: -50%;
+}
+
+.page-title {
+    background-color: #dcffeb;
+    margin-bottom: 5px;
+}
+
+    .page-title h1.display-6 {
+        font-size: 30px;
+        padding: 20px 0;
+    }
+
+.disabled {
+    box-shadow: none !important;
+}
+
+.breadcrumb-item {
+    font-size: 14px;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: none;
+}
+
+.btn:hover {
+    color: #fff;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Open Sans Regular", sans-serif;
+}
+
+.logo-web {
+    width: 190px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.box-actions {
+    max-width: 1024px;
+    width: 100%;
+    margin: 10px auto;
+}
+
+    .box-actions.disabled .card-custom {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+.select-layout {
+    width: 200px;
+    position: relative;
+    cursor: pointer;
+}
+
+    .select-layout .button-show-process {
+        border-bottom: 1px solid #000;
+        padding: 8px 12px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .select-layout .button-show-process.up-chevron i {
+            transform: rotate(180deg);
+        }
+
+        .select-layout .button-show-process i {
+            font-size: 20px;
+        }
+
+    .select-layout .form-select-sm {
+        border: 1px solid #ccc;
+        padding: 8px;
+        border-radius: 5px;
+        transition: all .5s ease-in-out;
+        margin-top: 8px;
+        animation: fadeInUp .5s;
+        background-color: #fff;
+        box-shadow: var(--box-shadow-btn);
+        position: absolute;
+        width: 100%;
+        z-index: 8;
+    }
+
+.btn-show-modal {
+    height: 200px;
+}
+
+.card-custom {
+    box-shadow: var(--box-shadow-btn);
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    border: 1px solid #000;
+}
+
+    .card-custom.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .card-custom:hover {
+        box-shadow: none;
+    }
+
+    .card-custom a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    .card-custom .card-body p {
+        text-transform: capitalize;
+        height: 50px;
+        margin-bottom: 0;
+        color: #000;
+    }
+
+.btn-link-login {
+    line-height: 0;
+    width: 100px;
+    padding: 0;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--box-shadow-btn);
+}
+
+    .btn-link-login:hover {
+        background-color: var(--color-bg-primary);
+        box-shadow: none;
+    }
+
+.page-title {
+    padding: 15px 0;
+}
+
+.form-login {
+    padding: 20px 10px;
+    border: 1px solid #808080;
+    border-radius: 5px;
+}
+
+    .form-login input {
+        border: 1px solid #808080;
+        height: 40px;
+        width: 100%;
+        background-color: transparent;
+    }
+
+        .form-login input.password {
+            padding-right: 30px;
+        }
+
+        .form-login input:focus {
+            outline: none;
+        }
+
+    .form-login .login-img img {
+        width: 100%;
+        border-radius: 5px;
+        box-shadow: var(--box-shadow-btn);
+    }
+
+    .form-login .btn-login {
+        box-shadow: var(--box-shadow-btn);
+        transition: all .3s ease-in-out;
+    }
+
+
+
+        .form-login .btn-login.active {
+            box-shadow: none;
+            opacity: 0.4;
+        }
+
+        .form-login .btn-login:hover {
+            box-shadow: none;
+        }
+
+    .form-login .password-input {
+        position: relative;
+    }
+
+        .form-login .password-input .btn-show-password {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 40px;
+            width: 30px;
+            padding: 0;
+            background-color: transparent;
+            border: none;
+        }
+
+            .form-login .password-input .btn-show-password:focus {
+                outline: none;
+                box-shadow: none;
+            }
+
+    .form-login .loader-icon {
+        position: relative;
+    }
+
+        .form-login .loader-icon .spinner-grow {
+            position: absolute;
+            left: 50%;
+        }
+
+.message-error {
+    font-size: 12px;
+}
+
+.table-layout {
+    font-size: 14px;
+    height: 460px;
+}
+
+.table-data #saveDataLocation {
+    font-size: 14px;
+    width: 60px;
+    box-shadow: var(--box-shadow-btn);
+    transition: all .5s ease-in-out;
+    background-color: #008d61;
+    color: #fff;
+}
+
+    .table-data #saveDataLocation:hover {
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .table-data #saveDataLocation.active {
+        box-shadow: none;
+        color: #fff;
+    }
+
+#tableGetWOInMES {
+    font-size: 14px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    #tableGetWOInMES thead th,
+    #tableGetWOInMES tbody td {
+        text-align: center;
+    }
+
+    #tableGetWOInMES th {
+        /* Apply both top and bottom borders to the <th> */
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #tableGetWOInMES td {
+        /* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #tableGetWOInMES thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: #fff;
+    }
+
+    #tableGetWOInMES tbody td.item-workorderno {
+        width: 80px;
+    }
+
+    #tableGetWOInMES tbody td.item-productcode {
+        width: 120px;
+    }
+
+    #tableGetWOInMES tbody td.item-orderno {
+        width: 80px;
+    }
+
+    #tableGetWOInMES tbody td.item-lotno {
+        width: 80px;
+    }
+
+    #tableGetWOInMES tbody td.td-character {
+        width: 70px;
+    }
+
+    #tableGetWOInMES tbody td.td-import-qty {
+        width: 90px;
+    }
+
+    #tableGetWOInMES tbody td.td-date-time {
+        width: 130px;
+    }
+
+    #tableGetWOInMES tbody .input-group {
+        justify-content: center;
+    }
+
+        #tableGetWOInMES tbody .input-group input:focus {
+            outline: none;
+        }
+
+    #tableGetWOInMES tbody input.character-input {
+        width: 100%;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    #tableGetWOInMES tbody .input-group input {
+        width: 100%;
+    }
+
+    #tableGetWOInMES tbody .input-group img,
+    #tableGetWOInMES tbody .input-group i {
+        position: absolute;
+        right: 0;
+        width: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    #tableGetWOInMES tbody .input-group i {
+        color: #000;
+    }
+
+.btn-redirect-ex {
+    font-size: 14px;
+    box-shadow: var(--box-shadow-btn);
+    transition: all .3s ease-in-out;
+    background-color: #008d61;
+    color: #fff;
+}
+
+    .btn-redirect-ex:hover {
+        box-shadow: none;
+    }
+
+#tableGetWOInMES tbody .has-content {
+    background-color: var(--color-bg-primary) !important;
+    color: var(--color-text-primary);
+}
+
+    #tableGetWOInMES tbody .has-content .character-input {
+        border: none;
+        background-color: transparent;
+        color: var(--color-text-primary);
+    }
+
+#tableGetWOInMES tbody .content-add {
+    background-color: #61e9ff !important;
+}
+
+
+/* style bảng theo dõi tồn kho */
+.table-see-inventoy .table-responsive {
+    height: 650px;
+    overflow-y: auto;
+}
+
+.table-inventory {
+    width: 100%;
+    text-align: center;
+    border-collapse: separate; /* Don't collapse */
+    border-spacing: 0;
+    position: relative;
+    font-size: 14px;
+}
+
+    .table-inventory th {
+        /* Apply both top and bottom borders to the <th> */
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+    }
+
+    .table-inventory td {
+        /* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+    }
+
+        .table-inventory th:first-child,
+        .table-inventory td:first-child {
+            /* Apply a left border on the first <td> or <th> in a row */
+            border-left: 1px solid #000;
+        }
+
+    .table-inventory .background-error {
+        background-color: rgb(236, 168, 199);
+    }
+
+    .table-inventory thead th.w-350 span {
+        width: 100%;
+        display: block;
+        height: 22px;
+    }
+
+    .table-inventory thead.freezer-row tr.title-head th span {
+        display: block;
+    }
+
+    .table-inventory thead.freezer-row tr.title-head th:not(.item):nth-child(1) span {
+        width: calc(85px - 16px);
+    }
+
+    .table-inventory thead.freezer-row tr.title-head th:not(.item):nth-child(2) span {
+        width: calc(136px - 16px);
+    }
+
+    .table-inventory thead.freezer-row tr.title-head th:not(.item):nth-child(3) span {
+        width: calc(94px - 16px);
+    }
+
+    .table-inventory thead.freezer-row tr.title-head th:not(.item):nth-child(4) span {
+        width: calc(94px - 16px);
+    }
+
+    .table-inventory thead.freezer-row tr.title-head th.item span {
+        width: calc(74px - 16px);
+    }
+
+    .table-inventory thead.freezer-row tr {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 6;
+    }
+
+
+    .table-inventory thead.freezer-column tr:not(.title-head) th:not(.item) {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        left: 0;
+        z-index: 2;
+    }
+
+    .table-inventory thead.freezer-column tr.title-head th:not(.item) {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        left: 0;
+        z-index: 2;
+    }
+
+    .table-inventory tbody.freezer-column tr th.item {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        left: 0;
+        z-index: 2;
+    }
+
+.overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 0;
+    background-color: #000;
+    opacity: .4;
+}
+
+.addition-material .overlay {
+    z-index: -1;
+}
+
+/*Css phiếu xuất kho*/
+.border-dotted {
+    border: 2px dotted #888888;
+}
+
+.card-style {
+    padding: 15px 10px 0 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    font-size: 14px;
+}
+
+.btn-close-modal {
+    background-color: transparent;
+    color: #000;
+    font-size: 30px;
+}
+
+    .btn-close-modal:hover {
+        color: #000;
+    }
+
+.card-style .spinner-border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.card-style table th,
+.card-style table td {
+    text-align: center !important;
+    vertical-align: middle;
+}
+
+.card-style .content-table .disabled {
+    cursor: not-allowed;
+}
+
+    .card-style .content-table .disabled input,
+    .card-style .content-table .disabled button {
+        pointer-events: none;
+    }
+
+#detailContent table {
+    text-align: center;
+    font-size: 14px;
+}
+
+    #detailContent table th,
+    #detailContent table td {
+        vertical-align: middle;
+    }
+
+    #detailContent table input {
+        max-width: 120px;
+        width: 100%;
+    }
+
+#detailContent .table-responsive {
+    max-height: 300px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+#detailContent table textarea {
+    width: 100%;
+}
+
+.w-sm-100 {
+    max-width: 100px;
+    width: 100% !important;
+    outline: none;
+}
+
+/*style phieu xuat kho*/
+.delivery-container .content-table {
+    max-height: 400px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+    .delivery-container .content-table .table {
+        border-collapse: separate; /* Don't collapse */
+        border-spacing: 0;
+        position: relative;
+    }
+
+        .delivery-container .content-table .table th {
+            /* Apply both top and bottom borders to the <th> */
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+            vertical-align: middle;
+        }
+
+        .delivery-container .content-table .table td {
+            /* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+            vertical-align: middle;
+        }
+
+            .delivery-container .content-table .table th:first-child,
+            .delivery-container .content-table .table td:first-child {
+                /* Apply a left border on the first <td> or <th> in a row */
+                border-left: 1px solid #000;
+            }
+
+        .delivery-container .content-table .table thead tr {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+        }
+
+.btn-export-material {
+    font-size: 14px;
+}
+
+    .btn-export-material.disabled {
+        background-color: #808080;
+    }
+
+.sub-materials-card .input-group .ui-datepicker-trigger {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    cursor: pointer;
+    width: 20px;
+}
+
+.history-block {
+    position: relative;
+}
+
+    .history-block h5 {
+        font-size: 25px;
+    }
+
+    .history-block .item-content {
+        margin: 30px 0px;
+        padding: 15px;
+    }
+
+    .history-block .date-ex-item {
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    .history-block table th,
+    .history-block table td {
+        text-align: center !important;
+        vertical-align: middle;
+    }
+
+    .history-block table .item-code {
+        font-weight: bold;
+    }
+
+    .history-block .spinner-border {
+        position: absolute;
+        top: 0;
+        left: 50%;
+    }
+
+.table-print-label .table-collapse {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-print-label thead.table-freezer-row tr {
+    position: sticky;
+    z-index: 2;
+    background-color: #fff;
+}
+
+#modalCalculatorTimeProd .modal-xl {
+    max-width: 1215px;
+}
+
+#modalCalculatorTimeProd tbody td input {
+    width: 80px;
+    text-align: center;
+    height: 30px;
+}
+
+#modalCalculatorTimeProd tbody td textarea {
+    width: 150px;
+    height: 30px;
+}
+
+#modalCalculatorTimeProd tbody td input.indexWOProduction {
+    width: 60px;
+}
+
+#modalCalculatorTimeProd tbody td input.change-control {
+    width: 150px;
+}
+
+#modalCalculatorTimeProd tbody td input.input-time-custom {
+    width: 150px;
+}
+
+#modalCalculatorTimeProd tbody td input.disabled {
+    pointer-events: none;
+}
+
+#modalCalculatorTimeProd tbody td:has(> input.disabled) {
+    cursor: not-allowed;
+}
+
+#modalCalculatorTimeProd .table-calculator-item {
+    height: 400px;
+    overflow: auto;
+}
+
+#modalCalculatorTimeProd table.table-collapse {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .on-going td:not(.item-freezer) {
+    background-color: #00ff90;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-content td.item-freezer {
+    background-color: #008d61;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-content a,
+#modalCalculatorTimeProd .table-calculator-item .has-content span {
+    color: #fff;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-content td:not(.item-freezer) {
+    color: var(--color-text-primary);
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-content.on-going td.item-freezer a,
+#modalCalculatorTimeProd .table-calculator-item .has-content.on-going span {
+    color: #000;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-content.on-going td:not(.item-freezer) {
+    color: var(--color-text-primary);
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-content.on-going td:not(.item-freezer) input {
+    text-align: center;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .bg-warning .render input {
+    color: #000;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-content.on-going td.item-freezer {
+    background-color: #008d61;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .on-going td.item-freezer {
+    background-color: #00ff90;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content td:not(.item-freezer) {
+    background-color: #0094ff;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content.on-going td:not(.item-freezer) {
+    background-color: #00ff90;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content.on-going td.item-freezer {
+    background-color: #0094ff;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content td.not-enough-qty {
+    background-color: #ff6a00;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content.on-going td.not-enough-qty {
+    background-color: #ff6a00;
+}
+
+.comment-color {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.comment-title {
+    font-size: 16px;
+    padding-bottom: 10px;
+}
+
+.comment-color span {
+    font-size: 13px;
+}
+
+.box-item-color {
+    display: flex;
+    max-width: 600px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.bg-approval-end {
+    background-color: #fff;
+    width: 25px;
+    height: 16px;
+    margin-right: 3px;
+    border: 1px solid #000;
+}
+
+.bg-on-going {
+    background-color: #00ff90;
+    width: 25px;
+    height: 16px;
+    margin-right: 3px;
+}
+
+.bg-has-content {
+    background-color: var(--color-bg-primary);
+    width: 25px;
+    height: 16px;
+    margin-right: 3px;
+}
+
+.bg-hasdivline-lot {
+    background-color: #0094ff;
+    width: 25px;
+    height: 16px;
+    margin-right: 3px;
+}
+
+.bg-divnot-enough {
+    background-color: #ff6a00;
+    width: 25px;
+    height: 16px;
+    margin-right: 3px;
+}
+
+.table-line-process .on-going td:not(.item-freezer),
+.table-print-label .on-going td:not(.item-freezer) {
+    background-color: #00ff90;
+}
+
+.table-line-process .has-content td input {
+    border: 1px solid #000;
+    background-color: #fff;
+    outline: none;
+}
+
+.table-print-label .table-layout {
+    height: 460px;
+    overflow-y: auto;
+}
+
+.table-print-label table {
+    text-align: center;
+    font-size: 14px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    .table-print-label table th,
+    .table-print-label table td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+    }
+
+    .table-print-label table.table th:first-child,
+    .table-print-label table.table td:first-child {
+        /* Apply a left border on the first <td> or <th> in a row */
+        border-left: 1px solid #000;
+    }
+
+    .table-print-label table tbody input.character-wo {
+        text-transform: uppercase;
+        border: 1px solid #000;
+        padding: 1px 2px;
+    }
+
+    .table-print-label table tbody input.date-prod {
+        padding: 1px 2px;
+    }
+
+    .table-print-label table tbody .render input {
+        border: 1px solid #fff;
+        text-align: center;
+        background-color: transparent;
+        padding: 1px 2px;
+        width: 100%;
+    }
+
+.pagingations {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+}
+
+    .pagingations .page-number {
+        padding: 0 15px;
+        text-decoration: none;
+        color: #000;
+        opacity: 0.5;
+    }
+
+        .pagingations .page-number.current-page {
+            color: #008d61;
+            opacity: 1;
+        }
+
+.btn-pagingation {
+    align-content: center;
+    text-decoration: none;
+    color: #000;
+    margin: 0 5px;
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-pagingation:hover {
+        color: #008d61;
+    }
+
+    .btn-pagingation.disabled {
+        pointer-events: none;
+        color: #808080;
+    }
+
+#contentTablePrintLabels td img.ui-datepicker-trigger,
+#contentTablePrintLabels td span.bxs-time-five {
+    position: absolute;
+    right: 0;
+    bottom: 50%;
+    transform: translateY(50%);
+    font-size: 20px;
+}
+
+#contentTablePrintLabels textarea {
+    height: 50px;
+}
+
+td.item-freezer.d-none {
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.table-freezer-column th.item-freezer {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    left: 0;
+    background-color: #fff;
+}
+
+.table-freezer-column td.item-freezer.render a {
+    text-decoration: none;
+    color: #000;
+}
+
+.table-freezer-column td.item-freezer.hidden {
+    display: none;
+}
+
+.table-freezer-column td.item-freezer {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    left: 0;
+    background-color: #fff;
+}
+
+.table-freezer-column .has-content .date-prod-column,
+.table-freezer-column .has-content,
+.table-print-label .on-going.has-content td:not(.item-freezer) {
+    background-color: var(--color-bg-primary);
+}
+
+.btn-md {
+    font-size: 14px;
+    background-color: var(--color-bg-primary);
+    box-shadow: var(--box-shadow-btn);
+    color: #fff;
+    transition: all .3s ease-in-out;
+}
+
+    .btn-md:hover {
+        box-shadow: none;
+    }
+
+.modal-import-materials .modal-body {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 18px;
+}
+
+.modal-import-materials .list-item-plan tbody tr.holding {
+    background-color: #ffd800;
+}
+
+.modal-import-materials .list-item-plan tbody tr.imported {
+    background-color: #0094ff;
+    color: #fff;
+}
+
+.modal-import-materials .select-location {
+    margin: 0 auto;
+}
+
+.modal-import-materials .form-select-sm {
+    font-size: 16px;
+    text-align: left;
+}
+
+.modal-import-materials .modal-body .box-read-barcode {
+    display: flex;
+    align-items: center;
+}
+
+.modal-import-materials .modal-body .input-group {
+    align-items: center;
+}
+
+.modal-import-materials .modal-body label {
+    max-width: 250px;
+    width: 100%;
+}
+
+.modal-import-materials .modal-body .request-number-wrapper {
+    font-size: 15px;
+}
+
+
+#barcodeInput {
+    text-transform: uppercase;
+}
+
+.modal-import-materials .modal-body input[type="text"] {
+    width: calc(100% - 250px);
+    border: 1px solid #000;
+}
+
+.modal-import-materials .modal-body input.request-value-other {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    max-width: 250px;
+    height: 30px;
+    outline: none;
+}
+
+.box-read-barcode .btn-reload-content {
+    font-size: 24px;
+    border: none;
+    background-color: transparent;
+    height: 30px;
+    line-height: 1;
+}
+
+.modal-import-materials .content-qr-render {
+    margin: 20px auto;
+    max-width: 320px;
+    width: 100%;
+}
+
+.modal-import-materials .content-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+    .modal-import-materials .content-item .title {
+        max-width: 200px;
+        width: 100%;
+    }
+
+    .modal-import-materials .content-item .value {
+        width: calc(100% - 200px);
+    }
+
+#staticImportOthers .content-other-material {
+    margin-top: 20px;
+    height: 100%;
+    overflow: auto;
+    border-collapse: separate; /* Don't collapse */
+    border-spacing: 0;
+}
+
+    #staticImportOthers .content-other-material .info-material-import {
+        border: 1px dashed #000;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    #staticImportOthers .content-other-material table {
+        position: relative;
+    }
+
+    #staticImportOthers .content-other-material thead tr {
+        position: sticky;
+        top: 0;
+    }
+
+    #staticImportOthers .content-other-material th {
+        /* Apply both top and bottom borders to the <th> */
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+    }
+
+    #staticImportOthers .content-other-material td {
+        /* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+    }
+
+        #staticImportOthers .content-other-material th:first-child,
+        #staticImportOthers .content-other-material td:first-child {
+            /* Apply a left border on the first <td> or <th> in a row */
+            border-left: 1px solid #000;
+        }
+
+#staticImportOthers #renderOtherMaterials .disabled input[type="checkbox"] {
+    pointer-events: none;
+}
+
+.btn-pause-import {
+    background-color: #ffd800;
+    color: #000;
+}
+
+    .btn-pause-import:hover {
+        color: #000;
+    }
+
+.modal-request-no .input-group {
+    align-items: center;
+}
+
+.modal-import-materials .spinner-border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+#showHolding.show {
+    display: block;
+}
+
+.title-hold {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.list-item-holding {
+    list-style: none;
+    list-style: none;
+}
+
+    .list-item-holding li {
+        border-bottom: 1px solid #808080;
+        padding: 8px 12px;
+    }
+
+        .list-item-holding li .item-content {
+            margin-bottom: 10px;
+        }
+
+            .list-item-holding li .item-content .label {
+                max-width: 150px;
+                width: 100%;
+                margin-right: 5px;
+            }
+
+            .list-item-holding li .item-content:last-child {
+                margin-bottom: 0;
+            }
+
+.chart-layout {
+    position: relative;
+    margin: 0 auto;
+}
+
+    .chart-layout .spinner-grow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+
+.title-chart {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+    .title-chart h6 {
+        font-size: 20px;
+    }
+
+#ticketDetails .overlay {
+    z-index: -1;
+}
+
+#showNotification .overlay {
+    z-index: -1;
+}
+
+
+.import-materials-layout .card-custom {
+    max-width: 250px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+#modalChangePassword .input-password {
+    margin-bottom: 15px;
+}
+
+    #modalChangePassword .input-password .form-label {
+        max-width: 200px;
+        width: 100%;
+    }
+
+    #modalChangePassword .input-password .input-field {
+        width: calc(100% - 200px);
+        position: relative;
+    }
+
+        #modalChangePassword .input-password .input-field input {
+            width: 100%;
+            border-radius: 5px;
+            padding-right: 40px;
+            outline: none;
+        }
+
+#modalChangePassword .input-field .btn-show-password {
+    background-color: transparent;
+    position: absolute;
+    color: #000;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    padding: 0 10px;
+    outline: none;
+    box-shadow: none;
+}
+
+#modalChangePassword .message-error {
+    margin-left: 200px;
+}
+
+.search-history-layout .form-label {
+    max-width: 200px;
+    width: 100%;
+}
+
+.search-history-layout .input-field {
+    width: 100%;
+    outline: none;
+    border-bottom: 1px solid #000;
+    border-radius: 5px !important;
+    height: 30px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.search-history-layout .datepicker-layout {
+    position: relative;
+}
+
+    .search-history-layout .datepicker-layout img {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+    }
+
+#searchBtn {
+    outline: none;
+    box-shadow: var(--box-shadow-btn);
+    transition: all .3s ease-in-out;
+}
+
+    #searchBtn:hover, #searchBtn.active {
+        box-shadow: none;
+    }
+
+#showDivLine #tableDivLine tr.has-content {
+    background-color: #00ff90;
+}
+
+.action-working {
+    width: calc(100% - 55px);
+}
+
+    .action-working a {
+        margin-right: 10px;
+    }
+
+        .action-working a:last-child {
+            margin-right: 0;
+        }
+
+.content-action-process {
+    max-width: 768px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+    .content-action-process .card-custom {
+        margin-top: 30px;
+    }
+
+#processingAction .btn-pre-operation {
+    box-shadow: none;
+}
+
+.info-workorder-production .item-column {
+    width: 20%;
+    padding-right: -10px;
+    padding-left: -10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    font-size: 15px;
+    text-align: center;
+}
+
+    .info-workorder-production .item-column .item-data span {
+        display: block;
+        width: 100%;
+    }
+
+        .info-workorder-production .item-column .item-data span:first-child {
+            font-weight: bold;
+        }
+
+#qrMaterialValue.disabled {
+    pointer-events: none;
+}
+
+.addition-material .btn-save-data {
+    background-color: #0094ff;
+}
+
+#limitedSampleBoard.disabled {
+    pointer-events: none;
+}
+
+#showDivLine #tableDivLine .list-item input[type="number"].disabled {
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+#showDivLine #tableDivLine .list-item input[type="number"] {
+    width: 100%;
+    border: 1px solid #000;
+}
+
+#modalCalculatorTimeProd table.table th {
+    /* Apply both top and bottom borders to the <th> */
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#modalCalculatorTimeProd table.table td {
+    /* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+    vertical-align: middle;
+    text-align: center;
+}
+
+    #modalCalculatorTimeProd table.table th:first-child,
+    #modalCalculatorTimeProd table.table td:first-child {
+        /* Apply a left border on the first <td> or <th> in a row */
+        border-left: 1px solid #000;
+    }
+
+#modalCalculatorTimeProd .table-calculator-item .freezer-column tr th.item-freezer {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 6;
+    left: 0;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .freezer-column tr td.item-freezer {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 5;
+}
+
+#modalCalculatorTimeProd .table-calculator-item thead.freezer-row th {
+    position: sticky;
+    background-color: #fff;
+    z-index: 5;
+    top: 0;
+}
+
+#modalCalculatorTimeProd .table-calculator-item .total-line {
+    color: #fff;
+}
+/*Style form nhập dữ liệu điều kiện*/
+.info-box-operations {
+    width: calc(100% - 20px);
+    margin: 0 auto;
+}
+
+.content-form-render {
+    margin-top: 20px;
+}
+
+    .content-form-render:first-child {
+        margin-top: 0;
+    }
+
+#showFrequencyConditions .frequency-item {
+    text-align: center;
+    font-size: 15px;
+    padding: 10px 8px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+    #showFrequencyConditions .frequency-item input {
+        border: 1px solid;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    #showFrequencyConditions .frequency-item label {
+        cursor: pointer;
+    }
+
+#readLotMaterials #qrMaterialValue {
+    border: 1px solid #000;
+}
+
+#readLotMaterials #standardProductionsKTT {
+    text-align: center;
+}
+
+#readLotMaterials #standardProductionsKTT .render-item {
+    justify-content: center;
+    color: #000;
+    font-weight: bold;
+}
+
+    #readLotMaterials #standardProductionsKTT .render-item input {
+        border: none;
+        color: #000;
+        font-weight: bold;
+        text-align: center;
+    }
+
+.confirm-condition {
+    display: flex;
+    align-items: center;
+}
+
+.confirm-condition-process {
+    width: 100%;
+    margin-right: 15px;
+}
+
+    .confirm-condition-process p {
+        margin-bottom: 0;
+    }
+
+.confirm-condition .btn-export-excel {
+    background-color: #0094ff;
+    color: #fff;
+}
+
+#enterValueForTrough .header-content {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+#readLotMaterials .outer-diameter {
+    padding: 10px;
+}
+
+#readLotMaterials .outer-diameter.success {
+    border: 2px dashed #008d61;
+    position: relative;
+}
+
+    #readLotMaterials .outer-diameter.success::after {
+        content: "\ea47";
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        color: #fff;
+        font-size: 18px;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: #008d61;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: boxicons !important;
+        font-weight: 400;
+        font-style: normal;
+        font-variant: normal;
+        line-height: 1;
+        text-rendering: auto;
+        text-transform: none;
+    }
+
+#readLotMaterials .outer-diameter.error {
+    border: 2px dashed #ff0000;
+    position: relative;
+}
+
+    #readLotMaterials .outer-diameter.error::after {
+        content: "\eac5";
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        color: #fff;
+        font-size: 18px;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: #ff0000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: boxicons !important;
+        font-weight: 400;
+        font-style: normal;
+        font-variant: normal;
+        line-height: 1;
+        text-rendering: auto;
+        text-transform: none;
+    }
+
+#remarksContentErrorDiameter {
+    width: 100%;
+}
+
+    #remarksContentErrorDiameter:focus {
+        outline: none;
+    }
+
+
+#leaderComfirmedAbnormal input.form-control,
+#leaderComfirmedAbnormal textarea {
+    border: 1px solid #000;
+}
+
+#leaderComfirmedAbnormal textarea {
+    height: 100px;
+}
+
+
+#confirmWireHasBeenWorked .modal-body p.bg-warning {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+#confirmWireHasBeenWorked .modal-body .row {
+    align-items: center;
+}
+
+#confirmWireHasBeenWorked .modal-body #confirmHasWorkedValue {
+    height: 30px;
+    width: 30px;
+    border-color: #000;
+}
+
+.list-trays-container .data-render-items {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    margin-left: -15px;
+    margin-right: -15px;
+    width: 100%;
+}
+
+    .list-trays-container .data-render-items .tray-content {
+        flex: 0 0 calc(100% / 4);
+        padding-left: 15px;
+        padding-right: 15px;
+        flex-grow: 1;
+        max-width: calc(100% / 4);
+        width: 100%;
+    }
+
+        .list-trays-container .data-render-items .tray-content .card-custom-item {
+            border: 1px dashed #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .list-trays-container .data-render-items .tray-content .card-custom-item.success {
+            border: 1px dashed #008d61;
+        }
+
+.select-eink {
+    border-top: 1px solid #000;
+}
+
+    .select-eink .input-group {
+        width: 320px;
+        margin-top: 15px;
+    }
+
+    .select-eink label {
+        margin-bottom: 0;
+    }
+
+    .select-eink #einkTray {
+        border: 1px solid #000;
+        border-radius: 5px !important;
+        margin-left: 10px;
+    }
+
+        .select-eink #einkTray.success {
+            border: 1px solid #00ff90;
+        }
+
+        .select-eink #einkTray.error {
+            border: 1px solid #ff0000;
+        }
+
+#enterSuccessErrorTray .modal-body {
+    height: 600px;
+    overflow-y: scroll;
+}
+
+#enterSuccessErrorTray .confirm-error {
+    display: flex;
+    align-items: center;
+}
+
+    #enterSuccessErrorTray .confirm-error label {
+        margin-bottom: 0;
+        margin-left: 15px;
+    }
+
+    #enterSuccessErrorTray .confirm-error input {
+        margin-bottom: 0;
+        width: 18px;
+        height: 18px;
+    }
+
+.pass-error-container .error-container {
+    padding: 10px 15px;
+}
+
+    .pass-error-container .error-container .render-item {
+        border: 1px dotted #808080;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        height: 90px;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+        .pass-error-container .error-container .render-item label {
+            font-size: 14px;
+            margin-bottom: 0 !important;
+            margin-right: 10px;
+        }
+
+        .pass-error-container .error-container .render-item input {
+            margin-left: 0;
+            border: 1px solid #000;
+            border-radius: 3px !important;
+            margin-top: 0;
+        }
+
+    .pass-error-container .error-container .list-other-errors {
+        margin-top: 20px;
+        border-top: 1px solid #000;
+        padding-top: 10px;
+    }
+
+        .pass-error-container .error-container .list-other-errors p {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+#listErrors input {
+    border-radius: 3px;
+    border: 1px solid #000;
+}
+
+#listErrors input[type="checkbox"] {
+    margin-left: 5px;
+    margin-top: 0;
+}
+
+#listErrors .input-other-error {
+    height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+    #listErrors .input-other-error label {
+        margin-bottom: 0;
+    }
+
+.total-qty-result input {
+    margin-top: 10px;
+    pointer-events: none;
+    border-top-left-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+    border-radius: 5px;
+}
+
+    .total-qty-result input#suitableQuantityKTT {
+        background-color: #0094ff;
+        border: 1px solid #0094ff;
+        color: #fff;
+    }
+
+    .total-qty-result input#nonConforminItemsKTT {
+        background-color: #ff0000;
+        border: 1px solid #ff0000;
+        color: #fff;
+    }
+
+/*Hiển thị chia NVL cho máy in nhãn*/
+#showDivMC .modal-xl {
+    max-width: calc(100% - 15px);
+}
+
+#showDivMC .list-item input {
+    border: 1px solid #0094ff;
+}
+
+    #showDivMC .list-item input.disabled {
+        pointer-events: none;
+        border: 1px solid #ccc;
+        opacity: 0.5;
+    }
+/*Style xem chia máy trong ngày*/
+#pills-tabContent .progress {
+    height: 30px;
+    width: 100%;
+    background-color: #ccc;
+}
+
+.tab-content .on-going .info-product {
+    background-color: #00ff90;
+}
+
+#pills-tabContent .qty-used {
+    width: 100%;
+}
+
+.content-percent .percent-used {
+    width: 50px;
+}
+
+.content-percent .progress {
+    width: calc(100% - 50px);
+    height: 25px;
+}
+
+.content-percent .qty-used {
+    width: 130px;
+}
+
+/*Hiển thị sổ quản lý NVL điện tử*/
+
+#tabLotMaterials .nav-link {
+    color: #080808;
+}
+
+    #tabLotMaterials .nav-link.active {
+        border-color: #0094ff #0094ff #fff;
+        color: #0094ff;
+    }
+
+#tabInfoMaterials .nav-link {
+    color: #080808;
+}
+
+    #tabInfoMaterials .nav-link.active {
+        border-color: #0094ff #0094ff #fff;
+        color: #0094ff;
+    }
+
+.filter-date-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+    .filter-date-group .ui-datepicker-trigger {
+        position: absolute;
+        right: 5px;
+    }
+
+#selectMaterials {
+    font-size: 15px;
+    line-height: 1;
+    height: 30px;
+    width: 250px;
+    margin-left: 10px;
+    border-color: #212529;
+    border-radius: 5px;
+}
+
+.filter-date-group .input-date-view {
+    height: 30px;
+    border: 1px solid #212529;
+    border-radius: 5px;
+}
+
+#btnViewMaterial {
+    height: 30px;
+}
+
+#tabLotMaterials .btn-show-detail-lot {
+    margin-right: 10px;
+}
+
+    #tabLotMaterials .btn-show-detail-lot:last-child {
+        margin-right: 0;
+    }
+
+    #tabLotMaterials .btn-show-detail-lot.active {
+        color: rgb(255, 255, 255);
+        background-color: #157347;
+        border-color: #146c43;
+        box-shadow: none;
+    }
+
+#tabInfoContents .content-by-lot {
+    height: 400px;
+    overflow: auto;
+}
+
+#containerDataManageMaterials .info-manage-materials {
+    justify-content: center;
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+.custom-spinner {
+    position: absolute;
+    left: 50%;
+}
+
+#tabInfoContents.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    #tabInfoContents .table th,
+    #tabInfoContents .table td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        vertical-align: middle;
+    }
+
+        #tabInfoContents .table th:first-child,
+        #tabInfoContents .table td:first-child {
+            /* Apply a left border on the first <td> or <th> in a row */
+            border-left: 1px solid #000;
+        }
+
+    #tabInfoContents .table thead tr th {
+        position: sticky;
+        top: 0;
+        background-color: #00ff82;
+    }
+
+
+.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+    width: unset;
+}
+
+
+#readLotMaterials.modal-push-up {
+    top: 80px;
+    transition: all .5s ease-in-out;
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .form-sm {
+        width: 575px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 1023px) {
+    .box-actions {
+        max-width: 768px;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1317px) {
+    .form-lg {
+        width: 1024px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #enterSuccessErrorTray .modal-body {
+        height: 500px;
+        overflow-y: scroll;
+    }
+}
+
+@media (min-width: 1200px) {
+    .form-xl {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(0, 30px, 0);
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}

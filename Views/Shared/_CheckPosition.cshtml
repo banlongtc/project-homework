@@ -1,0 +1,29 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* Đọc mã vị trí làm việc *@
+<div class="modal fade" id="showCheckPosition" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="showCheckPositionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center">
+                    <h5 class="modal-title" id="showCheckPositionLabel">Kiểm tra vị trí làm việc</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label for="qrValue" class="col-sm-3 col-form-label">Mã vị trí:</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="valuePosition" id="qrValuePosition" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-none">
+                <button type="button" class="btn btn-primary btn-save-position">Kiểm tra</button>
+            </div>
+        </div>
+    </div>
+</div>

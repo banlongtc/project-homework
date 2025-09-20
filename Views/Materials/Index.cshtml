@@ -1,0 +1,140 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Nguyên Vật Liệu";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+}
+<div class="text-center page-title">
+    <h1 class="display-6">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+    <hr />
+</div>
+<div class="box-actions">
+    <div class="row">
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="Materials" asp-action="PrepareForMaterials" class="action-link">
+                    <div class="card-body text-center">
+                        <p class="fs-6">Chuẩn Bị</p>
+                        <img src="~/images/processing.png" alt="Alternate Text" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="Materials" asp-action="SubMaterials" class="action-link">
+                    <div class="card-body text-center">
+                        <p class="fs-6">Nguyên Vật Liệu Phụ</p>
+                        <img src="~/images/man.png" alt="Alternate Text" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="Materials" asp-action="HistoryPrinted" class="action-link">
+                    <div class="card-body text-center">
+                        <p class="fs-6">Lịch sử các phiếu đã viết</p>
+                        <img src="~/images/planning.png" alt="Alternate Text" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="ImportMaterials" asp-action="Index" class="action-link">
+                    <div class="card-body text-center">
+                        <p class="fs-6">Nhập Nguyên Vật Liệu</p>
+                        <img src="~/images/import.png" alt="Alternate Text" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="FlowMaterials" asp-action="Index" class="action-link">
+                    <div class="card-body text-center">
+                        <p class="fs-6">Theo Dõi Tỷ Lệ Tồn Kho</p>
+                        <img src="~/images/analytics.png" alt="Alternate Text" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="FlowTimeLimitMaterials" asp-action="Index" class="action-link">
+                    <div class="card-body text-center">
+                        <p>Theo dõi thời gian hết hạn</p>
+                        <img src="~/images/limited.png" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="Stock" asp-action="Show" class="action-link">
+                    <div class="card-body text-center">
+                        <p>Quản lý tồn kho</p>
+                        <img src="~/images/Qlstock.png" width="110" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="Eink" asp-action="Show" class="action-link">
+                    <div class="card-body text-center">
+                        <p>Quản lý E-ink</p>
+                        <img src="~/images/Eink.png" width="110" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="FlowMaterials" asp-action="ViewMaterialInBook" class="action-link">
+                    <div class="card-body text-center">
+                        <p>Sổ quản lý NVL</p>
+                        <img src="~/images/briefcase.png" width="110" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-4">
+            <div class="card card-custom">
+                <a asp-controller="Import" asp-action="Month" class="action-link">
+                    <div class="card-body text-center">
+                        <p>Tổng hợp báo cáo tháng</p>
+                       @*  <img src="~/images/Qlstock.png" width="110" /> *@
+                    </div>
+
+
+            
+
+
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+</div>

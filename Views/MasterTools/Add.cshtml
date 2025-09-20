@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Thêm dụng cụ";
+}
+<div class="container">
+    <h2>@ViewData["Title"]</h2>
+    <p>Đăng ký mới master dụng cụ theo mẫu mặc định</p>
+    <div class="notification-content"></div>
+    <div class="form-add-new mt-5">
+        <form class="action-upload mb-3" id="uploadCSV" enctype="multipart/form-data">
+            <input type="file" name="file" class="form-control" id="filePathCSV" />
+            <button class="btn btn-outline-dark btn-upload-tool mt-3">Tải lên<i class="bx bx-upload"></i></button>
+        </form>
+    </div>
+</div>

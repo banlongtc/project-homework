@@ -1,0 +1,124 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<MPLUS_GW_WebCore.Models.CustomRenderProcess>
+@{
+    ViewData["Title"] = "Chuẩn Bị";
+    Layout = "_Layout";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+}
+<div class="text-center page-title">
+    <h1 class="display-6 mb-0">@ViewData["Title"]</h1>
+</div>
+<div class="container">
+    @* Hiển thị breadcrumb *@
+    @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+    <div class="d-flex align-items-center">
+        <div class="select-layout">
+            <div class="button-show-process" id="btnShowProcessForWO">
+                <span class="option-value">Chọn công đoạn</span>
+                <i class="bx bxs-chevron-down"></i>
+            </div>
+
+            <div class="form-select-sm dropdown d-none" id="selectToShowWorkOrder">
+                @foreach (var processProd in Model)
+                {
+                    <div class="dropdown-item" data-value="@processProd.ProcessCode">@processProd.ProcessName</div>
+                }
+            </div>
+
+        </div>
+    </div>
+    <hr />
+</div>
+
+
+@* Hiển thị dữ liệu workorder *@
+<div class="mt-4">
+    <div class="before-render text-center container d-none">
+        <div class="spinner-grow text-primary"></div>
+    </div>
+    <div class="table-data d-none">
+        <div class="notification">
+            <p class="text-danger mb-0 fst-italic">* Chú ý:</p>
+            <ol>
+                <li class="text-danger fst-italic" style="font-size: 12px;">Ngày nhập phải nhỏ ngày sản xuất</li>
+                <li class="text-danger fst-italic" style="font-size: 12px;">Tổng số lượng nhập bằng số lượng chỉ thị</li>
+            </ol>
+        </div>
+        <div class="title-table text-center">
+        </div>
+        <div class="d-flex justify-content-between">
+            <div class="text-start d-flex align-items-center">
+                <button class="btn btn-sm btn-success btn-show-inventory">Theo dõi tồn kho</button>
+            </div>
+            <div class="text-end d-flex justify-content-between">
+                <div class="save-data me-3">
+                    <button id="saveDataLocation" class="btn btn-sm btn-save-materials disabled">Lưu</button>
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </div>
+                <a class="btn btn-sm disabled btn-redirect-ex" asp-controller="Materials" asp-action="WriteDeliveryNote">Viết phiếu xuất kho</a>
+            </div>
+        </div>
+        <div class="message text-danger mt-2 fst-italic mb-2"></div>
+        <div class="table-layout table-responsive">
+            <table id="tableGetWOInMES" class="table text-center table-bordered border-dark text-center">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle" data-title="Số chỉ thị" data-code_title="workOrder">Số chỉ thị</th>
+                        <th scope="col" class="align-middle" data-title="Danh sách sản phẩm" data-code_title="itemCode">Danh sách sản phẩm</th>
+                        <th scope="col" class="align-middle" data-title="Số lô" data-code_title="lotno">Số lô</th>
+                        <th scope="col" class="align-middle" data-title="Số lượng dự định" data-code_title="qty">Số lượng chỉ thị</th>
+                        <th scope="col" class="align-middle" data-title="Chữ cái" data-code_title="character">Chữ cái</th>
+                        <th scope="col" class="align-middle" data-title="Ngày dự định sản xuất" data-code_title="dateIntended">Ngày dự định sản xuất</th>
+                        <th scope="col" class="align-middle" data-title="Giờ dự định sản xuất" data-code_title="timeIntended">Giờ dự định sản xuất</th>
+                        <th scope="col" class="align-middle" data-title="Số lượng nhập" data-code_title="qtyImport">Số lượng nhập</th>
+                        <th scope="col" class="align-middle" data-title="Ngày nhập NVL" data-code_title="dateInput">Ngày nhập NVL</th>
+                        <th scope="col" class="align-middle" data-title="Giờ nhập NVL" data-code_title="timeInput">Giờ nhập NVL</th> 
+                        <th scope="col" class="align-middle d-none" data-title="Công đoạn" data-code_title="processCode">Công đoạn</th>
+                        <th scope="col" class="align-middle d-none" data-title=""></th>
+                    </tr>
+                </thead>
+                <tbody id="renderTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="table-see-inventoy d-none">
+        <div class="table-title">
+            <button class="btn btn-secondary btn-back" style="width: 100px;">Quay lại</button>
+            <div class="text-center">
+                <h4 class="display-6">Theo dõi tồn kho</h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-inventory text-center">
+                    <thead>
+                        <tr class="rm-code-inventory">
+                            <th colspan="4" class="w-350"><span>Mã sản phẩm</span></th>
+                        </tr>
+                        <tr class="rm-name-inventory">
+                            <th colspan="4" class="w-350"><span>Tên sản phẩm</span></th>
+                        </tr>
+                        <tr class="total-inventory">
+                            <th colspan="4" class="w-350"><span>Tổng tồn thực tế</span></th>
+                        </tr>
+                        <tr class="half-amount">
+                            <th colspan="4" class="w-350"><span>Số lượng dự định chưa sử dụng</span></th>
+                        </tr>
+                        <tr class="qty-unused">
+                            <th colspan="4" class="w-350"><span>Tồn còn lại</span></th>
+                        </tr>
+                        <tr class="title-head">
+                            <th><span>Số WO</span></th>
+                            <th><span>WO Item</span></th>
+                            <th><span>Số lô</span></th>
+                            <th><span>SL sản xuất</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryContent">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

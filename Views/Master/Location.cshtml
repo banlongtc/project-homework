@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Master Location";
+    Layout = "_Admin";
+    var Listloc = ViewData["ListLoc"] as List<TblLocationC>;
+    var Listloccha = ViewData["Listloccha"] as List<TblLocation>;
+
+}
+<h4 style="color:#008d61; font-weight:600">Master Location</h4>
+<br />
+<div style="float:left">
+    <button type="button" id="Btnthemloc" class="btn btn-primary" style="background-color:cadetblue; border-color:cadetblue; margin:20px;margin-left:0">
+        Thêm mới
+    </button>
+</div>
+<table class="table table-hover" style="font-size:small">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Location Code</th>
+            <th scope="col">Location Name</th>
+            <th scope="col">Location cha</th>
+            <th scope="col" width="90px">Sửa & Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Listloc != null)
+        {
+            foreach (var it in Listloc)
+            {
+                <tr class="table-light">
+                    <td class="idloc" data-idloc="@it.Id"> @it.Id</td>
+                    <td class="loccode" data-loccode="@it.LocationCodeC"> @it.LocationCodeC</td>
+                    <td class="locname" data-locname="@it.LocationNameC"> @it.LocationNameC</td>
+                    <td class="idcloc" data-idcloc="@it.IdChaC"> @it.IdChaC</td>
+                    <td class="align-middle text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="action-item text-decoration-none" id="Editloc"><i class="bx bx-edit"></i></a>
+                            <a class="action-item text-decoration-none text-danger" id="Deleteloc">
+                                <i class="bx bx-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="Popup_Themloc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lbtdloc" style="color:darkblue;font-weight:600"></h5>
+                <button class="btn-close-modal btn" data-bs-dismiss="modal" aria-label="Close" type="button"><span class="bx bx-x"></span></button>
+            </div>
+            <div class="modal-body">
+                <div id="noticeContainer"></div>
+                <label id="Lbidloc"></label>
+                <div style="margin-bottom:10px">
+                    <label>Location Code: </label>
+                    <input type="text" class="form-control" id="txtcodeloc">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Tên Location: </label>
+                    <input type="text" class="form-control" id="txtnameloc">
+                </div>
+                <div style="margin-bottom:10px;width:250px">
+                    <label>Id Location Cha:</label>
+
+                    <select class="form-select" id="idchaloc">
+                        @if (Listloccha != null)
+                        {
+                            foreach (var it in Listloccha)
+                            {
+                                <option value="@it.IdLocation">@it.LocationCode: @it.LocationName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="BtnSave_loc" class="btn btn-primary">Lưu</button>
+                <span class="spinner-border spinner-border-sm d-none check-load" role="status" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MPLUS_GW</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/OIP.ico" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-icons/font/bootstrap-icons.min.css"/> *@
+    <link rel="stylesheet" href="~/css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/css/dataTables.css" />
+    <link rel="stylesheet" href="~/css/timepicker.min.css" />
+    <link rel="stylesheet" href="~/css/boxicons.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MPLUS_GW_WebCore.styles.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" /> *@
+    <link href="~/css/site/style1.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <input type="hidden" id="userIdLogin" value="@Context.Session.GetString("User ID")" />
+        <input type="hidden" id="userDisplayName" value="@Context.Session.GetString("DisplayName")" />
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex logo-web" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" alt="Alternate Text" />
+                    <span class="text-danger fs-6 fst-italic">MPLUS_GW</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                @if (Context.Session.GetString("DisplayName") != null)
+                {
+                    <div class="dropdown user-actions">
+                        <div class="display-name" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bx-user-circle"></i>
+                            <span>@Context.Session.GetString("DisplayName")</span>
+                            <i class="bx bx-caret-down"></i>
+                        </div>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <div class="dropdown-item">
+                                <a class="nav-link">Thông tin tài khoản</a>
+                            </div>
+                            <div class="dropdown-item">
+                                <a class="nav-link btn-logout" asp-controller="Home" asp-action="Logout">
+                                    Đăng Xuất
+                                    <i class="bx bx-caret-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a class="btn btn-success btn-link-login text-white" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng Nhập</a>
+                }
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="pb-3">
+        <div class="container-fluid main-content">
+            @RenderBody()
+        </div>
+    </main>
+    <div class="modal fade" id="loginModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-login form-default form-md mb-4 mt-4">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <div class="login-img">
+                                    <img class="" src="~/images/ADMbuilding12.jpg" alt="Ảnh Nền" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="logo-box text-center mb-4">
+                                    <img src="~/images/logo.png" alt="Logo" />
+                                </div>
+                                <div class="mb-4 text-center">
+                                    <h5 class="fw-bolder fst-italic">Vui lòng nhập thông tin</h5>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="form-label col-sm-12 col-md-5 col-form-label" for="Username">Tên đăng nhập <span class="text-danger fst-italic">(*)</span></label>
+                                    <div class="col-sm-12 col-md-7">
+                                        <input id="Username" type="text" class="form-control-sm username" placeholder="Tên đăng nhập" required="required" />
+                                        <div class="text-danger fst-italic message-error"></div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="form-label col-sm-12 col-md-5 col-form-label" for="Password">Mật khẩu <span class="text-danger fst-italic">(*)</span></label>
+                                    <div class="col-sm-12 col-md-7">
+                                        <div class="password-input">
+                                            <input type="password" id="Password" class="form-control-sm password-user" required="required" placeholder="Mật khẩu" />
+                                            <button type="button" title="show password" id="btnShowPassword" class="d-none btn-show-password"><i class="bx bxs-show"></i></button>
+                                        </div>
+                                        <div class="message-error text-danger fst-italic"></div>
+                                    </div>
+                                </div>
+                                <div class="action-forgot text-end">
+                                    <a href="javascript:void(0)" class="text-decoration-none">Quên mật khẩu?</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="message-login-failed text-center fst-italic text-danger mb-3"></div>
+                            <div class="loader-icon d-flex align-items-center justify-content-center">
+                                <button class="btn btn-login btn-success" id="btnLogin">
+                                    <span>Đăng Nhập</span>
+                                </button>
+                                <div class="spinner-grow text-primary d-none">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalChangePassword">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center w-100">
+                        <h5 class="modal-title">Thay đổi mật khẩu</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="notification-password">
+                        <p class="text-danger fst-italic">Mật khẩu mới phải có đầy đủ chữ hoa, chữ thường, ký tự đặc biệt và số. Độ dài phải từ 8 ký tự trở lên.</p>
+                    </div>
+                    <div class="input-password input-group">
+                        <label class="form-label" for="oldPassword">Mật khẩu cũ: </label>
+                        <div class="input-field">
+                            <input type="password" id="oldPassword" class="password-old" />
+                            <button class="btn btn-show-password d-none"><i class="bx bxs-show"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-password input-group">
+                        <label class="form-label" for="newPassword">Mật khẩu mới: </label>
+                        <div class="input-field">
+                            <input type="password" id="newPassword" class="new-password" />
+                            <button class="btn btn-show-password d-none"><i class="bx bxs-show"></i></button>
+                        </div>
+                        <div class="mt-1 message-error text-danger"></div>
+                    </div>
+                    <div class="input-password input-group">
+                        <label class="form-label" for="confirmPassword">Xác nhập mật khẩu: </label>
+                        <div class="input-field">
+                            <input type="password" id="confirmPassword" class="confirm-password" />
+                            <button class="btn btn-show-password d-none"><i class="bx bxs-show"></i></button>
+                        </div>
+                        <div class="mt-1 message-error text-danger"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-update-password disabled">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="border-top text-center text-muted">
+        <div class="container">
+            Design by IT Application Team &copy; 2024 - MPLUS_GW
+        </div>
+        <input type="hidden" id="positionWorkingCurrent" value="@Context.Session.GetString("PositionWorking")" />
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/file-saver/dist/filesaver.min.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    @*     <script src="~/lib/chart.js/dist/chart.min.js"></script>
+    <script src="~/lib/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script> *@
+    <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/dataTables.js"></script>
+    <script src="~/js/timepicker.min.js"></script>
+    <script src="~/js/configs.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/renderWorkOrder.js" asp-append-version="true"></script>
+    <script src="~/js/create_down_delivery.js" asp-append-version="true"></script>
+    <script src="~/js/submaterials.js" asp-append-version="true"></script>
+    <script src="~/js/processing.js" asp-append-version="true"></script>
+    <script src="~/js/printlabels.js" asp-append-version="true"></script>
+    <script src="~/js/flowPercentMaterials.js" asp-append-version="true"></script>
+    <script src="~/js/manage-eink.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    @*    @if (Context.Session.GetString("UserID") == null)
+    {
+        <div class="modal fade" id="showNotificationLogin">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="text-center w-100"><h5 class="modal-title">Thông báo</h5></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger">Vui lòng đăng nhập và kiểm tra thông tin vị trí làm việc trước khi bắt đầu. Trân trọng cảm ơn.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-login btn-success btn-show-login" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#loginModal">Đăng Nhập</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const showNotifycation = document.getElementById('showNotificationLogin');
+                $(showNotifycation).modal('show');
+                $('.btn-show-login').on('click', function() {
+                    $(showNotifycation).modal('hide');
+                });
+            });
+        </script>
+    } *@
+</body>
+</html>

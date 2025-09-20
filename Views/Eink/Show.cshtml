@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Quản Lý ESL";
+    var breadcrumbs = ViewBag.Breadcrumbs as List<Breadcrumb>;
+    var listeink = ViewData["ListEink"] as List<MPLUS_GW_WebCore.Controllers.Eink.InfoEinks>;
+}
+@await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
+<form>
+    <fieldset>
+        <legend style="color:#198754"><b>Quản lý ESL đã được kết nối</b></legend>
+    </fieldset>
+</form>
+<div id="noticeContainer"></div>
+<div id="einkContents">
+    <table id="tblShowEinks" class="table text-center table-hover table-bordered border-dark" style="font-size:small;">
+        <thead class="bg-secondary text-light">
+            <tr>
+                <th scope="col" class="text-center align-middle">ID</th>
+                <th scope="col" class="text-center align-middle">MAC</th>
+                <th scope="col" class="text-center align-middle">Variant</th>
+                <th scope="col" class="text-center align-middle">Description</th>
+                <th scope="col" class="text-center align-middle">Group</th>
+                <th scope="col" class="text-center align-middle">Status</th>
+                <th scope="col" class="text-center align-middle">Unlink</th>
+                <th scope="col" class="text-center align-middle">ImageFile</th>
+                <th scope="col" class="text-center align-middle">PollInterval</th>
+                <th scope="col" class="text-center align-middle">PollTimeout</th>
+                <th scope="col" class="text-center align-middle">ScanInterval</th>
+                <th scope="col" class="text-center align-middle">BatteryStatus</th>
+                <th scope="col" class="text-center align-middle">BatteryVoltage</th>
+                <th scope="col" class="text-center align-middle">LastPoll</th>
+                <th scope="col" class="text-center align-middle">BaseStation</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (listeink != null)
+            {
+                foreach (var it in listeink)
+                {
+                    <tr>
+                        <td class="text-center align-middle"><div class="info-esl" style="width: 280px;">@it.IdProduct</div></td>
+                        <td class="text-center align-middle"><div class="info-esl mac">@it.EinkMac</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.Variant</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.Description</div></td>
+                        <td class="text-center align-middle"><div class="info-esl" style="width: 60px;">@it.Group</div></td>
+                        @if (it.IdProduct != null && it.IdProduct != "")
+                        {
+                            <td class="text-center align-middle"><img src="~/images/link.png" width="25" /></td>
+                            <td class="text-center align-middle">
+                                <button data-productid="@it.IdProduct" data-variant="@it.Variant" type="submit" class="btn btn-primary btn-unlink-esl"
+                                        style="background-color: #f0f076; font-size:small; border: 1px solid #f0f076; color: #000; width: 70px; padding: 5px 0;">
+                                    <i class="bx bx-unlink"></i> Unlink
+                                </button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-center align-middle"><img src="~/images/cancel.png" width="25" /></td>
+                            <td class="text-center align-middle"></td>
+                        }
+
+                        <td class="text-center align-middle"><div class="info-esl">@it.ImageFile</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.PollInterval</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.PollTimeout</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.ScanInterval</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.BatteryStatus</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.BatteryVoltage</div></td>
+                        <td class="text-center align-middle"><div class="info-esl" style="width: 130px;">@it.LastPoll</div></td>
+                        <td class="text-center align-middle"><div class="info-esl">@it.BaseStation</div></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+

@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Quản lý tài khoản";
+    var listUsers = ViewData["ListUsers"] as List<GetAllUsers>;
+}
+<div class="container">
+    <div class="page-title">
+        <h2>@ViewData["Title"]</h2>
+        <p class="card-subtitle">
+            Hiển thị tất cả người dùng đã được tạo trên hệ thống
+        </p>
+    </div>
+    <div class="add-new-user mt-3">
+        <a asp-controler="UserManagement" asp-action="AddUser" class="btn btn-primary btn-sm text-capitalize">Thêm mới</a>
+    </div>
+    <div class="list-user mt-4">
+        <div class="table-responsive">
+            <table class="table border-dark table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th class="align-middle" data-title="STT"></th>
+                        <th class="align-middle" data-title="Tên đăng nhập"></th>
+                        <th class="align-middle" data-title="Tên hiển thị"></th>
+                        <th class="align-middle" data-title="Mã nhân viên"></th>
+                        <th class="align-middle" data-title="Email"></th>
+                        <th class="align-middle" data-title="Quyền"></th>
+                        <th class="align-middle" data-title="Công đoạn"></th>
+                        <th class="align-middle" data-title="Bộ phận"></th>
+                        <th class="align-middle" data-title="Trạng thái"></th>
+                        <th class="align-middle" data-title="Hành động"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (listUsers != null)
+                    {
+                        int index = 1;
+                        foreach (var item in listUsers)
+                        {
+                            <tr>
+                                <td class="align-middle">@index</td>
+                                <td class="align-middle">@item.UserName</td>
+                                <td class="align-middle">@item.FullName</td>
+                                <td class="align-middle">@item.EmployeeNo</td>
+                                <td class="align-middle">@item.Email</td>
+                                <td class="align-middle">@item.Role</td>
+                                <td class="align-middle">@item.Location</td>
+                                <td class="align-middle">@item.Section</td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center">
+                                        @if(item.Status == "True") {
+                                            <a title="Hoạt động" class="status-display bg-success"></a>
+                                        } else {
+                                            <a title="Vô hiệu hóa" class="status-display bg-danger"></a>
+                                        }
+                                    </div>
+                                 </td>
+                                <td class="align-middle">
+                                    <div class="btn-action d-flex align-items-center justify-content-between">
+                                        <a class="btn btn-edit-user" title="Sửa" asp-controller="UserManagement" asp-action="Edit" asp-route-id="@item.IdUser">
+                                            <i class="bx bx-edit"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" class="btn btn-delete-user text-danger" title="Xóa" data-user_id="@item.IdUser">
+                                            <i class="bx bx-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+       
+    </div>
+</div>
