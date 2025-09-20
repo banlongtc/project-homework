@@ -194,6 +194,9 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
             listWoProductions = listWoProductions
                 .OrderBy(x => string.IsNullOrEmpty(x.SoTT) ? 1 : 0)
                 .ThenBy(x => x.SoTT)
+                .OrderBy(x => string.IsNullOrEmpty(x.Character) ? 1 : 0)
+                .ThenBy(x => x.Character)
+                .ThenBy(x => x.WorkOrderNo)
                 .ToList();
 
             var totalsPerLine = new Dictionary<int, int>();

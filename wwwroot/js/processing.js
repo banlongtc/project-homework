@@ -172,554 +172,6 @@ function DivLineForProduction(tableDivLine) {
                     })
             }
         });
-
-        //Hiển thị chia line cho từng lot NVL
-        $('#showDivLine').on('hidden.bs.modal', function () {
-            $(this).find('.data-render').html('');
-            $('#showDivLine .modal-body p.text-danger').remove();
-        })
-        $('.show-div-line').on('click', function (e) {
-            e.preventDefault();
-
-            let parentElem = $(e.target).parent().parent();
-            let totalProductLine1 = parseInt(parentElem.find('input.line-1').val(), 10);
-            let totalProductLine2 = parseInt(parentElem.find('input.line-2').val(), 10);
-            let totalProductLine3 = parseInt(parentElem.find('input.line-3').val(), 10);
-            let totalProductLine4 = parseInt(parentElem.find('input.line-4').val(), 10);
-
-            let productCode = parentElem.attr('data-product_code');
-            let lotProduct = parentElem.attr('data-lotno');
-
-            $('.btn-save-line-lot').attr('data-workorder', parentElem.data('workorder'));
-            $('#showDivLine #tableDivLine .data-render').html('');
-            let processCode = parentElem.find("input.processcode").val();
-
-            fetch(`${window.baseUrl}api/getreserveditem`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    workOrder: parentElem.data('workorder'),
-                    processCode: processCode,
-                })
-            })
-                .then(async response => {
-                    if (!response.ok) {
-                        const errorResponse = await response.json();
-                        throw new Error(`${response.status} - ${errorResponse.message}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    $('#showDivLine .modal-body .title-select').remove();
-                    $('#tableShowOld .data-render').html('');
-                    let dataLot = data.dataLot;
-                    let oldData = data.oldData;
-                    let count = 0;
-                    let htmlSelectMaterial = '';
-                    if (processCode == "01060" || processCode == "01070" || processCode == "01075") {
-                        $('#tableDivLine').addClass('d-none');
-                        $('#oldContentsDivLine').addClass('d-none');
-                        htmlSelectMaterial += `<div class="title-select mb-3">`;
-
-                        if (dataLot.length > 0) {
-                            let mergedData = Object.values(
-                                dataLot.reduce((acc, item) => {
-                                    let { productCode, lotNo, qty } = item;
-                                    if (!acc[productCode]) {
-                                        acc[productCode] = { productCode };
-                                    }
-                                    return acc;
-                                }, {})
-                            );
-                            htmlSelectMaterial += `<span>Chọn mã NVL:</span>
-                            <select class="form-select-xl" id="getMaterialCode">
-                                <option value="">--Chọn mã NVL--</option>`;
-                            mergedData.forEach(item => {
-                                htmlSelectMaterial += `<option value="${item.productCode}">${item.productCode}</option>`;
-                            });
-                            htmlSelectMaterial += `</select>`;
-                        } else {
-                            htmlSelectMaterial += `<span>Chưa có NVL được Reserved trên MES</span>`;
-                        }
-                        htmlSelectMaterial += `</div>`;
-                        $('#showDivLine #tableDivLine').parent().before(htmlSelectMaterial);
-                        $('#getMaterialCode').on('change', function (e) {
-                            e.preventDefault();
-                            let htmlRender = '';
-                            $('#tableShowOld .data-render').html('');
-                            if ($(this).val() != '') {
-                                $('#tableDivLine').removeClass('d-none');
-                                $('#tableDivLine').parent().removeClass('d-none');
-                                $('#oldContentsDivLine').removeClass('d-none');
-                                dataLot.forEach(item => {
-                                    if (item.productCode == $(this).val()) {
-                                        let classDisabled = ["", "", "", ""];
-                                        let totalProductLines = [totalProductLine1, totalProductLine2, totalProductLine3, totalProductLine4];
-
-                                        for (let i = 0; i < totalProductLines.length; i++) {
-                                            if (totalProductLines[i] <= 0) {
-                                                classDisabled[i] = "disabled";
-                                            }
-                                        }
-                                        htmlRender += `<tr class="list-item" 
-                                        data-item="${productCode}" 
-                                        data-lotitem="${lotProduct}" 
-                                        data-product_code="${item.productCode}" 
-                                        data-lot_product="${item.lotNo}" 
-                                        data-qty-base="${item.qty}">
-                                            <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
-                                            <td class="align-middle text-center"><div>${item.lotNo}</div></td>
-                                            <td class="align-middle text-center"><divclass="qty-base">${item.qty}</div></td>
-                                            <td class="align-middle text-center" style="width: 130px;">
-                                                <div class="input-group">
-                                                    <input type="number" name="lineLot1" id="valueDivLine1_${count}" data-element-total="btn-total-line-1" data-line="1" class="text-center enter-value-line-1 ${classDisabled[0]}" />
-                                                </div>
-                                            </td>                                
-                                            <td class="align-middle text-center" style="width: 130px;">
-                                                <div class="input-group">
-                                                    <input type="number" name="lineLot2" id="valueDivLine2_${count}" data-element-total="btn-total-line-2" data-line="2" class="text-center enter-value-line-2 ${classDisabled[1]}" />
-                                                </div>
-                                            </td>                                
-                                            <td class="align-middle text-center" style="width: 130px;">
-                                                <div class="input-group">
-                                                    <input type="number" name="lineLot3" id="valueDivLine3_${count}" data-element-total="btn-total-line-3" data-line="3" class="text-center enter-value-line-3 ${classDisabled[2]}" />
-                                                </div>
-                                            </td>                                
-                                            <td class="align-middle text-center" style="width: 130px;">
-                                                <div class="input-group">
-                                                    <input type="number" name="lineLot4" id="valueDivLine4_${count}" data-element-total="btn-total-line-4" data-line="4" class="text-center enter-value-line-4 ${classDisabled[3]}" />
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center d-none">
-                                                <input type="checkbox" class="check-data-line"/>
-                                            </td>
-                                        </tr>`;
-                                        count++;
-                                    }
-                                });
-                                $('#showDivLine #tableDivLine .data-render').html(htmlRender);
-                                $('#showDivLine #tableDivLine tr.list-item td').each(function (i, elem) {
-                                    $(elem).on('change', 'input[type="number"]', function (e) {
-                                        $(e.target).parent().parent().parent().find('input.check-data-line').trigger('change');
-                                        let classBtn = $(e.target).data('element-total');
-                                        $('.' + classBtn).trigger('click');
-                                    });
-                                });
-                                if (oldData.length) {
-                                    $('#tableShowOld').removeClass('d-none');
-                                    let totalLine1 = 0;
-                                    let totalLine2 = 0;
-                                    let totalLine3 = 0;
-                                    let totalLine4 = 0;
-                                    oldData.forEach(item => {
-                                        if ($(this).val() == item.productCode) {
-                                            totalLine1 += item.line1;
-                                            totalLine2 += item.line2;
-                                            totalLine3 += item.line3;
-                                            totalLine4 += item.line4;
-                                            $('#tableShowOld .data-render').append(`<tr class="list-item" data-product_code="${item.productCode}" data-lot_product="${item.lotDivLine}">
-                                                <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
-                                                <td class="align-middle text-center"><div>${item.lotDivLine}</div></td>
-                                                <td class="align-middle text-center">
-                                                    <div class="total-line">
-                                                        <span id="totalLine1">${item.line1}</span>
-                                                    </div>
-                                                </td>                                
-                                                <td class="align-middle text-center">
-                                                    <div class="total-line">
-                                                        <span id="totalLine1">${item.line2}</span>             
-                                                    </div>
-                                                </td>                                
-                                                <td class="align-middle text-center">
-                                                    <div class="total-line">
-                                                        <span id="totalLine1">${item.line3}</span>             
-                                                    </div>
-                                                </td>                                
-                                                <td class="align-middle text-center">
-                                                    <div cclass="total-line">
-                                                        <span id="totalLine1">${item.line4}</span>             
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle text-center d-none">
-                                                    <input type="checkbox" class="check-data-line"/>
-                                                </td>
-                                            </tr>`);
-
-                                            let hasDivOrderLine1 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-1`).val();
-                                            let hasDivOrderLine2 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-2`).val();
-                                            let hasDivOrderLine3 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-3`).val();
-                                            let hasDivOrderLine4 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-4`).val();
-                                            if (totalLine1 == parseInt(hasDivOrderLine1, 10)) {
-                                                $('.enter-value-line-1').addClass('disabled');
-                                            }
-                                            if (totalLine2 == parseInt(hasDivOrderLine2, 10)) {
-                                                $('.enter-value-line-2').addClass('disabled');
-                                            }
-                                            if (totalLine3 == parseInt(hasDivOrderLine3, 10)) {
-                                                $('.enter-value-line-3').addClass('disabled');
-                                            }
-                                            if (totalLine4 == parseInt(hasDivOrderLine4, 10)) {
-                                                $('.enter-value-line-4').addClass('disabled');
-                                            }
-                                        }
-
-                                    });
-                                    $('#tableShowOld .data-render').append(`
-                                    <tr>
-                                        <td colspan="2" class="align-middle text-center">Tổng</td>
-                                        <td class="align-middle text-center"><div class="total-line-1">${totalLine1}<button type="button" class="d-none btn-total-line-1"></button></div></td>
-                                        <td class="align-middle text-center"><div class="total-line-2">${totalLine2}<button type="button" class="d-none btn-total-line-2"></button></div></td>
-                                        <td class="align-middle text-center"><div class="total-line-3">${totalLine3}<button type="button" class="d-none btn-total-line-3"></button></div></td>
-                                        <td class="align-middle text-center"><div class="total-line-4">${totalLine4}<button type="button" class="d-none btn-total-line-4"></button></div></td>
-                                    </tr>`);
-                                } else {
-                                    $('#tableShowOld').addClass('d-none');
-                                }
-                            }
-                        });
-                    } else {
-                        if (dataLot.length > 0) {
-                            dataLot.forEach(item => {
-                                let classDisabled = ["", "", "", ""];
-                                let totalProductLines = [totalProductLine1, totalProductLine2, totalProductLine3, totalProductLine4];
-
-                                for (let i = 0; i < totalProductLines.length; i++) {
-                                    if (totalProductLines[i] <= 0) {
-                                        classDisabled[i] = "disabled";
-                                    }
-                                }
-                                $('#showDivLine #tableDivLine .data-render').append(`<tr class="list-item" 
-                                data-item="${productCode}" 
-                                data-lotitem="${lotProduct}" 
-                                data-product_code="${item.productCode}" 
-                                data-lot_product="${item.lotNo}" 
-                                data-qty-base="${item.qty}">
-                                    <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
-                                    <td class="align-middle text-center"><div>${item.lotNo}</div></td>
-                                    <td class="align-middle text-center"><div class="qty-base">${item.qty}</div></td>
-                                    <td class="align-middle text-center" style="width: 130px;">
-                                        <div class="input-group">
-                                            <input type="number" name="lineLot1" id="valueDivLine1_${count}" data-line="1" data-element-total="btn-total-line-1" class="text-center enter-value-line-1 ${classDisabled[0]}" />
-                                        </div>
-                                    </td>                                
-                                    <td class="align-middle text-center" style="width: 130px;">
-                                        <div class="input-group">
-                                            <input type="number" name="lineLot2" id="valueDivLine2_${count}" data-line="2" data-element-total="btn-total-line-2" class="text-center enter-value-line-2 ${classDisabled[1]}" />
-                                        </div>
-                                    </td>                                
-                                    <td class="align-middle text-center" style="width: 130px;">
-                                        <div class="input-group">
-                                            <input type="number" name="lineLot3" id="valueDivLine3_${count}" data-line="3" data-element-total="btn-total-line-3" class="text-center enter-value-line-3 ${classDisabled[2]}" />
-                                        </div>
-                                    </td>                                
-                                    <td class="align-middle text-center" style="width: 130px;">
-                                        <div class="input-group">
-                                            <input type="number" name="lineLot4" id="valueDivLine4_${count}" data-line="4" data-element-total="btn-total-line-4" class="text-center enter-value-line-4 ${classDisabled[3]}" />
-                                        </div>
-                                    </td>
-                                    <td class="align-middle text-center d-none">
-                                        <input type="checkbox" class="check-data-line"/>
-                                    </td>
-                                </tr>`);
-                                count++;
-                            });
-                        } else {
-                            $('#showDivLine #tableDivLine .data-render').html('<tr><td class="align-middle text-center" colspan="7">Không có dữ liệu</td></tr>')
-                        }
-                        if (oldData.length) {
-                            $('#tableShowOld').removeClass('d-none');
-                            let totalLine1 = 0;
-                            let totalLine2 = 0;
-                            let totalLine3 = 0;
-                            let totalLine4 = 0;
-                            oldData.forEach(item => {
-                                totalLine1 += item.line1;
-                                totalLine2 += item.line2;
-                                totalLine3 += item.line3;
-                                totalLine4 += item.line4;
-                                let qtyBase = item.line1 + item.line2 + item.line3 + item.line4;
-                                $('#tableShowOld .data-render').append(`<tr class="list-item" data-product_code="${item.productCode}" data-lot_product="${item.lotDivLine}">
-                                    <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
-                                    <td class="align-middle text-center"><div>${item.lotDivLine}</div></td>
-                                    <td class="align-middle text-center">
-                                        <div class="total-line">
-                                            <span id="totalLine1">${item.line1}</span>
-                                        </div>
-                                    </td>                                
-                                    <td class="align-middle text-center">
-                                        <div class="total-line">
-                                            <span id="totalLine1">${item.line2}</span>             
-                                        </div>
-                                    </td>                                
-                                    <td class="align-middle text-center">
-                                        <div class="total-line">
-                                            <span id="totalLine1">${item.line3}</span>             
-                                        </div>
-                                    </td>                                
-                                    <td class="align-middle text-center">
-                                        <div cclass="total-line">
-                                            <span id="totalLine1">${item.line4}</span>             
-                                        </div>
-                                    </td>
-                                    <td class="align-middle text-center d-none">
-                                        <input type="checkbox" class="check-data-line"/>
-                                    </td>
-                                </tr>`);
-
-                                let hasDivOrderLine1 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-1`).val();
-                                let hasDivOrderLine2 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-2`).val();
-                                let hasDivOrderLine3 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-3`).val();
-                                let hasDivOrderLine4 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-4`).val();
-                                $(`#tableDivLine tr.list-item[data-product_code="${item.productCode}"][data-lot_product="${item.lotDivLine}"][data-qty-base="${qtyBase}"]`).addClass('d-none');
-                                if (totalLine1 == parseInt(hasDivOrderLine1, 10)) {
-                                    $('.enter-value-line-1').addClass('disabled');
-                                }
-                                if (totalLine2 == parseInt(hasDivOrderLine2, 10)) {
-                                    $('.enter-value-line-2').addClass('disabled');
-                                }
-                                if (totalLine3 == parseInt(hasDivOrderLine3, 10)) {
-                                    $('.enter-value-line-3').addClass('disabled');
-                                }
-                                if (totalLine4 == parseInt(hasDivOrderLine4, 10)) {
-                                    $('.enter-value-line-4').addClass('disabled');                                }
-                            });
-                            $('#tableShowOld .data-render').append(`
-                            <tr>
-                                <td colspan="2" class="align-middle text-center">Tổng</td>
-                                <td class="align-middle text-center"><div class="total-line-1">${totalLine1}<button type="button" class="d-none btn-total-line-1"></button></div></td>
-                                <td class="align-middle text-center"><div class="total-line-2">${totalLine2}<button type="button" class="d-none btn-total-line-2"></button></div></td>
-                                <td class="align-middle text-center"><div class="total-line-3">${totalLine3}<button type="button" class="d-none btn-total-line-3"></button></div></td>
-                                <td class="align-middle text-center"><div class="total-line-4">${totalLine4}<button type="button" class="d-none btn-total-line-4"></button></div></td>
-                            </tr>`);
-                        } else {
-                            $('#tableShowOld').addClass('d-none');
-                        }
-                    }
-
-                    $('#showDivLine #tableDivLine tr.list-item td').each(function (i, elem) {
-                        $(elem).on('change', 'input[type="number"]', function (e) {
-                            $(e.target).parent().parent().parent().find('input.check-data-line').trigger('change');
-                            let classBtn = $(e.target).data('element-total');
-                            $('.' + classBtn).trigger('click');
-                        });
-                    });
-
-                    let check = true;
-                    $('body').on('change', '.check-data-line', function (e) {
-                        e.preventDefault();
-                        $('#showDivLine .modal-body p.text-danger').remove();
-                        let totalRow = 0;
-                        let $parent = $(e.target).parent().parent();
-                        $parent.addClass('checked');
-                        let valBase = parseInt($parent.data('qty-base'), 10);
-                        $parent.find('td').has('input[type="number"]').each(function (i, elem) {
-                            let valInput = parseInt($(elem).find('input[type="number"]').val() ?? "0", 10) ?? 0;
-                            if (valInput > 0) {
-                                valInput = valInput;
-                            } else {
-                                valInput = 0;
-                            }
-                            totalRow += valInput;
-                        });
-                        if (totalRow > valBase) {
-                            check = false;
-                        } else {
-                            check = true;
-                            $('.btn-save-line-lot').removeClass('disabled');
-                        }
-                        if (check == false) {
-                            $parent.find('input[type="number"]').addClass('border-danger');
-                            $('#showDivLine .modal-body').append('<p class="text-danger";">Số lượng chia cho NVL đang có lỗi. Vui lòng thử lại!!</p>');
-                            $('.btn-save-line-lot').addClass('disabled');
-                        } else {
-                            $parent.find('input[type="number"]').removeClass('border-danger');
-                            $('#showDivLine .modal-body p.text-danger').remove();
-                        }
-                    });
-
-                    $('body').on('click', '.btn-total-line-1', function (e) {
-                        $('#showDivLine .modal-body p.text-danger').remove();
-                        let totalColumnLine = 0;
-                        $('.enter-value-line-1').each(function (i, elem) {
-                            let valInput = '';
-                            if ($(elem).val() == '') {
-                                valInput = '0';
-                            } else {
-                                valInput = $(elem).val();
-                            }
-                            totalColumnLine += parseInt(valInput, 10);
-                        });
-                        totalColumnLine += parseInt($(this).parent().text().trim(), 10);
-                        if (totalProductLine1 < totalColumnLine) {
-                            $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
-                        }
-                    });
-
-                    $('body').on('click', '.btn-total-line-2', function (e) {
-                        let totalColumnLine = 0;
-                        $('#showDivLine .modal-body p.text-danger').remove();
-                        $('.enter-value-line-2').each(function (i, elem) {
-                            let valInput = '';
-                            if ($(elem).val() == '') {
-                                valInput = '0';
-                            } else {
-                                valInput = $(elem).val();
-                            }
-                            totalColumnLine += parseInt(valInput, 10);
-                        });
-                        totalColumnLine += parseInt($(this).parent().text().trim(), 10);
-                        if (totalProductLine2 < totalColumnLine) {
-                            $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
-                        }
-                    });
-
-                    $('body').on('click', '.btn-total-line-3', function (e) {
-                        let totalColumnLine = 0;
-                        $('#showDivLine .modal-body p.text-danger').remove();
-                        $('.enter-value-line-3').each(function (i, elem) {
-                            let valInput = '';
-                            if ($(elem).val() == '') {
-                                valInput = '0';
-                            } else {
-                                valInput = $(elem).val();
-                            }
-                            totalColumnLine += parseInt(valInput, 10);
-                        });
-                        totalColumnLine += parseInt($(this).parent().text().trim(), 10);
-                        if (totalProductLine3 < totalColumnLine) {
-                            $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
-                        }
-                    });
-
-                    $('body').on('click', '.btn-total-line-4', function (e) {
-                        let totalColumnLine = 0;
-                        $('#showDivLine .modal-body p.text-danger').remove();
-                        $('.enter-value-line-4').each(function (i, elem) {
-                            let valInput = '';
-                            if ($(elem).val() == '') {
-                                valInput = '0';
-                            } else {
-                                valInput = $(elem).val();
-                            }
-                            totalColumnLine += parseInt(valInput, 10);
-                        });
-                        totalColumnLine += parseInt($(this).parent().text().trim(), 10);
-                        if (totalProductLine4 < totalColumnLine) {
-                            $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
-                        }
-                    });
-                })
-                .catch(error => {
-                    alert(error);
-                })
-        });
-        $('.btn-save-line-lot').on('click', function (e) {
-            e.preventDefault();
-            let dataSave = [];
-            let workorder = $(this).data('workorder');
-            $('#showDivLine tbody tr.checked').each(function (i, elem) {
-                let objItem = {};
-                objItem.workOrder = workorder;
-                objItem.productCode = $(elem).data('product_code');
-                objItem.lotMaterial = $(elem).data('lot_product');
-                objItem.line1 = $(elem).find('input.enter-value-line-1').val() != "" ? parseInt($(elem).find('input.enter-value-line-1').val(), 10) : 0;
-                objItem.line2 = $(elem).find('input.enter-value-line-2').val() != "" ? parseInt($(elem).find('input.enter-value-line-2').val(), 10) : 0;
-                objItem.line3 = $(elem).find('input.enter-value-line-3').val() != "" ? parseInt($(elem).find('input.enter-value-line-3').val(), 10) : 0;
-                objItem.line4 = $(elem).find('input.enter-value-line-4').val() != "" ? parseInt($(elem).find('input.enter-value-line-4').val(), 10) : 0;
-                dataSave.push(objItem);
-            });
-            if (dataSave.length > 0) {
-                fetch(`${window.baseUrl}api/savedivforlot`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        dataSave: JSON.stringify(dataSave)
-                    })
-                })
-                    .then(async response => {
-                        if (!response.ok) {
-                            const errorResponse = await response.json();
-                            throw new Error(`${response.status} - ${errorResponse.message}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        alert(data.message);
-                        window.location.reload();
-                    })
-                    .catch(error => {
-                        alert(error);
-                    })
-            }
-        });
-
-        $('#showDivLine').on('change', '#tableDivLine tbody tr input[type="number"]', function (e) {
-            e.preventDefault();
-            $('#enterEink').modal('show');
-            $('#showDivLine').addClass('d-none');
-            let $this = $(this);
-            let valLine = $this.attr('data-line');
-            let materialCode = $this.parent().parent().parent().attr('data-product_code');
-            let lotMaterial = $this.parent().parent().parent().attr('data-lot_product');
-            let itemCode = $this.parent().parent().parent().attr('data-item');
-            let lotItem = $this.parent().parent().parent().attr('data-lotitem');
-            let qtyBase = parseInt($this.parent().parent().parent().attr('data-qty-base'), 10);
-            let qtyDiv = $this.val();
-            if (qtyDiv <= qtyBase) {
-                $('#enterEink').on('shown.bs.modal', function (e) {
-                    $('#einkDivLine').focus();
-                    $('#einkDivLine').val('');
-                    $('#einkDivLine').on('keypress', function (e) {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            let valEink = $(this).val();
-                            fetch(`${window.baseUrl}processing/connectingeinkdivline`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    line: valLine,
-                                    productCode: itemCode,
-                                    productLot: lotItem,
-                                    materialCode: materialCode,
-                                    lotMaterial: lotMaterial,
-                                    qtyDiv: qtyDiv,
-                                    einkMac: valEink,
-                                })
-                            })
-                                .then(async response => {
-                                    if (!response.ok) {
-                                        const errorResponse = await response.json();
-                                        throw new Error(`${response.status} - ${errorResponse.message}`);
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    swal('Thông báo', data.message, 'success');
-                                    $('#enterEink').modal('hide');
-                                    $('#showDivLine').removeClass('d-none');
-                                })
-                                .catch(error => {
-                                    alert(error);
-                                    $('#einkDivLine').focus();
-                                    $('#einkDivLine').val('');
-                                })
-                        }
-                    });
-                });
-            }
-        });
-
-        $('#enterEink .btn-close').on('click', function (e) {
-            e.preventDefault();
-            $('#enterEink').modal('hide');
-            $('#showDivLine').removeClass('d-none');
-        });
     }
     if ($('.table-calculator-item')) {
         // Chia line mới
@@ -745,8 +197,6 @@ function DivLineForProduction(tableDivLine) {
             let width_4 = $(elem).find('td.item-freezer').eq(4).width() + 17;
             let width_5 = $(elem).find('td.item-freezer').eq(5).width() + 17;
 
-            console.log(width_0);
-            console.log(width_1);
             $(elem).find('td.item-freezer').eq(1).css('left', width_0);
             $(elem).find('td.item-freezer').eq(2).css('left', width_0 + width_1);
             $(elem).find('td.item-freezer').eq(3).css('left', width_0 + width_1 + width_2);
@@ -793,6 +243,8 @@ function DivLineForProduction(tableDivLine) {
                 ev.preventDefault();
                 const newVal = parseInt($(this).val(), 10);
                 const workOrder = $(this).parent().parent().find('.workorder').text().trim();
+                const productCode = $(this).parent().parent().find('.product-code').text().trim();
+                const processCode = $(this).parent().parent().find('.processcode').val();
 
                 if (!isNaN(newVal) && newVal > 0) {
                     $enterValInput.removeClass('disabled');
@@ -801,6 +253,8 @@ function DivLineForProduction(tableDivLine) {
                     const objElemt = {
                         soTT: newVal,
                         workorder: workOrder,
+                        productCode: productCode,
+                        processCode: processCode,
                         htmlElem: $row.html().trim(),
                     };
 
@@ -831,6 +285,21 @@ function DivLineForProduction(tableDivLine) {
                 });
                 $('#tableCalculators tbody').html(htmlTbody);
                 arrDataSort.forEach(item => {
+                    if (new Array("01070", "01075", "01074", "01069").includes(item.processCode)) {
+                        let numbers = item.productCode.match(/\d/g);
+                        if (numbers && numbers.length >= 3) {
+                            let lastThreeDigits = numbers.slice(-3).join('');
+                            if (lastThreeDigits < 223) {
+                                $('.product-code-sort').removeClass('d-none');
+                            } else if (lastThreeDigits > 223) {
+                                $('.product-code-long').removeClass('d-none');
+                            } else {
+                                $('.product-code-sort').removeClass('d-none');
+                                $('.product-code-long').removeClass('d-none');
+                            }
+                        }
+                    }
+                   
                     $(`#tableCalculators tbody tr[tabindex="${(item.soTT - 1)}"]`).each(function (i, e) {
                         $(this).find('input.indexWOProduction').val(item.soTT);
                     });
@@ -865,7 +334,26 @@ function DivLineForProduction(tableDivLine) {
             let dataLine = $(this).attr('data-line');
             let qtyProcessLine = parseInt($(this).val(), 10);
 
-            let cycleTime = parseFloat($('#cycleTime').val());
+            let cycleTime = 0;
+
+            let processCode = $(this).parent().parent().find('.processcode').val(); 
+
+            if (new Array("01070", "01075", "01074", "01069").includes(processCode)) {
+                let productCode = $(this).parent().parent().find('.product-code').text().trim();
+                console.log(productCode);
+                let numbers = productCode.match(/\d/g);
+                if (numbers && numbers.length >= 3) {
+                    let lastThreeDigits = numbers.slice(-3).join('');
+                    // check chủng loại ngắn
+                    if (lastThreeDigits < 223) {
+                        cycleTime = parseFloat($('#cycleTimeSort').val());
+                    } else if (lastThreeDigits >= 223) {
+                        cycleTime = parseFloat($('#cycleTimeLong').val());
+                    }
+                }
+            } else {
+                cycleTime = parseFloat($('#cycleTime').val());
+            }
 
             let thisQtyWo = parseInt($(this).parent().parent().find('.qty-wo').text(), 10);
             let totalQtyProcessing = 0;
@@ -899,11 +387,21 @@ function DivLineForProduction(tableDivLine) {
         $('body').on('change', '#modalCalculatorTimeProd #tableCalculators .date-start-lot', function (e) {
             $('.btn-save-calculator').removeClass('disabled');
         });
-        $('#qtyInHours').on('change', function (e) {
+        $('#qtyInHoursLong').on('change', function (e) {
             e.preventDefault();
             let valQtyHours = $(this).val();
             let cycleTime = 3600 / parseInt(valQtyHours, 10);
-            $('#cycleTime').val(cycleTime);
+            $('#cycleTimeLong').val(cycleTime.toFixed(2));
+            $(this).removeClass('border-danger');
+            $('#modalCalculatorTimeProd #tableCalculators tbody tr input.input-enter-val').each(function () {
+                $(this).removeClass('disabled');
+            });
+        });
+        $('#qtyInHoursShort').on('change', function (e) {
+            e.preventDefault();
+            let valQtyHours = $(this).val();
+            let cycleTime = 3600 / parseInt(valQtyHours, 10);
+            $('#cycleTimeSort').val(cycleTime.toFixed(2));
             $(this).removeClass('border-danger');
             $('#modalCalculatorTimeProd #tableCalculators tbody tr input.input-enter-val').each(function () {
                 $(this).removeClass('disabled');
@@ -923,7 +421,7 @@ function DivLineForProduction(tableDivLine) {
                 }
                 let dataProdLines = item.ProductionLines;
                 dataProdLines.forEach(itemLine => {
-                    $(row).find(`input.qty-production-line[data-line="${itemLine.DataLine}"]`).val(itemLine.Qty);
+                    $(row).find(`input.qty-production-line[data-line="${itemLine.DataLine}"]`).val(itemLine.Qty).parent().addClass('has-divide-line').attr('data-line', itemLine.DataLine);
                     $(row).find(`input.time-production[data-line="${itemLine.DataLine}"]`).val(itemLine.Time);
                     $(row).find(`input.date-start-lot[data-line="${itemLine.DataLine}"]`).val(itemLine.StartDate);
                     $(row).find(`input.date-end-lot[data-line="${itemLine.DataLine}"]`).val(itemLine.EndDate);
@@ -1113,7 +611,559 @@ function DivLineForProduction(tableDivLine) {
                     })
             }
         });
+
+        // chia line cho nguyên vật liệu tại các công đoạn khác in nhãn
+        DivideLineMaterials();
     }
+}
+
+function DivideLineMaterials() {
+    //Hiển thị chia line cho từng lot NVL
+    $('#showDivLine').on('hidden.bs.modal', function () {
+        $(this).find('.data-render').html('');
+        $('#showDivLine .modal-body p.text-danger').remove();
+    })
+    $('#tableCalculators tbody td.item-freezer a').on('click', function (e) {
+        e.preventDefault();
+
+        var parentElem = $(e.target).parent().parent();
+        let dataHasDivLine = [];
+        parentElem.each(function (index, elem) {
+            dataHasDivLine.push({
+                line: $(elem).find('td.has-divide-line').attr('data-line'),
+            });
+        });
+        //var totalProductLine1 = parseInt(parentElem.find('input.line-1').val(), 10);
+        //var totalProductLine2 = parseInt(parentElem.find('input.line-2').val(), 10);
+        //var totalProductLine3 = parseInt(parentElem.find('input.line-3').val(), 10);
+        //var totalProductLine4 = parseInt(parentElem.find('input.line-4').val(), 10);
+
+        var productCode = parentElem.attr('data-product_code');
+        var lotProduct = parentElem.attr('data-lotno');
+
+        $('.btn-save-line-lot').attr('data-workorder', parentElem.data('workorder'));
+        $('#showDivLine #tableDivLine .data-render').html('');
+        let processCode = parentElem.find("input.processcode").val();
+
+        fetch(`${window.baseUrl}api/getreserveditem`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                workOrder: parentElem.data('workorder'),
+                processCode: processCode,
+            })
+        })
+            .then(async response => {
+                if (!response.ok) {
+                    const errorResponse = await response.json();
+                    throw new Error(`${response.status} - ${errorResponse.message}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                $('#showDivLine .modal-body .title-select').remove();
+                $('#tableShowOld .data-render').html('');
+                let dataLot = data.dataLot;
+                let oldData = data.oldData;
+                let count = 0;
+                let htmlSelectMaterial = '';
+                if (new Array("01060", "01070", "01075", "01074", "01069").includes(processCode)) {
+                    $('#tableDivLine').addClass('d-none');
+                    $('#oldContentsDivLine').addClass('d-none');
+                    htmlSelectMaterial += `<div class="title-select mb-3">`;
+
+                    if (dataLot.length > 0) {
+                        let mergedData = Object.values(
+                            dataLot.reduce((acc, item) => {
+                                let { productCode, lotNo, qty } = item;
+                                if (!acc[productCode]) {
+                                    acc[productCode] = { productCode };
+                                }
+                                return acc;
+                            }, {})
+                        );
+                        htmlSelectMaterial += `<span>Chọn mã NVL:</span>
+                            <select class="form-select-xl" id="getMaterialCode">
+                                <option value="">--Chọn mã NVL--</option>`;
+                        mergedData.forEach(item => {
+                            htmlSelectMaterial += `<option value="${item.productCode}">${item.productCode}</option>`;
+                        });
+                        htmlSelectMaterial += `</select>`;
+                    } else {
+                        htmlSelectMaterial += `<span>Chưa có NVL được Reserved trên MES</span>`;
+                    }
+                    htmlSelectMaterial += `</div>`;
+                    $('#showDivLine #tableDivLine').parent().before(htmlSelectMaterial);
+                    $('#getMaterialCode').on('change', function (e) {
+                        e.preventDefault();
+                        let htmlRender = '';
+                        $('#tableShowOld .data-render').html('');
+                        if ($(this).val() != '') {
+                            $('#tableDivLine').removeClass('d-none');
+                            $('#tableDivLine').parent().removeClass('d-none');
+                            $('#oldContentsDivLine').removeClass('d-none');
+                            dataLot.forEach(item => {
+                                if (item.productCode == $(this).val()) {
+                                    let classDisabled = ["", "", "", ""];
+                                    //let totalProductLines = [totalProductLine1, totalProductLine2, totalProductLine3, totalProductLine4];
+
+                                    //for (let i = 0; i < totalProductLines.length; i++) {
+                                    //    if (totalProductLines[i] <= 0) {
+                                    //        classDisabled[i] = "disabled";
+                                    //    }
+                                    //}
+                                    htmlRender += `<tr class="list-item" 
+                                        data-item="${productCode}" 
+                                        data-lotitem="${lotProduct}" 
+                                        data-product_code="${item.productCode}" 
+                                        data-lot_product="${item.lotNo}" 
+                                        data-qty-base="${item.qty}">
+                                            <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
+                                            <td class="align-middle text-center"><div>${item.lotNo}</div></td>
+                                            <td class="align-middle text-center"><divclass="qty-base">${item.qty}</div></td>
+                                            <td class="align-middle text-center" style="width: 130px;">
+                                                <div class="input-group">
+                                                    <input type="number" name="lineLot1" id="valueDivLine1_${count}" data-element-total="btn-total-line-1" data-line="1" class="text-center enter-value-line-1 ${classDisabled[0]}" />
+                                                </div>
+                                            </td>                                
+                                            <td class="align-middle text-center" style="width: 130px;">
+                                                <div class="input-group">
+                                                    <input type="number" name="lineLot2" id="valueDivLine2_${count}" data-element-total="btn-total-line-2" data-line="2" class="text-center enter-value-line-2 ${classDisabled[1]}" />
+                                                </div>
+                                            </td>                                
+                                            <td class="align-middle text-center" style="width: 130px;">
+                                                <div class="input-group">
+                                                    <input type="number" name="lineLot3" id="valueDivLine3_${count}" data-element-total="btn-total-line-3" data-line="3" class="text-center enter-value-line-3 ${classDisabled[2]}" />
+                                                </div>
+                                            </td>                                
+                                            <td class="align-middle text-center" style="width: 130px;">
+                                                <div class="input-group">
+                                                    <input type="number" name="lineLot4" id="valueDivLine4_${count}" data-element-total="btn-total-line-4" data-line="4" class="text-center enter-value-line-4 ${classDisabled[3]}" />
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center d-none">
+                                                <input type="checkbox" class="check-data-line"/>
+                                            </td>
+                                        </tr>`;
+                                    count++;
+                                }
+                            });
+                            $('#showDivLine #tableDivLine .data-render').html(htmlRender);
+                            $('#showDivLine #tableDivLine tr.list-item td').each(function (i, elem) {
+                                $(elem).on('change', 'input[type="number"]', function (e) {
+                                    $(e.target).parent().parent().parent().find('input.check-data-line').trigger('change');
+                                    let classBtn = $(e.target).data('element-total');
+                                    $('.' + classBtn).trigger('click');
+                                });
+                            });
+                            if (oldData.length) {
+                                $('#tableShowOld').removeClass('d-none');
+                                let totalLine1 = 0;
+                                let totalLine2 = 0;
+                                let totalLine3 = 0;
+                                let totalLine4 = 0;
+                                oldData.forEach(item => {
+                                    if ($(this).val() == item.productCode) {
+                                        totalLine1 += item.line1;
+                                        totalLine2 += item.line2;
+                                        totalLine3 += item.line3;
+                                        totalLine4 += item.line4;
+                                        $('#tableShowOld .data-render').append(`<tr class="list-item" data-product_code="${item.productCode}" data-lot_product="${item.lotDivLine}">
+                                                <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
+                                                <td class="align-middle text-center"><div>${item.lotDivLine}</div></td>
+                                                <td class="align-middle text-center">
+                                                    <div class="total-line">
+                                                        <span id="totalLine1">${item.line1}</span>
+                                                    </div>
+                                                </td>                                
+                                                <td class="align-middle text-center">
+                                                    <div class="total-line">
+                                                        <span id="totalLine1">${item.line2}</span>             
+                                                    </div>
+                                                </td>                                
+                                                <td class="align-middle text-center">
+                                                    <div class="total-line">
+                                                        <span id="totalLine1">${item.line3}</span>             
+                                                    </div>
+                                                </td>                                
+                                                <td class="align-middle text-center">
+                                                    <div cclass="total-line">
+                                                        <span id="totalLine1">${item.line4}</span>             
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-center d-none">
+                                                    <input type="checkbox" class="check-data-line"/>
+                                                </td>
+                                            </tr>`);
+
+                                        let hasDivOrderLine1 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-1`).val();
+                                        let hasDivOrderLine2 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-2`).val();
+                                        let hasDivOrderLine3 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-3`).val();
+                                        let hasDivOrderLine4 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-4`).val();
+                                        if (totalLine1 == parseInt(hasDivOrderLine1, 10)) {
+                                            $('.enter-value-line-1').addClass('disabled');
+                                        }
+                                        if (totalLine2 == parseInt(hasDivOrderLine2, 10)) {
+                                            $('.enter-value-line-2').addClass('disabled');
+                                        }
+                                        if (totalLine3 == parseInt(hasDivOrderLine3, 10)) {
+                                            $('.enter-value-line-3').addClass('disabled');
+                                        }
+                                        if (totalLine4 == parseInt(hasDivOrderLine4, 10)) {
+                                            $('.enter-value-line-4').addClass('disabled');
+                                        }
+                                    }
+
+                                });
+                                $('#tableShowOld .data-render').append(`
+                                    <tr>
+                                        <td colspan="2" class="align-middle text-center">Tổng</td>
+                                        <td class="align-middle text-center"><div class="total-line-1">${totalLine1}<button type="button" class="d-none btn-total-line-1"></button></div></td>
+                                        <td class="align-middle text-center"><div class="total-line-2">${totalLine2}<button type="button" class="d-none btn-total-line-2"></button></div></td>
+                                        <td class="align-middle text-center"><div class="total-line-3">${totalLine3}<button type="button" class="d-none btn-total-line-3"></button></div></td>
+                                        <td class="align-middle text-center"><div class="total-line-4">${totalLine4}<button type="button" class="d-none btn-total-line-4"></button></div></td>
+                                    </tr>`);
+                            } else {
+                                $('#tableShowOld').addClass('d-none');
+                            }
+                        }
+                    });
+                } else {
+                    if (dataLot.length > 0) {
+                        dataLot.forEach(item => {
+                            $('#showDivLine #tableDivLine .data-render').append(`<tr class="list-item" 
+                                data-item="${productCode}" 
+                                data-lotitem="${lotProduct}" 
+                                data-product_code="${item.productCode}" 
+                                data-lot_product="${item.lotNo}" 
+                                data-qty-base="${item.qty}">
+                                    <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
+                                    <td class="align-middle text-center"><div>${item.lotNo}</div></td>
+                                    <td class="align-middle text-center"><div class="qty-base">${item.qty}</div></td>
+                                    <td class="align-middle text-center" style="width: 130px;">
+                                        <div class="input-group">
+                                            <input type="number" name="lineLot1" id="valueDivLine1_${count}" data-line="1" data-element-total="btn-total-line-1" class="text-center enter-value-line-1 ${classDisabled[0]}" />
+                                        </div>
+                                    </td>                                
+                                    <td class="align-middle text-center" style="width: 130px;">
+                                        <div class="input-group">
+                                            <input type="number" name="lineLot2" id="valueDivLine2_${count}" data-line="2" data-element-total="btn-total-line-2" class="text-center enter-value-line-2 ${classDisabled[1]}" />
+                                        </div>
+                                    </td>                                
+                                    <td class="align-middle text-center" style="width: 130px;">
+                                        <div class="input-group">
+                                            <input type="number" name="lineLot3" id="valueDivLine3_${count}" data-line="3" data-element-total="btn-total-line-3" class="text-center enter-value-line-3 ${classDisabled[2]}" />
+                                        </div>
+                                    </td>                                
+                                    <td class="align-middle text-center" style="width: 130px;">
+                                        <div class="input-group">
+                                            <input type="number" name="lineLot4" id="valueDivLine4_${count}" data-line="4" data-element-total="btn-total-line-4" class="text-center enter-value-line-4 ${classDisabled[3]}" />
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center d-none">
+                                        <input type="checkbox" class="check-data-line"/>
+                                    </td>
+                                </tr>`);
+                            count++;
+                        });
+                    } else {
+                        $('#showDivLine #tableDivLine .data-render').html('<tr><td class="align-middle text-center" colspan="7">Không có dữ liệu</td></tr>')
+                    }
+                    if (oldData.length) {
+                        $('#tableShowOld').removeClass('d-none');
+                        let totalLine1 = 0;
+                        let totalLine2 = 0;
+                        let totalLine3 = 0;
+                        let totalLine4 = 0;
+                        oldData.forEach(item => {
+                            totalLine1 += item.line1;
+                            totalLine2 += item.line2;
+                            totalLine3 += item.line3;
+                            totalLine4 += item.line4;
+                            let qtyBase = item.line1 + item.line2 + item.line3 + item.line4;
+                            $('#tableShowOld .data-render').append(`<tr class="list-item" data-product_code="${item.productCode}" data-lot_product="${item.lotDivLine}">
+                                    <td class="align-middle text-center"><div class="item-product">${item.productCode}</div></td>
+                                    <td class="align-middle text-center"><div>${item.lotDivLine}</div></td>
+                                    <td class="align-middle text-center">
+                                        <div class="total-line">
+                                            <span id="totalLine1">${item.line1}</span>
+                                        </div>
+                                    </td>                                
+                                    <td class="align-middle text-center">
+                                        <div class="total-line">
+                                            <span id="totalLine1">${item.line2}</span>             
+                                        </div>
+                                    </td>                                
+                                    <td class="align-middle text-center">
+                                        <div class="total-line">
+                                            <span id="totalLine1">${item.line3}</span>             
+                                        </div>
+                                    </td>                                
+                                    <td class="align-middle text-center">
+                                        <div cclass="total-line">
+                                            <span id="totalLine1">${item.line4}</span>             
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center d-none">
+                                        <input type="checkbox" class="check-data-line"/>
+                                    </td>
+                                </tr>`);
+
+                            let hasDivOrderLine1 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-1`).val();
+                            let hasDivOrderLine2 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-2`).val();
+                            let hasDivOrderLine3 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-3`).val();
+                            let hasDivOrderLine4 = $(`.table-line-process #contentTable tr[data-workorder="${item.workOrder}"] .line-4`).val();
+                            $(`#tableDivLine tr.list-item[data-product_code="${item.productCode}"][data-lot_product="${item.lotDivLine}"][data-qty-base="${qtyBase}"]`).addClass('d-none');
+                            if (totalLine1 == parseInt(hasDivOrderLine1, 10)) {
+                                $('.enter-value-line-1').addClass('disabled');
+                            }
+                            if (totalLine2 == parseInt(hasDivOrderLine2, 10)) {
+                                $('.enter-value-line-2').addClass('disabled');
+                            }
+                            if (totalLine3 == parseInt(hasDivOrderLine3, 10)) {
+                                $('.enter-value-line-3').addClass('disabled');
+                            }
+                            if (totalLine4 == parseInt(hasDivOrderLine4, 10)) {
+                                $('.enter-value-line-4').addClass('disabled');
+                            }
+                        });
+                        $('#tableShowOld .data-render').append(`
+                            <tr>
+                                <td colspan="2" class="align-middle text-center">Tổng</td>
+                                <td class="align-middle text-center"><div class="total-line-1">${totalLine1}<button type="button" class="d-none btn-total-line-1"></button></div></td>
+                                <td class="align-middle text-center"><div class="total-line-2">${totalLine2}<button type="button" class="d-none btn-total-line-2"></button></div></td>
+                                <td class="align-middle text-center"><div class="total-line-3">${totalLine3}<button type="button" class="d-none btn-total-line-3"></button></div></td>
+                                <td class="align-middle text-center"><div class="total-line-4">${totalLine4}<button type="button" class="d-none btn-total-line-4"></button></div></td>
+                            </tr>`);
+                    } else {
+                        $('#tableShowOld').addClass('d-none');
+                    }
+                }
+
+                $('#showDivLine #tableDivLine tr.list-item td').each(function (i, elem) {
+                    $(elem).on('change', 'input[type="number"]', function (e) {
+                        $(e.target).parent().parent().parent().find('input.check-data-line').trigger('change');
+                        let classBtn = $(e.target).data('element-total');
+                        $('.' + classBtn).trigger('click');
+                    });
+                });
+
+                let check = true;
+                $('body').on('change', '.check-data-line', function (e) {
+                    e.preventDefault();
+                    $('#showDivLine .modal-body p.text-danger').remove();
+                    let totalRow = 0;
+                    let $parent = $(e.target).parent().parent();
+                    $parent.addClass('checked');
+                    let valBase = parseInt($parent.data('qty-base'), 10);
+                    $parent.find('td').has('input[type="number"]').each(function (i, elem) {
+                        let valInput = parseInt($(elem).find('input[type="number"]').val() ?? "0", 10) ?? 0;
+                        if (valInput > 0) {
+                            valInput = valInput;
+                        } else {
+                            valInput = 0;
+                        }
+                        totalRow += valInput;
+                    });
+                    if (totalRow > valBase) {
+                        check = false;
+                    } else {
+                        check = true;
+                        $('.btn-save-line-lot').removeClass('disabled');
+                    }
+                    if (check == false) {
+                        $parent.find('input[type="number"]').addClass('border-danger');
+                        $('#showDivLine .modal-body').append('<p class="text-danger";">Số lượng chia cho NVL đang có lỗi. Vui lòng thử lại!!</p>');
+                        $('.btn-save-line-lot').addClass('disabled');
+                    } else {
+                        $parent.find('input[type="number"]').removeClass('border-danger');
+                        $('#showDivLine .modal-body p.text-danger').remove();
+                    }
+                });
+
+                $('body').on('click', '.btn-total-line-1', function (e) {
+                    $('#showDivLine .modal-body p.text-danger').remove();
+                    let totalColumnLine = 0;
+                    $('.enter-value-line-1').each(function (i, elem) {
+                        let valInput = '';
+                        if ($(elem).val() == '') {
+                            valInput = '0';
+                        } else {
+                            valInput = $(elem).val();
+                        }
+                        totalColumnLine += parseInt(valInput, 10);
+                    });
+                    totalColumnLine += parseInt($(this).parent().text().trim(), 10);
+                    if (totalProductLine1 < totalColumnLine) {
+                        $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
+                    }
+                });
+
+                $('body').on('click', '.btn-total-line-2', function (e) {
+                    let totalColumnLine = 0;
+                    $('#showDivLine .modal-body p.text-danger').remove();
+                    $('.enter-value-line-2').each(function (i, elem) {
+                        let valInput = '';
+                        if ($(elem).val() == '') {
+                            valInput = '0';
+                        } else {
+                            valInput = $(elem).val();
+                        }
+                        totalColumnLine += parseInt(valInput, 10);
+                    });
+                    totalColumnLine += parseInt($(this).parent().text().trim(), 10);
+                    if (totalProductLine2 < totalColumnLine) {
+                        $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
+                    }
+                });
+
+                $('body').on('click', '.btn-total-line-3', function (e) {
+                    let totalColumnLine = 0;
+                    $('#showDivLine .modal-body p.text-danger').remove();
+                    $('.enter-value-line-3').each(function (i, elem) {
+                        let valInput = '';
+                        if ($(elem).val() == '') {
+                            valInput = '0';
+                        } else {
+                            valInput = $(elem).val();
+                        }
+                        totalColumnLine += parseInt(valInput, 10);
+                    });
+                    totalColumnLine += parseInt($(this).parent().text().trim(), 10);
+                    if (totalProductLine3 < totalColumnLine) {
+                        $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
+                    }
+                });
+
+                $('body').on('click', '.btn-total-line-4', function (e) {
+                    let totalColumnLine = 0;
+                    $('#showDivLine .modal-body p.text-danger').remove();
+                    $('.enter-value-line-4').each(function (i, elem) {
+                        let valInput = '';
+                        if ($(elem).val() == '') {
+                            valInput = '0';
+                        } else {
+                            valInput = $(elem).val();
+                        }
+                        totalColumnLine += parseInt(valInput, 10);
+                    });
+                    totalColumnLine += parseInt($(this).parent().text().trim(), 10);
+                    if (totalProductLine4 < totalColumnLine) {
+                        $('#showDivLine .modal-body').append('<p class="text-danger">Tổng chia line NVL đang lớn hơn chia line theo sản phẩm!</p>');
+                    }
+                });
+            })
+            .catch(error => {
+                alert(error);
+            })
+    });
+    $('.btn-save-line-lot').on('click', function (e) {
+        e.preventDefault();
+        let dataSave = [];
+        let workorder = $(this).data('workorder');
+        $('#showDivLine tbody tr.checked').each(function (i, elem) {
+            let objItem = {};
+            objItem.workOrder = workorder;
+            objItem.productCode = $(elem).data('product_code');
+            objItem.lotMaterial = $(elem).data('lot_product');
+            objItem.line1 = $(elem).find('input.enter-value-line-1').val() != "" ? parseInt($(elem).find('input.enter-value-line-1').val(), 10) : 0;
+            objItem.line2 = $(elem).find('input.enter-value-line-2').val() != "" ? parseInt($(elem).find('input.enter-value-line-2').val(), 10) : 0;
+            objItem.line3 = $(elem).find('input.enter-value-line-3').val() != "" ? parseInt($(elem).find('input.enter-value-line-3').val(), 10) : 0;
+            objItem.line4 = $(elem).find('input.enter-value-line-4').val() != "" ? parseInt($(elem).find('input.enter-value-line-4').val(), 10) : 0;
+            dataSave.push(objItem);
+        });
+        if (dataSave.length > 0) {
+            fetch(`${window.baseUrl}api/savedivforlot`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    dataSave: JSON.stringify(dataSave)
+                })
+            })
+                .then(async response => {
+                    if (!response.ok) {
+                        const errorResponse = await response.json();
+                        throw new Error(`${response.status} - ${errorResponse.message}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    window.location.reload();
+                })
+                .catch(error => {
+                    alert(error);
+                })
+        }
+    });
+
+    $('#showDivLine').on('change', '#tableDivLine tbody tr input[type="number"]', function (e) {
+        e.preventDefault();
+        $('#enterEink').modal('show');
+        $('#showDivLine').addClass('d-none');
+        let $this = $(this);
+        let valLine = $this.attr('data-line');
+        let materialCode = $this.parent().parent().parent().attr('data-product_code');
+        let lotMaterial = $this.parent().parent().parent().attr('data-lot_product');
+        let itemCode = $this.parent().parent().parent().attr('data-item');
+        let lotItem = $this.parent().parent().parent().attr('data-lotitem');
+        let qtyBase = parseInt($this.parent().parent().parent().attr('data-qty-base'), 10);
+        let qtyDiv = $this.val();
+        if (qtyDiv <= qtyBase) {
+            $('#enterEink').on('shown.bs.modal', function (e) {
+                $('#einkDivLine').focus();
+                $('#einkDivLine').val('');
+                $('#einkDivLine').on('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        let valEink = $(this).val();
+                        fetch(`${window.baseUrl}processing/connectingeinkdivline`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                line: valLine,
+                                productCode: itemCode,
+                                productLot: lotItem,
+                                materialCode: materialCode,
+                                lotMaterial: lotMaterial,
+                                qtyDiv: qtyDiv,
+                                einkMac: valEink,
+                            })
+                        })
+                            .then(async response => {
+                                if (!response.ok) {
+                                    const errorResponse = await response.json();
+                                    throw new Error(`${response.status} - ${errorResponse.message}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                swal('Thông báo', data.message, 'success');
+                                $('#enterEink').modal('hide');
+                                $('#showDivLine').removeClass('d-none');
+                            })
+                            .catch(error => {
+                                alert(error);
+                                $('#einkDivLine').focus();
+                                $('#einkDivLine').val('');
+                            })
+                    }
+                });
+            });
+        }
+    });
+
+    $('#enterEink .btn-close').on('click', function (e) {
+        e.preventDefault();
+        $('#enterEink').modal('hide');
+        $('#showDivLine').removeClass('d-none');
+    });
 }
 function checkTime30(inputTime, itemData) {
     let newDate = new Date(inputTime);

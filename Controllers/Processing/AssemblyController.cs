@@ -14,7 +14,8 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
         private readonly Classa _cl;
         public readonly IWebHostEnvironment _environment;
 
-        public AssemblyController(MplusGwContext context, Classa classa, IWebHostEnvironment hostEnvironment) {
+        public AssemblyController(MplusGwContext context, Classa classa, IWebHostEnvironment hostEnvironment)
+        {
             _context = context;
             _cl = classa ?? throw new ArgumentNullException(nameof(classa));
             _environment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
@@ -39,7 +40,7 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
             List<ListDivLineForLot> listDivLineForLot = new();
             var roleName = HttpContext.Session.GetString("RoleName");
             var locationCode = await (from l in _context.TblLocations
-                                      where l.LocationName == "In Chuôi"
+                                      where l.LocationName == "Lắp Ráp"
                                       select new
                                       {
                                           l.LocationCode,
@@ -191,8 +192,26 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
             }
 
             listWoProductions = listWoProductions
+                .GroupBy(x => x.WorkOrderNo)
+                .Select(s => new ListWoProduction
+                {
+                    WorkOrderNo = s.Key,
+                    SoTT = s.First().SoTT,
+                    ProductCode = s.First().ProductCode,
+                    LotNo = s.First().LotNo,
+                    QtyProd = s.First().QtyProd,
+                    Character = s.First().Character,
+                    DateProd = s.First().DateProd,
+                    TimeProd = s.First().TimeProd,
+                    ProcessCode = s.First().ProcessCode,
+                    StatusName = s.First().StatusName,
+                    ProductionLines = s.First().ProductionLines
+                })
                 .OrderBy(x => string.IsNullOrEmpty(x.SoTT) ? 1 : 0)
                 .ThenBy(x => x.SoTT)
+                .OrderBy(x => string.IsNullOrEmpty(x.Character) ? 1 : 0)
+                .ThenBy(x => x.Character)
+                .ThenBy(x => x.WorkOrderNo)
                 .ToList();
 
             var totalsPerLine = new Dictionary<int, int>();
@@ -243,28 +262,28 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
                                         where l.LocationCode == requestData.ProcessCode
                                         select l.IdLocation).FirstOrDefaultAsync();
                 var idLocationProcessing = await (from l in _context.TblLocations
-                                        where l.LocationCode == "01050"
-                                        select l.IdLocation).FirstOrDefaultAsync();
+                                                  where l.LocationCode == "01050"
+                                                  select l.IdLocation).FirstOrDefaultAsync();
                 if (itemLineSaveds?.Length > 0)
                 {
                     foreach (var item in itemLineSaveds)
                     {
                         var workOrder = item.WorkOrder;
-                        
+
                         var checkItem = await _context.TblDivLineProds
                             .FirstOrDefaultAsync(x => x.WorkOrder == workOrder);
-                        
+
                         var updateCharacter = await _context.TblPreImportItems
                             .FirstOrDefaultAsync(x => x.WorkOrder == workOrder);
 
                         string itemCodeWithCut = item.ItemCode != null && item.ItemCode.Length >= 11 ? item.ItemCode.Substring(4, 7) : "";
                         string lotNoSearch = item.LotNo != null && item.LotNo.Length >= 5 ? item.LotNo.Substring(0, 6) : "";
-                        //string itemCodeSearch = itemCodeWithCut.Length > 1 ? itemCodeWithCut.Substring(0, itemCodeWithCut.Length - 1) : "";
+
 
                         DateTime.TryParseExact(item.DateProd, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateProd);
 
                         var existItem = await _context.TblDivLineProds
-                            .Where(x => x.ItemCode != null && x.ItemCode.Contains(itemCodeWithCut) 
+                            .Where(x => x.ItemCode != null && x.ItemCode.Contains(itemCodeWithCut)
                             && x.LotNo != null && x.LotNo.Contains(lotNoSearch)
                             && x.IdLocation != idLocation && x.IdLocation != idLocationProcessing)
                             .FirstOrDefaultAsync();
@@ -320,11 +339,11 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
                             existItem.Line3 = item.Line3;
                             existItem.Line4 = item.Line4;
                             await (from s in _context.TblPreImportItems
-                             where s.WorkOrder == existItem.WorkOrder
-                             select s).ForEachAsync(x =>
-                             {
-                                 x.CharacterAlp = item.Character ?? "".ToUpper();
-                             });
+                                   where s.WorkOrder == existItem.WorkOrder
+                                   select s).ForEachAsync(x =>
+                                   {
+                                       x.CharacterAlp = item.Character ?? "".ToUpper();
+                                   });
                         }
                     }
                     _context.SaveChanges();

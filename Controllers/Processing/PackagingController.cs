@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MPLUS_GW_WebCore.Models;
+using Newtonsoft.Json;
 using System.Data;
 
 namespace MPLUS_GW_WebCore.Controllers.Processing
@@ -65,9 +67,33 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
                     }).ToList();
                 foreach (var item in groupByWorkorder)
                 {
+                    string workOrder = item.Key ?? "";
+                    var getDataCalcTimeProds = _context.TblCalcTimeDivLines
+                          .Where(x => x.WorkOrder == workOrder).ToList();
+                    List<ProductionLineTimeData> productionLineTimes = new();
+
+                    string? indexNumber = string.Empty;
+                    if (getDataCalcTimeProds.Count > 0)
+                    {
+                        foreach (var itemCalc in getDataCalcTimeProds)
+                        {
+                            indexNumber = itemCalc.SoTt.ToString();
+                            productionLineTimes.Add(new ProductionLineTimeData
+                            {
+                                DataLine = itemCalc.LineNumber ?? 0,
+                                Qty = itemCalc.SoLuongDuDinh ?? 0,
+                                Time = (double?)itemCalc.ThoiGianSanXuat ?? 0,
+                                StartDate = itemCalc.NgayDuDinhSanXuat?.ToString("dd/MM/yyyy HH:mm") ?? "",
+                                EndDate = itemCalc.NgayKetThuc?.ToString("dd/MM/yyyy HH:mm") ?? "",
+                                QtyInDay = itemCalc.SoLuongTrenNgay ?? 0
+                            });
+                        }
+                    }
+
                     listWoProductions.Add(new ListWoProduction
                     {
-                        WorkOrderNo = item.Key,
+                        SoTT = indexNumber ?? "",
+                        WorkOrderNo = workOrder,
                         ProductCode = item.ItemCode,
                         LotNo = item.LotNo,
                         QtyProd = item.QtyWo.ToString(),
@@ -76,9 +102,10 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
                         TimeProd = item.TimeProd?.ToString(@"hh\:mm"),
                         ProcessCode = item.ProgressOrder,
                         StatusName = item.Statusname,
+                        ProductionLines = productionLineTimes
                     });
                     var oldResult = await (from s in _context.TblDivLineProds
-                                           where s.WorkOrder == item.Key
+                                           where s.WorkOrder == workOrder
                                            select new
                                            {
                                                s.WorkOrder,
@@ -126,15 +153,39 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
                 }
             }
             listWoProductions = listWoProductions
-                .Where(x => x.DateProd != null && x.TimeProd != null && 
-                x.DateProd != DateTime.MinValue &&
-                x.StatusName != "Production end")
-                .OrderBy(x => x.DateProd)
-                .ThenBy(x => x.TimeProd).ToList();
+                .OrderBy(x => string.IsNullOrEmpty(x.SoTT) ? 1 : 0)
+                .ThenBy(x => x.SoTT)
+                .OrderBy(x => string.IsNullOrEmpty(x.Character) ? 1 : 0)
+                .ThenBy(x => x.Character)
+                .ThenBy(x => x.WorkOrderNo)
+                .ToList();
 
+            var totalsPerLine = new Dictionary<int, int>();
+            var getLines = _context.TblProdLines.Select(s => s.LineName).ToList();
+            foreach (var dataItem in listWoProductions)
+            {
+                foreach (var item in dataItem.ProductionLines)
+                {
+                    string dataLineName = "Line " + item.DataLine;
+                    if (getLines.Contains(dataLineName))
+                    {
+                        if (totalsPerLine.ContainsKey(item.DataLine))
+                        {
+                            totalsPerLine[item.DataLine] += item.Qty;
+                        }
+                        else
+                        {
+                            totalsPerLine.Add(item.DataLine, item.Qty);
+                        }
+                    }
+                }
+            }
             ViewData["ListWoProduction"] = listWoProductions;
             ViewData["ListWoDivLine"] = listWoDivLines;
             ViewData["ListDivLineForLot"] = listDivLineForLot;
+            ViewData["StringWOCalc"] = JsonConvert.SerializeObject(listWoProductions);
+            ViewData["StringTotalLine"] = JsonConvert.SerializeObject(totalsPerLine);
+
             return View();
         }
     }

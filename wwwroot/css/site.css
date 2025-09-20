@@ -781,18 +781,17 @@ body {
     background-color: #008d61;
 }
 
-#modalCalculatorTimeProd .table-calculator-item .has-content a,
-#modalCalculatorTimeProd .table-calculator-item .has-content span {
-    color: #fff;
+#modalCalculatorTimeProd .table-calculator-item a {
+    color: #000;
+    text-decoration: none;
 }
 
 #modalCalculatorTimeProd .table-calculator-item .has-content td:not(.item-freezer) {
     color: var(--color-text-primary);
 }
 
-#modalCalculatorTimeProd .table-calculator-item .has-content.on-going td.item-freezer a,
-#modalCalculatorTimeProd .table-calculator-item .has-content.on-going span {
-    color: #000;
+#modalCalculatorTimeProd .table-calculator-item .has-content.on-going td.item-freezer a {
+    color: #fff;
 }
 
 #modalCalculatorTimeProd .table-calculator-item .has-content.on-going td:not(.item-freezer) {
@@ -827,9 +826,13 @@ body {
     background-color: #0094ff;
 }
 
-#modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content td.not-enough-qty {
-    background-color: #ff6a00;
-}
+    #modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content.on-going td.item-freezer a {
+        color: #000;
+    }
+
+    #modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content td.not-enough-qty {
+        background-color: #ff6a00;
+    }
 
 #modalCalculatorTimeProd .table-calculator-item .has-div-lot.has-content.on-going td.not-enough-qty {
     background-color: #ff6a00;

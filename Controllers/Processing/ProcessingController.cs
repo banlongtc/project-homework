@@ -219,6 +219,9 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
                 listWoProductions = listWoProductions
                     .OrderBy(x => string.IsNullOrEmpty(x.SoTT) ? 1 : 0)
                     .ThenBy(x => x.SoTT)
+                    .OrderBy(x => string.IsNullOrEmpty(x.Character) ? 1 : 0)
+                    .ThenBy(x => x.Character)
+                    .ThenBy(x => x.WorkOrderNo)
                     .ToList();
 
                 var totalsPerLine = new Dictionary<int, int>();
@@ -619,6 +622,11 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
             }
         }
 
+        /// <summary>
+        /// Lưu thông tin tính chia line
+        /// </summary>
+        /// <param name="requestData"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult SaveCalcProductionTime([FromBody] RequestData requestData)
         {
@@ -761,6 +769,12 @@ namespace MPLUS_GW_WebCore.Controllers.Processing
             }
             return Ok(new { message = "Đã tính xong. Nhấn Ok để xem kết quả.", dataRender = afterCalcResults, totalLines = totalsPerLine });
         }
+
+        /// <summary>
+        /// Update khi có sửa thông tin
+        /// </summary>
+        /// <param name="requestData"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult UpdateCalcTimes([FromBody] RequestData requestData)
         {

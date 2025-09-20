@@ -1,0 +1,91 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Đăng ký CycleTimes";
+    Layout = "_Admin";
+    var locations = ViewData["Locations"] as List<TblLocation>;
+    var listCycleTimes = ViewData["ListCycleTimes"] as List<TblMasterCycleTime>;
+    locations = locations?.GroupBy(x => x.LocationName)
+    .Select(s => new TblLocation
+            {
+                LocationName = s.Key,
+                LocationCode = string.Join(',', s.Select(g => g.LocationCode).ToArray()),
+            }).ToList();
+}
+<div class="container">
+    <h2>@ViewData["Title"]</h2>
+    <p>Đăng ký thời sản xuất cho công đoạn</p>
+    <div class="mt-4 select-location-wrapper">
+        <div class="row">
+            <div class="col-8">
+                <div class="input-group align-items-center">
+                    <label for="selectLocation">Chọn công đoạn cần đăng ký:</label>
+                    <select class="form-select ms-3" id="selectLocation">
+                        @if (locations != null)
+                        {
+                            <option value="">--Chọn công đoạn--</option>
+                            foreach (var location in locations)
+                            {
+                                <option value="@location.LocationCode">@location.LocationName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-show-list disabled" id="showCycleTime">Hiển thị</button>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 list-cycletimes" id="listItemCycles">
+        @if (listCycleTimes?.Count > 0)
+        {
+            int count = 1;
+            <table class="table table-bordered border-dark text-center">
+                <thead>
+                    <tr>
+                        <th class="align-middle">Số TT</th>
+                        <th class="align-middle">Công đoạn</th>
+                        <th class="align-middle">Số lượng sản xuất</th>
+                        <th class="align-middle">Cycle Time</th>
+                        <th class="align-middle">Ghi chú</th>
+                        <th class="align-middle">Thời gian tạo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var itemCycle in listCycleTimes)
+                    {
+                        var locationName = locations?.FirstOrDefault(x => x.LocationCode == itemCycle.ProcessCode)?.LocationName;
+                        <tr>
+                            <td>@count</td>
+                            <td>@locationName</td>
+                            <td>@itemCycle.SoLuongSanXuat</td>
+                            <td>@itemCycle.CycleTime</td>
+                            <td>@itemCycle.Note</td>
+                            <td>@itemCycle.ModifiedDate?.ToString("dd-MM-yyyy HH:mm")</td>
+                        </tr>
+                        count++;
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+<div class="modal fade" id="showRegisterCycleTime" data-bs-backdrop="static" tabindex="-1" aria-labelledby="showRegisterCycleTimeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center w-100">
+                    <h6 class="modal-title" id="showRegisterCycleTimeLabel">Đăng ký CycleTime</h6>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-save-cycle">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

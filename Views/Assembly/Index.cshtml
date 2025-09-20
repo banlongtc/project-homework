@@ -202,11 +202,29 @@
                                 classChangeControl = "has-change-control ";
                             }
                             <tr class="@classHasDivLot@classOldItem@classChangeControl@classOnGoing@classNotEnoughQty" data-workorder="@item.WorkOrderNo" data-product_code="@item.ProductCode" data-lotno="@item.LotNo" data-qty="@item.QtyProd">
-                                <td class="item-freezer"><input type="number" class="indexWOProduction info-wo" min="0" value="@item.SoTT" /></td>
-                                <td class="item-freezer"><div class="info-wo workorder">@item.WorkOrderNo</div></td>
-                                <td class="item-freezer"><div class="info-wo product-code">@item.ProductCode</div></td>
-                                <td class="item-freezer"><div class="info-wo lot-no">@item.LotNo</div></td>
-                                <td class="item-freezer"><div class="info-wo qty-wo">@item.QtyProd</div></td>
+                                <td class="item-freezer">
+                                    <input type="@(string.IsNullOrEmpty(item.SoTT) ? "number" : "text")" class="indexWOProduction info-wo" min="0" value="@item.SoTT" />
+                                </td>
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo workorder">
+                                        @item.WorkOrderNo
+                                    </a>
+                                </td>
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo product-code">
+                                        @item.ProductCode
+                                    </a>
+                                </td>
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo lot-no">
+                                        @item.LotNo
+                                    </a>
+                                </td>
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo qty-wo">
+                                        @item.QtyProd
+                                    </a>
+                                </td>
                                 <td class="item-freezer"><input type="text" class="input-enter-val character-input info-wo text-uppercase text-center" value="@item.Character" /></td>
                                 <td><input type="number" data-line="1" class="input-enter-val qty-production-line" min="0" value="" /></td>
                                 <td><input type="text" data-line="1" class="input-enter-val time-production" value="" /></td>

@@ -1,4 +1,5 @@
 ﻿using ConnectMES;
+using Hangfire.Logging;
 using Microsoft.AspNetCore.Mvc;
 using MPLUS_GW_WebCore.Models;
 using OfficeOpenXml.Table.PivotTable;
@@ -82,6 +83,15 @@ namespace MPLUS_GW_WebCore.Controllers.Stock
             ViewData["Listitloc"] = itloc;
 
 
+            return View();
+        }
+        [Route("/master/dang-ky-cycletime")]
+        public IActionResult MasterCycleTime()
+        {
+            var locations = db.TblLocations.ToList();
+            var listCycleTimes = db.TblMasterCycleTimes.ToList();
+            ViewData["Locations"] = locations;
+            ViewData["ListCycleTimes"] = listCycleTimes;
             return View();
         }
 

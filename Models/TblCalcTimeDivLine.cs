@@ -26,4 +26,6 @@ public partial class TblCalcTimeDivLine
     public string? LocationCode { get; set; }
 
     public string? Character { get; set; }
+
+    public decimal? CycleTime { get; set; }
 }

@@ -1018,43 +1018,145 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
-    function uploadSingleFile(fileFormData, totalFiles, uploadedFiles, fileItem, fileName) {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', `${window.baseUrl}checksheets/uploadexcel`, true);
-            xhr.upload.onprogress = function (event) {
-                if (event.lengthComputable) {
-                    const percentComplete = (event.loaded / event.total) * 100;
-                    $('#progressBar').val(percentComplete);
-                    fileItem.innerHTML = `Đang tải <strong>${fileName}</strong> - ${Math.round(percentComplete)}%.`;
-                }
-            };
+    if ($('#listItemCycles').length > 0) {
+        $('#selectLocation').val('');
+        $('#selectLocation').on('change', function (e) {
+            e.preventDefault();
+            $('#showCycleTime').removeClass('disabled').attr('data-location', $(this).val());
+        });
 
-            xhr.onload = function () {
-                if (xhr.status == 200) {
-                    fileItem.innerHTML = `Tải xong <strong>${fileName}</strong>`;
-                    var response = JSON.parse(xhr.response);
-                    swal({
-                        title: 'Thông báo',
-                        text: 'Tải lên thành công!',
-                        icon: 'success',
-                        buttons: [false, "Ok"],
-                    }).then((isConfirmed) => {
-                        if (isConfirmed) {
-                            window.location.reload();
-                        } else {
-                            return;
-                        }
+        $('#showCycleTime').on('click', function (e) {
+            e.preventDefault();
+            let location = $(this).attr('data-location');
+            let htmlCreateCycleTime = `<div class="content-cycletime">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <label class="form-label" for="qtyHours">Số lượng sản xuất trong ngày</label>
+                                <input type="number" class="form-control qty-hours-day w-100" id="qtyHours" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group">
+                                <label class="form-label" for="cycleTime">CycleTime</label>
+                                <input type="number" class="form-control cycletime-input w-100" id="cycleTime" />
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            if (location.includes(',')) {
+                htmlCreateCycleTime = `<div class="content-cycletime">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <label class="form-label" for="qtyLongHours">Số lượng sản xuất trong ngày chủng loại dài</label>
+                                <input type="number" class="form-control qty-hours-day w-100" id="qtyLongHours" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group">
+                                <label class="form-label" for="cycleTimeLong">CycleTime chủng loại dài</label>
+                                <input type="number" class="form-control cycletime-input w-100" id="cycleTimeLong" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <label class="form-label" for="qtyShortHours">Số lượng sản xuất trong ngày chủng loại ngắn</label>
+                                <input type="number" class="form-control qty-hours-day w-100" id="qtyShortHours" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group">
+                                <label class="form-label" for="cycleTimeShort">CycleTime chủng loại ngắn</label>
+                                <input type="number" class="form-control cycletime-input w-100" id="cycleTimeShort" />
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+            $('#showRegisterCycleTime').modal('show');
+            $('#showRegisterCycleTime .modal-body').html(htmlCreateCycleTime);
+            $('#showRegisterCycleTime .btn-save-cycle').attr('data-location', location);
+        });
+        $('#showRegisterCycleTime').on('shown.bs.modal', function () {
+            $('#qtyHours').on('change', function (e) {
+                let qtyHours = parseInt($(this).val(), 10);
+                $('#cycleTime').val((3600 / qtyHours).toFixed(1));
+            });
+
+            $('#qtyLongHours').on('change', function (e) {
+                let qtyHours = parseInt($(this).val(), 10);
+                $('#cycleTimeLong').val((3600 / qtyHours).toFixed(1));
+            });
+
+            $('#qtyShortHours').on('change', function (e) {
+                let qtyHours = parseInt($(this).val(), 10);
+                $('#cycleTimeShort').val((3600 / qtyHours).toFixed(1));
+            });
+
+            $('#showRegisterCycleTime .btn-save-cycle').on('click', function (e) {
+                let qtyHours = $('#qtyHours').val();
+                let cycleTime = $('#cycleTime').val();
+                let qtyLongHours = $('#qtyLongHours').val();
+                let qtyShortHours = $('#qtyShortHours').val();
+                let cycleTimeLong = $('#cycleTimeLong').val();
+                let cycleTimeShort = $('#cycleTimeShort').val();
+                let bodyJson = '';
+                if (qtyHours != '' && cycleTime != '') {
+                    bodyJson = JSON.stringify({
+                        qtyHours: qtyHours,
+                        cycleTime: cycleTime,
                     });
-                    resolve();
                 } else {
-                    var response = JSON.parse(xhr.response);
-                    const errorMessage = response ? response.message : 'Unknown error';
-                    fileItem.innerHTML = `<p class="text-danger">Lỗi khi tải <strong>${fileName}</strong></p>`;
-                    reject(new Error(errorMessage));
+                    bodyJson = JSON.stringify({
+                        qtyLongHours: qtyLongHours,
+                        cycleTimeLong: cycleTimeLong,
+                        qtyShortHours: qtyShortHours,
+                        cycleTimeShort: cycleTimeShort
+                    });
                 }
-            };
-            xhr.send(fileFormData);
-        })
+            });
+        });
     }
 });
+function uploadSingleFile(fileFormData, totalFiles, uploadedFiles, fileItem, fileName) {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', `${window.baseUrl}checksheets/uploadexcel`, true);
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+                $('#progressBar').val(percentComplete);
+                fileItem.innerHTML = `Đang tải <strong>${fileName}</strong> - ${Math.round(percentComplete)}%.`;
+            }
+        };
+
+        xhr.onload = function () {
+            if (xhr.status == 200) {
+                fileItem.innerHTML = `Tải xong <strong>${fileName}</strong>`;
+                var response = JSON.parse(xhr.response);
+                swal({
+                    title: 'Thông báo',
+                    text: 'Tải lên thành công!',
+                    icon: 'success',
+                    buttons: [false, "Ok"],
+                }).then((isConfirmed) => {
+                    if (isConfirmed) {
+                        window.location.reload();
+                    } else {
+                        return;
+                    }
+                });
+                resolve();
+            } else {
+                var response = JSON.parse(xhr.response);
+                const errorMessage = response ? response.message : 'Unknown error';
+                fileItem.innerHTML = `<p class="text-danger">Lỗi khi tải <strong>${fileName}</strong></p>`;
+                reject(new Error(errorMessage));
+            }
+        };
+        xhr.send(fileFormData);
+    })
+}

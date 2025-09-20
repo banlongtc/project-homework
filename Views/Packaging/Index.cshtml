@@ -8,7 +8,10 @@
     var listWoProductions = ViewData["ListWoProduction"] as List<ListWoProduction>;
     var listWoDivLines = ViewData["ListWoDivLine"] as List<ListWoDivLine>;
     var listDivLineForLot = ViewData["listDivLineForLot"] as List<ListDivLineForLot>;
+    var stringJsonData = ViewData["StringWOCalc"]?.ToString();
+    var stringTotalLine = ViewData["StringTotalLine"]?.ToString();
     var classTableBordered = string.Empty;
+    string jsonData = string.Empty;
     if (listWoProductions?.Count > 0)
     {
         classTableBordered = "table table-collapse";
@@ -17,6 +20,7 @@
     {
         classTableBordered = "table table-bordered border-dark";
     }
+    var classHiddenElement = string.Empty;
 }
 <div class="text-center page-title">
     <h1 class="display-6">@ViewData["Title"]</h1>
@@ -25,12 +29,18 @@
     @await Component.InvokeAsync("Breadcrumb", new { breadcrumbs = breadcrumbs })
 </div>
 <hr />
+<input type="hidden" id="jsonCalcTimeProd" value="@stringJsonData" />
+<input type="hidden" id="jsonTotalLine" value="@stringTotalLine" />
 <div class="table-div-line">
     <div class="title-table text-center mb-2">
         <h5>Bảng chia line</h5>
         <div class="comment-color">
             <div class="comment-title">Chú thích</div>
             <div class="d-flex justify-content-around">
+                <div class="box-item-color">
+                    <div class="bg-approval-end"></div>
+                    <span>Order Approval End</span>
+                </div>
                 <div class="box-item-color">
                     <div class="bg-on-going"></div>
                     <span>On Going Production</span>
@@ -49,40 +59,101 @@
                 </div>
             </div>
         </div>
-        <div class="text-end">
-            <button class="btn btn-save-line btn-md disabled">Lưu</button>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-sort-wo btn-md disabled">Sắp xếp</button>
+            <button class="btn btn-save-calculator d-none disabled btn-md">Tính thời gian sản xuất</button>
+            <button class="btn btn-save-line btn-md disabled @classHiddenElement">Lưu</button>
         </div>
     </div>
-    <div class="table-line-process" id="tableLineProcessing">
-        <div class="message">
-            <div class="error-total text-danger fst-italic"></div>
-            <div class="error-input text-danger fst-italic"></div>
+    <div class="mt-1" id="modalCalculatorTimeProd">
+        <div class="qty-processing-wrapper d-none mt-3">
+            <p class="text-danger"></p>
+            <div class="product-code-long d-none">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="input-group align-items-center">
+                            <label class="form-label" for="qtyInHoursLong">Số lượng sản xuất theo giờ chủng loại dài:</label>
+                            <input type="number" id="qtyInHoursLong" class="qtyInHours form-control ms-2" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group align-items-center">
+                            <label class="form-label" for="cycleTimeLong">Cycle time chủng loại dài:</label>
+                            <input type="number" id="cycleTimeLong" class="cycleTime form-control ms-2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-code-sort d-none mt-2">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="input-group align-items-center">
+                            <label class="form-label" for="qtyInHoursShort">Số lượng sản xuất theo giờ chủng loại ngắn:</label>
+                            <input type="number" id="qtyInHoursShort" class="qtyInHours form-control ms-2" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group align-items-center">
+                            <label class="form-label" for="cycleTimeSort">Cycle time chủng loại ngắn:</label>
+                            <input type="number" id="cycleTimeSort" class="cycleTime form-control ms-2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div class="table-responsive-xxl">
-            <table class="@classTableBordered">
-                <thead class="">
-                    <tr>
-                        <th scope="col" class="align-middle item-freezer" data-col_title="workOrder" data-title="Số WO"></th>
-                        <th scope="col" class="align-middle item-freezer" data-col_title="itemCode" data-title="Danh sách sản phẩm"></th>
-                        <th scope="col" class="align-middle item-freezer" data-col_title="lotNo" data-title="Số lô"></th>
-                        <th scope="col" class="align-middle item-freezer" data-col_title="qtyUsed" data-title="Số lượng"></th>
-                        <th scope="col" class="align-middle item-freezer" data-col_title="character" data-title="Chữ cái"></th>
-                        <th scope="col" class="align-middle item-freezer" data-col_title="dateProd" data-title="Ngày sản xuất"></th>
-                        <th scope="col" class="align-middle item-freezer" data-col_title="timeProd" data-title="Giờ sản xuất"></th>
-                        <th scope="col" class="align-middle" data-col_title="line1" data-title="Line 1"></th>
-                        <th scope="col" class="align-middle" data-col_title="line2" data-title="Line 2"></th>
-                        <th scope="col" class="align-middle" data-col_title="line3" data-title="Line 3"></th>
-                        <th scope="col" class="align-middle" data-col_title="line4" data-title="Line 4"></th>
-                        <th scope="col" class="align-middle" data-col_title="changeControl" data-title="Mã thay đổi"></th>
-                        <th scope="col" class="align-middle" data-col_title="note" data-title="Ghi chú"></th>
-                        <th scope="col" class="align-middle" data-col_title="processCode" data-title="Công đoạn"></th>
-                        <th scope="col" class="align-middle" data-title="Kiểm tra"></th>
-                    </tr>
-                </thead>
-                <tbody id="contentTable" class="">
-                    @if (listWoProductions?.Count > 0)
-                    {
-                        foreach (var itemData in listWoProductions)
+        <p class="text-danger mb-0 mt-2">Vui lòng sắp xếp chỉ thị trước khi thực hiện tính thời gian sản xuất của các lô theo thứ tự 1, 2, 3,....</p>
+        <div class="table-responsive table-calculator-item mt-3">
+            @if (listWoProductions?.Count > 0)
+            {
+                <table class="table table-collapse" id="tableCalculators">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="align-middle item-freezer">STT</th>
+                            <th rowspan="2" class="align-middle item-freezer">WorkOrder</th>
+                            <th rowspan="2" class="align-middle item-freezer">Chủng loại</th>
+                            <th rowspan="2" class="align-middle item-freezer">Số lô</th>
+                            <th rowspan="2" class="align-middle item-freezer">Số lượng WO</th>
+                            <th rowspan="2" class="align-middle item-freezer">Chữ cái</th>
+                            <th colspan="5" class="align-middle">Line 1</th>
+                            <th colspan="5" class="align-middle">Line 2</th>
+                            <th colspan="5" class="align-middle">Line 3</th>
+                            <th colspan="5" class="align-middle">Line 4</th>
+                            <th rowspan="2" class="align-middle">Mã thay đổi</th>
+                            <th rowspan="2" class="align-middle">Ghi chú</th>
+                            <th rowspan="2" class="align-middle d-none"></th>
+                        </tr>
+                        <tr>
+                            <th class="align-middle d-none item-freezer">STT</th>
+                            <th class="align-middle d-none item-freezer">WorkOrder</th>
+                            <th class="align-middle d-none item-freezer">Chủng loại</th>
+                            <th class="align-middle d-none item-freezer">Số lô</th>
+                            <th class="align-middle d-none item-freezer">Số lượng WO</th>
+                            <th class="align-middle d-none item-freezer">Chữ cái</th>
+                            <th class="align-middle title-line-1" data-line="1">Số lượng dự định</th>
+                            <th class="align-middle title-line-1" data-line="1">Thời gian sản xuất lô</th>
+                            <th class="align-middle title-line-1" data-line="1">Ngày/giờ dự định</th>
+                            <th class="align-middle title-line-1" data-line="1">Ngày/giờ kết thúc</th>
+                            <th class="align-middle title-line-1" data-line="1">Số lượng/ngày</th>
+                            <th class="align-middle title-line-2" data-line="2">Số lượng dự định</th>
+                            <th class="align-middle title-line-2" data-line="2">Thời gian sản xuất lô</th>
+                            <th class="align-middle title-line-2" data-line="2">Ngày/giờ dự định</th>
+                            <th class="align-middle title-line-2" data-line="2">Ngày/giờ kết thúc</th>
+                            <th class="align-middle title-line-2" data-line="2">Số lượng/ngày</th>
+                            <th class="align-middle title-line-3" data-line="3">Số lượng dự định</th>
+                            <th class="align-middle title-line-3" data-line="3">Thời gian sản xuất lô</th>
+                            <th class="align-middle title-line-3" data-line="3">Ngày/giờ dự định</th>
+                            <th class="align-middle title-line-3" data-line="3">Ngày/giờ kết thúc</th>
+                            <th class="align-middle title-line-3" data-line="3">Số lượng/ngày</th>
+                            <th class="align-middle title-line-4" data-line="4">Số lượng dự định</th>
+                            <th class="align-middle title-line-4" data-line="4">Thời gian sản xuất lô</th>
+                            <th class="align-middle title-line-4" data-line="4">Ngày/giờ dự định</th>
+                            <th class="align-middle title-line-4" data-line="4">Ngày/giờ kết thúc</th>
+                            <th class="align-middle title-line-4" data-line="4">Số lượng/ngày</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in listWoProductions)
                         {
                             string line1 = string.Empty;
                             string line2 = string.Empty;
@@ -91,14 +162,13 @@
                             string changeControl = string.Empty;
                             string note = string.Empty;
                             string classChangeControl = string.Empty;
+                            string classDisabled = string.Empty;
                             string classOldItem = string.Empty;
                             string classOnGoing = string.Empty;
                             string classHasDivLot = string.Empty;
-                            string classNotEnoughQty1 = string.Empty;
-                            string classNotEnoughQty2 = string.Empty;
-                            string classNotEnoughQty3 = string.Empty;
-                            string classNotEnoughQty4 = string.Empty;
-                            if (itemData.StatusName == "On Going Production")
+                            string classNotEnoughQty = string.Empty;
+
+                            if (item.StatusName == "On Going Production")
                             {
                                 classOnGoing = "on-going";
                             }
@@ -106,22 +176,15 @@
                             {
                                 foreach (var itemOld in listWoDivLines)
                                 {
-                                    if (itemData.WorkOrderNo == itemOld.WorkOrder)
+                                    if (item.WorkOrderNo == itemOld.WorkOrder)
                                     {
-                                        line1 = itemOld.Line1 ?? "0";
-                                        line2 = itemOld.Line2 ?? "0";
-                                        line3 = itemOld.Line3 ?? "0";
-                                        line4 = itemOld.Line4 ?? "0";
+                                        line1 = itemOld.Line1 ?? "";
+                                        line2 = itemOld.Line2 ?? "";
+                                        line3 = itemOld.Line3 ?? "";
+                                        line4 = itemOld.Line4 ?? "";
                                         changeControl = itemOld.ChangeControl ?? "";
                                         note = itemOld.Note ?? "";
-                                        if (line1 == "0" && line2 == "0" && line3 == "0" && line4 == "0")
-                                        {
-                                            classOldItem = "";
-                                        } else
-                                        {
-                                            classOldItem = "has-content";
-                                        }
-
+                                        classOldItem = "has-content ";
                                     }
                                 }
                             }
@@ -129,65 +192,102 @@
                             {
                                 foreach (var itemDiv in listDivLineForLot)
                                 {
-                                    if (itemData.WorkOrderNo == itemDiv.WorkOrder)
+                                    if (item.WorkOrderNo == itemDiv.WorkOrder)
                                     {
-                                        classHasDivLot = "has-div-lot";
-                                        if (int.Parse(line1) < int.Parse(itemDiv.Line1 ?? "0"))
+                                        classHasDivLot = "has-div-lot ";
+                                        if (int.Parse(line1) > int.Parse(itemDiv.Line1 ?? "0"))
                                         {
-                                            classNotEnoughQty1 = "not-enough-qty";
+                                            classNotEnoughQty = " not-enough-qty";
                                         }
-                                        if (int.Parse(line2) < int.Parse(itemDiv.Line2 ?? "0"))
+                                        if (int.Parse(line2) > int.Parse(itemDiv.Line2 ?? "0"))
                                         {
-                                            classNotEnoughQty2 = "not-enough-qty";
+                                            classNotEnoughQty = " not-enough-qty";
                                         }
-                                        if (int.Parse(line3) < int.Parse(itemDiv.Line3 ?? "0"))
+                                        if (int.Parse(line3) > int.Parse(itemDiv.Line3 ?? "0"))
                                         {
-                                            classNotEnoughQty3 = "not-enough-qty";
+                                            classNotEnoughQty = " not-enough-qty";
                                         }
-                                        if (int.Parse(line4) < int.Parse(itemDiv.Line4 ?? "0"))
+                                        if (int.Parse(line4) > int.Parse(itemDiv.Line4 ?? "0"))
                                         {
-                                            classNotEnoughQty4 = "not-enough-qty";
+                                            classNotEnoughQty = " not-enough-qty";
                                         }
                                     }
                                 }
                             }
                             if (changeControl != "")
                             {
-                                classChangeControl = "has-change-control";
+                                classChangeControl = "has-change-control ";
                             }
-                            <tr class="@classHasDivLot @classOldItem @classChangeControl @classOnGoing" data-workorder="@itemData.WorkOrderNo" data-product_code="@itemData.ProductCode" data-lotno="@itemData.LotNo" data-qty="@itemData.QtyProd">
-                                <td class="align-middle render item-freezer">
-                                    <a href="#showDivLine" data-bs-toggle="modal" style="width: 70px;" class="input-line show-div-line work-order">@itemData.WorkOrderNo</a>
-                                    <input type="hidden" class="input-line" value="@itemData.WorkOrderNo" />
+                            <tr class="@classHasDivLot@classOldItem@classChangeControl@classOnGoing@classNotEnoughQty" data-workorder="@item.WorkOrderNo" data-product_code="@item.ProductCode" data-lotno="@item.LotNo" data-qty="@item.QtyProd">
+                                <td class="item-freezer">
+                                    <input type="@(string.IsNullOrEmpty(item.SoTT) ? "number" : "text")" class="indexWOProduction info-wo" min="0" value="@item.SoTT" />
                                 </td>
-                                <td class="align-middle render item-freezer">
-                                    <a href="#showDivLine" data-bs-toggle="modal" style="width: 120px;" class="input-line show-div-line product-code">@itemData.ProductCode</a>
-                                    <input type="hidden" class="input-line" value="@itemData.ProductCode" />
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo workorder">
+                                        @item.WorkOrderNo
+                                    </a>
                                 </td>
-                                <td class="align-middle render item-freezer">
-                                    <a href="#showDivLine" data-bs-toggle="modal" style="width: 80px;" class="input-line show-div-line lot-no">@itemData.LotNo</a>
-                                    <input type="hidden" class="input-line" value="@itemData.LotNo" />
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo product-code">
+                                        @item.ProductCode
+                                    </a>
                                 </td>
-                                <td class="align-middle render item-freezer">
-                                    <span style="width: 60px;" class="input-line qty-used">@itemData.QtyProd</span>
-                                    <input type="hidden" class="input-line" value="@itemData.QtyProd" />
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo lot-no">
+                                        @item.LotNo
+                                    </a>
                                 </td>
-                                <td class="align-middle item-freezer"><input type="text" style="width: 40px;" class="input-line character-wo" value="@itemData.Character" /></td>
-                                <td class="align-middle render item-freezer"><input type="text" style="width: 80px;" class="input-line disabled date-intended" value="@itemData.DateProd?.ToString("dd/MM/yyyy")" /></td>
-                                <td class="align-middle render item-freezer" data-date_intended="@itemData.DateProd?.ToString("yyyy/MM/dd")"><input type="text" class="input-line disabled time-intended" style="width: 60px;" value="@itemData.TimeProd" /></td>
-                                <td class="align-middle @classNotEnoughQty1"><input type="number" class="input-line line-1" min="0" value="@line1" style="width: 70px;" /></td>
-                                <td class="align-middle @classNotEnoughQty2"><input type="number" class="input-line line-2" min="0" value="@line2" style="width: 70px;" /></td>
-                                <td class="align-middle @classNotEnoughQty3"><input type="number" class="input-line line-3" min="0" value="@line3" style="width: 70px;" /></td>
-                                <td class="align-middle @classNotEnoughQty4"><input type="number" class="input-line line-4" min="0" value="@line4" style="width: 70px;" /></td>
-                                <td class="align-middle"><input type="text" class="input-line change-control" value="@changeControl" style="width: 70px;" /></td>
-                                <td class="align-middle"><textarea class="input-line" style="width: 100px; height: 30px;">@note</textarea></td>
-                                <td class="align-middle"><input type="text" class="input-line processcode" value="@itemData.ProcessCode" /></td>
-                                <td class="align-middle"><input type="checkbox" class="check-data" /></td>
+                                <td class="item-freezer">
+                                    <a href="#showDivLine" data-bs-toggle="modal" class="info-wo qty-wo">
+                                        @item.QtyProd
+                                    </a>
+                                </td>
+                                <td class="item-freezer"><input type="text" class="input-enter-val character-input info-wo text-uppercase text-center" value="@item.Character" /></td>
+                                <td><input type="number" data-line="1" class="input-enter-val qty-production-line" min="0" value="" /></td>
+                                <td><input type="text" data-line="1" class="input-enter-val time-production" value="" /></td>
+                                <td><input type="text" data-line="1" class="input-enter-val date-start-lot input-time-custom" value="" /></td>
+                                <td><input type="text" data-line="1" class="input-enter-val date-end-lot input-time-custom" value="" /></td>
+                                <td><input type="number" data-line="1" class="input-enter-val qty-in-day" min="0" value="" /></td>
+                                <td><input type="number" data-line="2" class="input-enter-val qty-production-line" min="0" value="" /></td>
+                                <td><input type="text" data-line="2" class="input-enter-val time-production" value="" /></td>
+                                <td><input type="text" data-line="2" class="input-enter-val date-start-lot input-time-custom" value="" /></td>
+                                <td><input type="text" data-line="2" class="input-enter-val date-end-lot input-time-custom" value="" /></td>
+                                <td><input type="number" data-line="2" class="input-enter-val qty-in-day" min="0" value="" /></td>
+                                <td><input type="number" data-line="3" class="input-enter-val qty-production-line" min="0" value="" /></td>
+                                <td><input type="text" data-line="3" class="input-enter-val time-production" value="" /></td>
+                                <td><input type="text" data-line="3" class="input-enter-val date-start-lot input-time-custom" value="" /></td>
+                                <td><input type="text" data-line="3" class="input-enter-val date-end-lot input-time-custom" value="" /></td>
+                                <td><input type="number" data-line="3" class="input-enter-val qty-in-day" min="0" value="" /></td>
+                                <td><input type="number" data-line="4" class="input-enter-val qty-production-line" min="0" value="" /></td>
+                                <td><input type="text" data-line="4" class="input-enter-val time-production" value="" /></td>
+                                <td><input type="text" data-line="4" class="input-enter-val date-start-lot input-time-custom" value="" /></td>
+                                <td><input type="text" data-line="4" class="input-enter-val date-end-lot input-time-custom" value="" /></td>
+                                <td><input type="number" data-line="4" class="input-enter-val qty-in-day" min="0" value="" /></td>
+                                <td><input type="text" class="input-enter-val change-control" value="" /></td>
+                                <td><textarea class="input-enter-val note"></textarea></td>
+                                <td class="d-none"><input type="hidden" class="processcode" min="0" value="@item.ProcessCode" /></td>
                             </tr>
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                    <tfoot class="bg-success">
+                        <tr>
+                            <td class="item-freezer" colspan="6"><div class="fw-bold">Tổng</div></td>
+                            <td><span class="total-line" data-line="1"></span></td>
+                            <td colspan="4"></td>
+                            <td><span class="total-line" data-line="2"></span></td>
+                            <td colspan="4"></td>
+                            <td><span class="total-line" data-line="3"></span></td>
+                            <td colspan="4"></td>
+                            <td><span class="total-line" data-line="4"></span></td>
+                            <td colspan="7"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            }
+            else
+            {
+                <p class="text-center">Không có dữ liệu cần tính</p>
+            }
         </div>
     </div>
 </div>

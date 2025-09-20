@@ -77,6 +77,8 @@ public partial class MplusGwContext : DbContext
 
     public virtual DbSet<TblDivMcprod> TblDivMcprods { get; set; }
 
+    public virtual DbSet<TblDivideLineForMaterial> TblDivideLineForMaterials { get; set; }
+
     public virtual DbSet<TblExportWh> TblExportWhs { get; set; }
 
     public virtual DbSet<TblHistoryLogin> TblHistoryLogins { get; set; }
@@ -102,6 +104,8 @@ public partial class MplusGwContext : DbContext
     public virtual DbSet<TblMachineValTc> TblMachineValTcs { get; set; }
 
     public virtual DbSet<TblManageMaterial> TblManageMaterials { get; set; }
+
+    public virtual DbSet<TblMasterCycleTime> TblMasterCycleTimes { get; set; }
 
     public virtual DbSet<TblMasterError> TblMasterErrors { get; set; }
 
@@ -302,6 +306,7 @@ public partial class MplusGwContext : DbContext
             entity.Property(e => e.Character)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.CycleTime).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.LocationCode)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -999,6 +1004,26 @@ public partial class MplusGwContext : DbContext
                 .HasConstraintName("FK_DivMC_User");
         });
 
+        modelBuilder.Entity<TblDivideLineForMaterial>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("tbl_DivideLineForMaterials");
+
+            entity.Property(e => e.CongDoan).HasMaxLength(50);
+            entity.Property(e => e.DivideLineMaterialsId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("DivideLineMaterialsID");
+            entity.Property(e => e.LotNvl)
+                .HasMaxLength(100)
+                .HasColumnName("LotNVL");
+            entity.Property(e => e.MaNvl)
+                .HasMaxLength(100)
+                .HasColumnName("MaNVL");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.WorkOrder).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<TblExportWh>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__tbl_Expo__3214EC27FBC33FA5");
@@ -1273,6 +1298,19 @@ public partial class MplusGwContext : DbContext
             entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.TblManageMaterials)
                 .HasForeignKey(d => d.IdUser)
                 .HasConstraintName("FK_tbl_ManageBookItem_tbl_Users");
+        });
+
+        modelBuilder.Entity<TblMasterCycleTime>(entity =>
+        {
+            entity.HasKey(e => e.CycleTimeId);
+
+            entity.ToTable("tbl_MasterCycleTime");
+
+            entity.Property(e => e.CycleTimeId).HasColumnName("CycleTimeID");
+            entity.Property(e => e.CycleTime).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Note).HasMaxLength(255);
+            entity.Property(e => e.ProcessCode).HasMaxLength(100);
         });
 
         modelBuilder.Entity<TblMasterError>(entity =>
